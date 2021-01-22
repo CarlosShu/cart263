@@ -36,8 +36,6 @@ function setup() {
   sausageDog = new SausageDog(x, y, sausageDogImage);
 }
 
-function createAnimals() {}
-
 function draw() {
   background(255, 255, 0);
 
