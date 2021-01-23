@@ -64,7 +64,7 @@ let state = "titlemenu";
 const NUM_LETTER_FONTS = 10;
 const NUM_LETTERS = 120;
 
-let letterFonts = [];
+let letterfonts = [];
 let letters = [];
 
 let oddletterfont = undefined;
@@ -87,8 +87,8 @@ function preload() {
   sylfaenfont = loadFont("assets/sylfaen.ttf");
 
   for (let i = 0; i < NUM_LETTER_FONTS; i++) {
-    let letterFont = loadFont(`assets/fonts/font${i}.ttf`);
-    letterFonts.push(letterFont);
+    let letterfont = loadFont(`assets/fonts/font${i}.ttf`);
+    letterfonts.push(letterfont);
   }
   // i starts at 0, while i is less than NUM_LETTER_FONTS i will go up by 1.
 
@@ -101,8 +101,8 @@ function setup() {
   for (let i = 0; i < NUM_LETTERS; i++) {
     let x = random(0, 1408); // random x position.
     let y = random(0, 576); // random y position.
-    let letterFont = random(letterFonts); // letter image number.
-    let letter = new Letter(x, y, letterFont);
+    let letterfont = random(letterfonts); // letter image number.
+    let letter = new Letter(x, y, letterfont);
     letters.push(letter);
   }
 
