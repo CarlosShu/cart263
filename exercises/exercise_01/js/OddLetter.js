@@ -1,4 +1,4 @@
-class OddLetter extends Letter {
+class Oddletter extends Letter {
   // Extends the Letter class.
   constructor(x, y, font) {
     super(x, y, font); // passes parameters.

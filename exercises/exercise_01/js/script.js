@@ -108,7 +108,7 @@ function setup() {
 
   let x = random(0, 1408);
   let y = random(0, 576);
-  oddletter = new OddLetter(x, y, oddletterfont);
+  oddletter = new Oddletter(x, y, oddletterfont);
 }
 
 // Canvas Resize function.
@@ -238,18 +238,7 @@ function mousePressed() {
     state = "instructions";
     starttimeleft = 6;
   }
-  // // Switch from won to instructions.
-  // else if (
-  //   mouseX > 0 &&
-  //   mouseX < width &&
-  //   mouseY > 0 &&
-  //   mouseY < height &&
-  //   state === "won"
-  // ) {
-  //   state = "instructions";
-  //   starttimeleft = 6;
-  // }
-  // // Switch from lost to instructions.
+
   else if (
     mouseX > 0 &&
     mouseX < width &&
