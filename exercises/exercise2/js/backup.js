@@ -1,12 +1,4 @@
 "use strict";
-
-/**************************************************
-Who's that Pokemon?
-Carlos-Enrique Salazar Aguilar
-
-Slamina exercise.
-**************************************************/
-
 // Fonts variables.
 let lemonfont;
 
@@ -184,7 +176,7 @@ function titlemenu() {
   textSize(60);
   textFont(lemonfont);
   fill(255);
-  text("WHO'S THAT POKéMON?", 600, 300);
+  text("WHO'S THAT POKEMON?", 600, 300);
   pop();
 
   push();
@@ -491,7 +483,7 @@ function game() {
     text(
       "Correct, it was " +
         currentPokemon +
-        "! Press SPACE again to generate a new pokémon!",
+        "! Press SPACE again to generate a new pokemon!",
       600,
       550
     );
@@ -499,12 +491,12 @@ function game() {
     text(
       "Wrong, it was " +
         currentPokemon +
-        "! Press SPACE again to generate a new pokémon!",
+        "! Press SPACE again to generate a new pokemon!",
       600,
       550
     );
   } else if (guess == undefined && gamestart == false) {
-    text("Press SPACE to generate a pokémon!", 600, 550);
+    text("Press SPACE to generate a pokemon!", 600, 550);
   }
   pop();
 }
