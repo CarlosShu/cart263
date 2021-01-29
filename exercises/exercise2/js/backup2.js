@@ -504,7 +504,7 @@ function game() {
       550
     );
   } else if (guess == undefined && gamestart == false) {
-    text("Press SPACE to generate a pokémon!", 600, 300);
+    text("Press SPACE to generate a pokémon!", 600, 550);
   }
   pop();
 }
@@ -521,7 +521,7 @@ function keyPressed() {
   if (state === "game") {
     if (starttimeleft <= 0) {
       if (keyCode == 32) {
-        if (gamestart == false) {
+        if (gamestart == true || gamestart == false) {
           gamestart = true;
           guess = undefined;
           currentPokemon = random(pokemons); // gets random value from pokemon array.
@@ -535,15 +535,9 @@ function guessPokemon(pokemon) {
   // Will pass the pokemon 'word' into parameter.
   currentAnswer = pokemon.toLowerCase(); // Converts to lower case.
 
-  if (currentAnswer.includes(currentPokemon) && gamestart == true) {
-    if (gamestart == true) {
-      gamestart = false;
-      guess = true;
-    }
-  } else if (!currentAnswer.includes(currentPokemon) && gamestart == true) {
-    if (gamestart == true) {
-      gamestart = false;
-      guess = false;
-    }
+  if (currentAnswer == currentPokemon) {
+    guess = true;
+  } else {
+    guess = false;
   }
 }
