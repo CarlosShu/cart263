@@ -504,7 +504,11 @@ function game() {
       550
     );
   } else if (guess == undefined && gamestart == false) {
-    text("Press SPACE to generate a pokémon!", 600, 300);
+    text(
+      "Press SPACE to generate a pokémon and say its name to win! If you don't know what it is, just say anything to skip.",
+      600,
+      300
+    );
   }
   pop();
 }
