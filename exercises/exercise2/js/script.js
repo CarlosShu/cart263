@@ -24,6 +24,8 @@ let pikachuimage;
 let pikachusilhouetteimage;
 let jigglypuffimage;
 let jigglypuffsilhouetteimage;
+let gengarimage;
+let gengarsilhouetteimage;
 let eeveeimage;
 let eeveesilhouetteimage;
 let snorlaximage;
@@ -73,6 +75,7 @@ const pokemons = [
   "squirtle",
   "pikachu",
   "jigglypuff",
+  "gengar",
   "eevee",
   "snorlax",
   "dragonite",
@@ -114,6 +117,8 @@ function preload() {
   jigglypuffsilhouetteimage = loadImage(
     "assets/images/jigglypuffsilhouette.png"
   );
+  gengarimage = loadImage("assets/images/gengar.png");
+  gengarsilhouetteimage = loadImage("assets/images/gengarsilhouette.png");
   eeveeimage = loadImage("assets/images/eevee.png");
   eeveesilhouetteimage = loadImage("assets/images/eeveesilhouette.png");
   snorlaximage = loadImage("assets/images/snorlax.png");
@@ -277,6 +282,20 @@ function game() {
       push();
       imageMode(CENTER);
       image(jigglypuffimage, width / 2, height / 2, 300, 300);
+      pop();
+    }
+  }
+
+  if (currentPokemon == "gengar") {
+    if (guess == undefined) {
+      push();
+      imageMode(CENTER);
+      image(gengarsilhouetteimage, width / 2, height / 2, 400, 400);
+      pop();
+    } else {
+      push();
+      imageMode(CENTER);
+      image(gengarimage, width / 2, height / 2, 400, 400);
       pop();
     }
   }
