@@ -57,7 +57,7 @@ function setup() {
   if (data !== null) {
     userData.name = data.name;
   } else {
-    userData.name = prompt("Set your username."); // asks for and inputs name.
+    userData.name = prompt("Set Your Username. (20 Characters Max)"); // asks for and inputs name.
     localStorage.setItem(
       "web-storage-example-personalization",
       JSON.stringify(userData)
@@ -70,7 +70,7 @@ function setup() {
   if (passworddata !== null) {
     passData.password = passworddata.password;
   } else {
-    passData.password = prompt("Set your password."); // asks for and inputs name.
+    passData.password = prompt("Set Your Password. (20 Characters Max)"); // asks for and inputs name.
     localStorage.setItem(
       "web-storage-example-password",
       JSON.stringify(passData)
@@ -293,9 +293,17 @@ function onInput() {
 
 function keyTyped() {
   if ((state == "username") & (starttimeleft <= 0)) {
-    usercontents += key;
+    if (usercontents.length < 20) {
+      usercontents += key;
+    } else {
+      usercontents = usercontents;
+    }
   } else if ((state == "password") & (starttimeleft <= 0)) {
-    passwordcontents += key;
+    if (passwordcontents.length < 20) {
+      passwordcontents += key;
+    } else {
+      passwordcontents = passwordcontents;
+    }
   }
 }
 
@@ -313,7 +321,7 @@ function keyPressed() {
   else if (state === "username") {
     // If backspace is entered the user will delete their last key.
     if (keyCode == 8) {
-      usercontents = "";
+      usercontents = usercontents.slice(0, usercontents.length - 1);
     }
     // If user gets username right it will switch to password screen.
     if (usercontents == userData.name) {
@@ -328,7 +336,7 @@ function keyPressed() {
   else if (state === "password") {
     // If backspace is entered the user will delete their last key.
     if (keyCode == 8) {
-      passwordcontents = "";
+      passwordcontents = passwordcontents.slice(0, passwordcontents.length - 1);
     }
     // If user gets username right it will switch to welcome screen.
     if (passwordcontents == passData.password) {
