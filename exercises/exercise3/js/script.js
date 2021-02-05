@@ -111,7 +111,7 @@ function title() {
   push();
   textAlign(CENTER, CENTER);
   textFont(droidfont);
-  textSize(80);
+  textSize(100);
   fill(0, 255, 0);
   text("CLICK & CLICK", width / 2, height / 2);
   pop();
@@ -121,7 +121,15 @@ function title() {
   textFont(droidfont);
   textSize(20);
   fill(255, 255, 255);
-  text("Press Enter to Log In / Register", width / 2, 450);
+  text("Press Enter to Log In", width / 2, 450);
+  pop();
+
+  push();
+  textAlign(CENTER, CENTER);
+  textFont(droidfont);
+  textSize(10);
+  fill(255, 255, 255);
+  text("Press ESC to delete all save data", width / 2, 50);
   pop();
 }
 
@@ -173,7 +181,7 @@ function welcome() {
   textSize(30);
   fill(0, 255, 0);
   text(
-    `Welcome ${gameData.highScore}, your current highscore is ${gameData.highScore} points.`,
+    `Welcome ${userData.name}, your current highscore is ${gameData.highScore} points.`,
     width / 2,
     height / 2
   );
