@@ -6,20 +6,6 @@ Here is a description of this template p5 project.
 **************************************************/
 "use strict";
 
-let userData = {
-  name: "guest",
-};
-
-let passData = {
-  password: "password",
-};
-
-let gameData = {
-  highScore: 0,
-};
-
-let clicks = 0; // number of clicks.
-
 // Fonts variable.
 let droidfont;
 
@@ -50,39 +36,6 @@ function preload() {
 function setup() {
   createCanvas(1000, 500);
   noCursor();
-
-  let data = JSON.parse(
-    localStorage.getItem("web-storage-example-personalization")
-  );
-  if (data !== null) {
-    userData.name = data.name;
-  } else {
-    userData.name = prompt("Set your username."); // asks for and inputs name.
-    localStorage.setItem(
-      "web-storage-example-personalization",
-      JSON.stringify(userData)
-    );
-  }
-
-  let passworddata = JSON.parse(
-    localStorage.getItem("web-storage-example-password")
-  );
-  if (passworddata !== null) {
-    passData.password = passworddata.password;
-  } else {
-    passData.password = prompt("Set your password."); // asks for and inputs name.
-    localStorage.setItem(
-      "web-storage-example-password",
-      JSON.stringify(passData)
-    );
-  }
-
-  let clickdata = JSON.parse(localStorage.getItem("click-attack-game-data"));
-  // load the data when the program starts.
-  if (clickdata !== null) {
-    // if data isn't null then there is a highscore there.
-    gameData = clickdata;
-  }
 }
 
 function draw() {
@@ -173,7 +126,7 @@ function welcome() {
   textSize(30);
   fill(0, 255, 0);
   text(
-    `Welcome ${gameData.highScore}, your current highscore is ${gameData.highScore} points.`,
+    "Welcome rofl, your current highscore is " + highscore + " points",
     width / 2,
     height / 2
   );
@@ -216,7 +169,7 @@ function game() {
   textFont(droidfont);
   textSize(30);
   fill(0, 255, 0);
-  text(clicks, width / 2, height / 2);
+  text(userscore, width / 2, height / 2);
   pop();
 
   // Game Timer.
@@ -249,7 +202,7 @@ function end() {
   textFont(droidfont);
   textSize(30);
   fill(0, 255, 0);
-  text("YOU GOT " + clicks + " points", width / 2, height / 2);
+  text("YOU GOT " + userscore + " points", width / 2, height / 2);
   pop();
 
   push();
@@ -308,7 +261,7 @@ function keyPressed() {
       usercontents = "";
     }
     // If user gets username right it will switch to password screen.
-    if (usercontents == userData.name) {
+    if (usercontents == "rofl") {
       if (keyCode == 13) {
         state = "password";
         starttimeleft = 1;
@@ -323,7 +276,7 @@ function keyPressed() {
       passwordcontents = "";
     }
     // If user gets username right it will switch to welcome screen.
-    if (passwordcontents == passData.password) {
+    if (passwordcontents == "lmao") {
       if (keyCode == 13) {
         state = "welcome";
         starttimeleft = 1;
@@ -343,14 +296,8 @@ function keyPressed() {
   if (state === "end") {
     if (keyCode == 13) {
       state = "welcome";
-      clicks = 0;
+      userscore = 0;
     }
-  }
-
-  if (keyCode == 27) {
-    localStorage.removeItem("web-storage-example-personalization"); // Deletes save data.
-    localStorage.removeItem("web-storage-example-password"); // Deletes save data.
-    localStorage.removeItem("click-attack-game-data"); // Deletes save data.
   }
 }
 
@@ -360,11 +307,6 @@ function mousePressed() {
     gametimeleft = 5;
   }
   if (state === "game") {
-    clicks++; // adds on clicks.
-
-    if (clicks > gameData.highScore) {
-      gameData.highScore = clicks;
-      localStorage.setItem("click-attack-game-data", JSON.stringify(gameData)); // converts game data to string.
-    }
+    userscore = userscore + 1;
   }
 }

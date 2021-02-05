@@ -32,9 +32,3 @@ function draw() {
   text(`Hello, ${userData.name}!`, width / 2, height / 2);
   pop();
 }
-
-function keyPressed() {
-  if (key === "c") {
-    localStorage.removeItem("web-storage-example-personalization"); // deletes save data.
-  }
-}
