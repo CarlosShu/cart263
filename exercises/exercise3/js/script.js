@@ -133,6 +133,7 @@ function title() {
   pop();
 }
 
+// Username function.
 function username() {
   // Start Timer.
   if (starttimecounter == 60) {
@@ -150,6 +151,7 @@ function username() {
   pop();
 }
 
+// Password function.
 function password() {
   // Start Timer.
   if (starttimecounter == 60) {
@@ -167,6 +169,7 @@ function password() {
   pop();
 }
 
+// Welcome Screen function.
 function welcome() {
   // Start Timer.
   if (starttimecounter == 60) {
@@ -196,6 +199,7 @@ function welcome() {
   pop();
 }
 
+// Instructions function.
 function instructions() {
   push();
   textAlign(CENTER, CENTER);
@@ -218,6 +222,7 @@ function instructions() {
   pop();
 }
 
+// Game function.
 function game() {
   push();
   textAlign(CENTER, CENTER);
@@ -251,6 +256,7 @@ function game() {
   }
 }
 
+// Ending screen function.
 function end() {
   push();
   textAlign(CENTER, CENTER);
@@ -291,6 +297,7 @@ function onInput() {
   }
 }
 
+// Displays what the user types and sets a character limit.
 function keyTyped() {
   if ((state == "username") & (starttimeleft <= 0)) {
     if (usercontents.length < 20) {
@@ -363,6 +370,7 @@ function keyPressed() {
     }
   }
 
+  // Deletes the data upon hitting ESC.
   if (keyCode == 27) {
     localStorage.removeItem("web-storage-example-personalization"); // Deletes save data.
     localStorage.removeItem("web-storage-example-password"); // Deletes save data.
@@ -370,6 +378,7 @@ function keyPressed() {
   }
 }
 
+// Mouse Pressed function.
 function mousePressed() {
   if (state === "instructions") {
     state = "game";

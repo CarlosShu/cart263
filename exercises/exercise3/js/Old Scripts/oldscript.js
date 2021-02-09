@@ -70,7 +70,7 @@ function username() {
   pop();
 }
 
-// Key press function.
+// Key Press function.
 function keyPressed() {
   // Switch from title to instructions.
   if (state === "title") {
