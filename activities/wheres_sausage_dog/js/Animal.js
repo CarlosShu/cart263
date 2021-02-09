@@ -3,7 +3,6 @@ class Animal {
     this.x = x;
     this.y = y;
     this.image = image;
-
     this.angle = 0;
   }
 
@@ -11,6 +10,7 @@ class Animal {
     // Update method call display method.
     this.display();
   }
+
   display() {
     push();
     imageMode(CENTER);
