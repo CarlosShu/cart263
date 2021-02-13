@@ -2,7 +2,7 @@ class Bubble {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.size = 60;
+    this.size = 40;
     this.vx = 0;
     this.vy = 0;
     this.marginx = 40;

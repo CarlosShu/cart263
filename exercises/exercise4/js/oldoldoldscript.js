@@ -46,15 +46,6 @@ let gameData = {
 // Time left variable.
 var timeleft = 10;
 
-// User's webcam
-let video;
-// The name of our model
-let modelName = `Handpose`;
-// Handpose object (using the name of the model for clarity)
-let handpose;
-// The current set of predictions made by Handpose once it's running
-let predictions = [];
-
 function preload() {
   // Fonts.
   lemonfont = loadFont("assets/lemon.otf");
@@ -68,24 +59,8 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(640, 480);
+  createCanvas(1000, 500);
   noCursor();
-
-  // Start webcam and hide the resulting HTML element
-  video = createCapture(VIDEO);
-  video.size(width, height);
-  video.hide();
-
-  // Load the handpose model.
-  handpose = ml5.handpose(video, { flipHorizontal: true }, function () {
-    console.log("Model loaded.");
-  });
-
-  // Listen for predictions.
-  handpose.on("predict", function (results) {
-    console.log(results);
-    predictions = results;
-  });
 
   let data = JSON.parse(localStorage.getItem("click-attack-game-data"));
   // load the data when the program starts.
@@ -160,6 +135,12 @@ function GlobalOverlay() {
   blendMode(OVERLAY);
   image(underwaterimage, width / 2, height / 2, width, height);
   pop();
+
+  // Cursor Image.
+  push();
+  imageMode(CENTER);
+  image(cursorimage, mouseX, mouseY, 700, 700);
+  pop();
 }
 
 // Title function.
@@ -168,7 +149,7 @@ function title() {
   push();
   textAlign(CENTER, CENTER);
   textFont(lemonfont);
-  textSize(75);
+  textSize(90);
   fill(255, 255, 255);
   text("POP-A-BOP 2", width / 2, height / 2);
   pop();
@@ -271,23 +252,6 @@ function bubbleAppear() {
   // Counter for arrays. Less than four moving bubble.
   for (let i = 0; i < bigbubbles.length; i++) {
     bigbubbles[i].update();
-  }
-
-  if (predictions.length > 0) {
-    let hand = predictions[0];
-    let index = hand.annotations.indexFinger;
-    let tip = index[3];
-    let base = index[0];
-    let tipX = tip[0];
-    let tipY = tip[1];
-    let baseX = base[0];
-    let baseY = base[1];
-
-    // Cursor Image.
-    push();
-    imageMode(CENTER);
-    image(cursorimage, baseX, baseY, 700, 700);
-    pop();
   }
 }
 

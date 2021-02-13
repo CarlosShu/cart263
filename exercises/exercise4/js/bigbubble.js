@@ -2,7 +2,7 @@ class BigBubble {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.size = 90;
+    this.size = 60;
     this.vx = 0;
     this.vy = 0;
     this.marginx = 60;

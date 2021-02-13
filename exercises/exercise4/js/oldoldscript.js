@@ -17,8 +17,12 @@ let underwaterimage;
 let bgimage;
 let bubbleimage;
 
-// State.
-let state = "title";
+// The Global Video.
+let video = undefined;
+// The Handpose Model.
+let handpose = undefined;
+// The current set of predictions.
+let predictions = [];
 
 // Bubbles.
 let bubbles = []; // Calling card of the array.
@@ -46,14 +50,8 @@ let gameData = {
 // Time left variable.
 var timeleft = 10;
 
-// User's webcam
-let video;
-// The name of our model
-let modelName = `Handpose`;
-// Handpose object (using the name of the model for clarity)
-let handpose;
-// The current set of predictions made by Handpose once it's running
-let predictions = [];
+// State.
+let state = "title";
 
 function preload() {
   // Fonts.
@@ -68,13 +66,18 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(640, 480);
+  createCanvas(1000, 500);
   noCursor();
 
-  // Start webcam and hide the resulting HTML element
+  // Access user's webcam.
   video = createCapture(VIDEO);
-  video.size(width, height);
-  video.hide();
+
+  let data = JSON.parse(localStorage.getItem("click-attack-game-data"));
+  // load the data when the program starts.
+  if (data !== null) {
+    // if data isn't null then there is a highscore there.
+    gameData = data;
+  }
 
   // Load the handpose model.
   handpose = ml5.handpose(video, { flipHorizontal: true }, function () {
@@ -86,13 +89,6 @@ function setup() {
     console.log(results);
     predictions = results;
   });
-
-  let data = JSON.parse(localStorage.getItem("click-attack-game-data"));
-  // load the data when the program starts.
-  if (data !== null) {
-    // if data isn't null then there is a highscore there.
-    gameData = data;
-  }
 
   // Bubble Spawn.
   for (let i = 0; i < bubblesSize; i++) {
@@ -160,6 +156,12 @@ function GlobalOverlay() {
   blendMode(OVERLAY);
   image(underwaterimage, width / 2, height / 2, width, height);
   pop();
+
+  // Cursor Image.
+  push();
+  imageMode(CENTER);
+  image(cursorimage, mouseX, mouseY, 700, 700);
+  pop();
 }
 
 // Title function.
@@ -168,7 +170,7 @@ function title() {
   push();
   textAlign(CENTER, CENTER);
   textFont(lemonfont);
-  textSize(75);
+  textSize(90);
   fill(255, 255, 255);
   text("POP-A-BOP 2", width / 2, height / 2);
   pop();
@@ -283,10 +285,12 @@ function bubbleAppear() {
     let baseX = base[0];
     let baseY = base[1];
 
-    // Cursor Image.
+    // Pin body.
     push();
-    imageMode(CENTER);
-    image(cursorimage, baseX, baseY, 700, 700);
+    noFill();
+    stroke(255, 255, 255);
+    strokeWeight(2);
+    line(baseX, baseY, tipX, tipY);
     pop();
   }
 }
