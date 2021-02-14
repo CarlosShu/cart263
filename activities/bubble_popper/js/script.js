@@ -3,7 +3,6 @@
 /**************************************************
 Bubble Popper
 Carlos-Enrique Salazar Aguilar
-
 Popp bubbles with your index finger as a pin.
 **************************************************/
 

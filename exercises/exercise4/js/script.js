@@ -1,12 +1,11 @@
 "use strict";
 
 /**************************************************
-Pop-A-Bop 2
+Pop-a-Bop 2
 Carlos-Enrique Salazar Aguilar
 
-Bubble Popper ++ Exercise using ML5 js.
+Pop bubbles with your index finger as a pin.
 **************************************************/
-
 // Fonts variables.
 let lemonfont;
 
@@ -17,20 +16,17 @@ let underwaterimage;
 let bgimage;
 let bubbleimage;
 
-// State.
-let state = "title";
+// The Global Video.
+let video = undefined;
 
-// Bubbles.
-let bubbles = []; // Calling card of the array.
-let bubblesSize = 20; // Bubble amount size.
+// The Handpose Model.
+let handpose = undefined;
 
-// Small Bubbles.
-let smallbubbles = []; // Calling card of the array.
-let smallbubblesSize = 40; // Bubble amount size.
+// The current set of predictions.
+let predictions = [];
 
-// Bubbles.
-let bigbubbles = []; // Calling card of the array.
-let bigbubblesSize = 10; // Bubble amount size.
+// The bubble.
+let bubble = undefined;
 
 // Time counter variable.
 let timecounter = 0;
@@ -46,14 +42,8 @@ let gameData = {
 // Time left variable.
 var timeleft = 10;
 
-// User's webcam
-let video;
-// The name of our model
-let modelName = `Handpose`;
-// Handpose object (using the name of the model for clarity)
-let handpose;
-// The current set of predictions made by Handpose once it's running
-let predictions = [];
+// State.
+let state = "title";
 
 function preload() {
   // Fonts.
@@ -69,11 +59,9 @@ function preload() {
 
 function setup() {
   createCanvas(640, 480);
-  noCursor();
 
-  // Start webcam and hide the resulting HTML element
+  // Access user's webcam.
   video = createCapture(VIDEO);
-  video.size(width, height);
   video.hide();
 
   // Load the handpose model.
@@ -87,62 +75,106 @@ function setup() {
     predictions = results;
   });
 
-  let data = JSON.parse(localStorage.getItem("click-attack-game-data"));
+  let data = JSON.parse(localStorage.getItem("bubble-game"));
   // load the data when the program starts.
   if (data !== null) {
     // if data isn't null then there is a highscore there.
     gameData = data;
   }
 
-  // Bubble Spawn.
-  for (let i = 0; i < bubblesSize; i++) {
-    let x = random(0, width);
-    let y = random(0, height);
-    let bubble = new Bubble(x, y);
-    bubbles.push(bubble);
-  }
-
-  // Small Bubble Spawn.
-  for (let i = 0; i < smallbubblesSize; i++) {
-    let x = random(0, width);
-    let y = random(0, height);
-    let smallbubble = new SmallBubble(x, y);
-    smallbubbles.push(smallbubble);
-  }
-
-  // Big Bubble Spawn.
-  for (let i = 0; i < bigbubblesSize; i++) {
-    let x = random(0, width);
-    let y = random(0, height);
-    let bigbubble = new BigBubble(x, y);
-    bigbubbles.push(bigbubble);
-  }
-}
-
-function windowResized() {
-  resizeCanvas(width, height);
+  // Our bubble.
+  bubble = {
+    x: random(width),
+    y: height,
+    size: 60,
+    vx: 0,
+    vy: 0,
+    speed: 2,
+    maxspeed: 4,
+  };
 }
 
 function draw() {
   background(bgimage);
 
   if (state === "title") {
-    bubbleAppear();
     title();
+    pin();
     GlobalOverlay();
   } else if (state === "instructions") {
-    bubbleAppear();
     instructions();
+    pin();
     GlobalOverlay();
   } else if (state === "simulation") {
-    bubbleAppear();
     simulation();
+    pin();
+    bubbleappear();
     GlobalOverlay();
   } else if (state === "ending") {
-    bubbleAppear();
     ending();
+    pin();
     GlobalOverlay();
   }
+}
+
+function pin() {
+  if (predictions.length > 0) {
+    let hand = predictions[0];
+    let index = hand.annotations.indexFinger;
+    let tip = index[3];
+    let base = index[0];
+    let tipX = tip[0];
+    let tipY = tip[1];
+    let baseX = base[0];
+    let baseY = base[1];
+
+    // Pin body.
+    push();
+    noFill();
+    stroke(255, 255, 255);
+    strokeWeight(5);
+    line(baseX, baseY, tipX, tipY);
+    pop();
+
+    // Pin head.
+    push();
+    noStroke();
+    fill(180, 180, 180);
+    ellipse(baseX, baseY, 25);
+    pop();
+
+    // Check pubble popping.
+    let d = dist(tipX, tipY, bubble.x, bubble.y);
+    if (d < bubble.size / 2) {
+      bubble.x = random(width);
+      bubble.y = height;
+      score = score + 1;
+    }
+  }
+}
+
+function bubbleappear() {
+  bubble.vy = random(-bubble.speed, -bubble.maxspeed);
+  let change = random(0, 100);
+  if (change < 0.1) {
+    bubble.vx = random(-bubble.speed, bubble.speed);
+  }
+
+  // Move the bubble.
+  bubble.x = bubble.x + bubble.vx;
+  bubble.y = bubble.y + bubble.vy;
+
+  // If bubble leaves canvas it resets.
+  if (bubble.y < 0) {
+    bubble.x = random(width);
+    bubble.y = height;
+  }
+
+  // Displays the bubble.
+  push();
+  imageMode(CENTER);
+  image(bubbleimage, bubble.x, bubble.y, bubble.size, bubble.size);
+  pop();
 }
 
 // Global lighting Function.
@@ -233,7 +265,7 @@ function simulation() {
 
   if (score > gameData.highscore) {
     gameData.highscore = score;
-    localStorage.setItem("click-attack-game-data", JSON.stringify(gameData)); // converts game data to string.
+    localStorage.setItem("bubble-game", JSON.stringify(gameData)); // converts game data to string.
   }
 }
 
@@ -255,40 +287,6 @@ function ending() {
   fill(255, 255, 255);
   text("Press ESC to play again", width / 2, height / 1.1);
   pop();
-}
-
-function bubbleAppear() {
-  // Counter for arrays. Less than four moving bubble.
-  for (let i = 0; i < bubbles.length; i++) {
-    bubbles[i].update();
-  }
-
-  // Counter for arrays. Less than four moving bubble.
-  for (let i = 0; i < smallbubbles.length; i++) {
-    smallbubbles[i].update();
-  }
-
-  // Counter for arrays. Less than four moving bubble.
-  for (let i = 0; i < bigbubbles.length; i++) {
-    bigbubbles[i].update();
-  }
-
-  if (predictions.length > 0) {
-    let hand = predictions[0];
-    let index = hand.annotations.indexFinger;
-    let tip = index[3];
-    let base = index[0];
-    let tipX = tip[0];
-    let tipY = tip[1];
-    let baseX = base[0];
-    let baseY = base[1];
-
-    // Cursor Image.
-    push();
-    imageMode(CENTER);
-    image(cursorimage, baseX, baseY, 700, 700);
-    pop();
-  }
 }
 
 // Key press function.

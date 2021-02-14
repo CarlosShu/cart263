@@ -106,6 +106,6 @@ function highlightHand(hand) {
   push();
   fill(255, 255, 0);
   noStroke();
-  ellipse(indexX, indexY, 25);
+  ellipse(indexX, indexY, 50);
   pop();
 }
