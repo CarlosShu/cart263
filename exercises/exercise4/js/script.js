@@ -43,7 +43,7 @@ let gameData = {
 var timeleft = 10;
 
 // State.
-let state = "title";
+let state = "loading";
 
 function preload() {
   // Fonts.
@@ -67,6 +67,7 @@ function setup() {
   // Load the handpose model.
   handpose = ml5.handpose(video, { flipHorizontal: true }, function () {
     console.log("Model loaded.");
+    state = `title`;
   });
 
   // Listen for predictions.
@@ -97,7 +98,9 @@ function setup() {
 function draw() {
   background(bgimage);
 
-  if (state === "title") {
+  if (state === `loading`) {
+    loading();
+  } else if (state === "title") {
     title();
     pin();
     GlobalOverlay();
@@ -115,6 +118,27 @@ function draw() {
     pin();
     GlobalOverlay();
   }
+}
+
+/**
+Displays a simple loading screen with the loading model's name
+*/
+function loading() {
+  push();
+  textAlign(CENTER, CENTER);
+  textFont(lemonfont);
+  textSize(25);
+  fill(255, 255, 255);
+  text("Use your Index Finger to Play!", width / 2, height / 2);
+  pop();
+
+  push();
+  textAlign(CENTER, CENTER);
+  textFont(lemonfont);
+  textSize(15);
+  fill(255, 255, 255);
+  text("Loading Game...", width / 2, 450);
+  pop();
 }
 
 function pin() {

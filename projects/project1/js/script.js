@@ -1,10 +1,10 @@
 "use strict";
 
 /**************************************************
-Template p5 project
+Project 1: A Night at the Movies
 Carlos-Enrique Salazar Aguilar
 
-Here is a description of this template p5 project.
+A re-telling of the classic Twilight Zone Episode "It's a Good Life".
 **************************************************/
 // Font variable.
 let courierfont;
@@ -17,11 +17,22 @@ let titleimage;
 // Panels variables.
 let panel01image;
 
-// State Variable.
-let state = "titlemenu";
+// FPS variable.
+let fr = 10;
 
 // Number Variables.
 let counter = 0;
+
+// Fade variables.
+var fade;
+var fadeAmount = 20;
+
+// Fade text variables.
+var fadeText;
+var fadeTextAmount = 20;
+
+// State Variable.
+let state = "titlemenu";
 
 function preload() {
   // Font.
@@ -33,11 +44,26 @@ function preload() {
   titleimage = loadImage("assets/images/title.png");
 
   // Visual Panels.
-  panel01image = loadImage("assets/images/panel01.gif");
+  panel01image = loadImage("assets/images/panels/01.gif");
 }
 
 function setup() {
   createCanvas(900, 700);
+
+  // No cursor.
+  noCursor();
+
+  // No Smoothing.
+  noSmooth();
+
+  // FPS.
+  frameRate(fr);
+
+  // Fade.
+  fade = 0;
+
+  // Fade Text.
+  fadeText = 0;
 }
 
 function draw() {
@@ -83,6 +109,7 @@ function panel01() {
   // Panel 01.
   push();
   imageMode(CENTER);
+  tint(255, fade);
   image(panel01image, width / 2, height / 2, width, height);
   pop();
 
@@ -96,13 +123,19 @@ function panel01() {
   textAlign(CENTER, CENTER);
   textFont(courierfont);
   textSize(15);
-  fill(255, 255, 255);
+  fill(255, 255, 255, fadeText);
   text(
-    "You're travelling to another dimension beyond the boundaries of time and space...",
+    "You're travelling to a dimension beyond the boundaries of time and space...",
     width / 2,
     height / 2
   );
   pop();
+
+  if (fade < 0) fadeAmount = 1;
+  fade += fadeAmount;
+
+  if (fadeText < 0) fadeTextAmount = 1;
+  fadeText += fadeTextAmount;
 }
 
 // Keypress function.
