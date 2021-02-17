@@ -29,7 +29,7 @@ let panel11image;
 let panel12image;
 
 // FPS variable.
-let fr = 10;
+let fr = 15;
 
 // Number Variables.
 let counter = 0;
@@ -52,28 +52,30 @@ let state = "titlemenu";
 // Sentence starts at zero characters. Ettiene helped.
 let n = 0;
 
-// Slide number.
-let slide = 1;
-
 // Dialogues.
 
-// Slide 2.
-var slide2_01 = "Hello, my name is Rob Sterling.";
-var slide2_02 =
-  "In tonight's story, we'll be exploring a little Town called Peaksville.";
-var slide2_03 =
-  "You see, not too long ago, Peaksville was isolated from the rest of the world...";
+// Slide Blank.
+var slideblank_01 = "Sometime in the Year 1963...";
+var slideblank_02 = "Later that day...";
+var slideblank_03 = "A little while later...";
+var slideblank_04 = "Later that night...";
 
-// Slide 3.
-var slide3_01 =
-  "Its inhabitants were never sure what happened to everything outside of the town...";
-var slide3_02 =
-  "...they were however sure of one thing, the cause; a Monster that had arrived.";
+// Panel 01 array.
+let panel01 = [
+  "You're travelling to another dimension...",
+  "One not only of sight and sound but of mind...",
+  "Your next stop...",
+  "The Twilight Zone",
+];
 
-// Slide 4.
-var slide4_01 =
-  "With one fell swoop he took away all technology simply because it displeased him...";
-var slide4_02 = "and he reduced humanity back into the dark ages...";
+// Panel 02 array.
+let panel02 = [
+  "Hello, my name is Rob Sterling.",
+  "In tonight's story, we'll be exploring a little Town called Peaksville.",
+  "You see, not too long ago, Peaksville was isolated from the rest of the world...",
+];
+
+let currentSlide = 0;
 
 function preload() {
   // Font.
@@ -118,26 +120,18 @@ function draw() {
 
   if (state === "titlemenu") {
     titlemenu();
-  } else if (state === "panel_01") {
-    panel01();
-  } else if (state === "panel_02") {
-    panel02();
-  } else if (state === "panel_03") {
-    panel03();
-  } else if (state === "panel_04") {
-    panel04();
-  } else if (state === "panel_05") {
-    panel05();
-  } else if (state === "panel_06") {
-    panel06();
-  } else if (state === "panel_07") {
-    panel07();
-  } else if (state === "panel_08") {
-    panel08();
-  } else if (state === "panel_09") {
-    panel09();
-  } else if (state === "panel_10") {
-    panel10();
+  } else if (state === "shot01") {
+    shot01();
+  } else if (state === "shot02") {
+    shot02();
+  } else if (state === "shot03") {
+    shot03();
+  } else if (state === "shot04") {
+    shot04();
+  } else if (state === "shot05") {
+    shot05();
+  } else if (state === "shot06") {
+    shot06();
   }
 
   // Panel Timer.
@@ -177,8 +171,8 @@ function titlemenu() {
   counter++;
 }
 
-function panel01() {
-  // Panel 01.
+// Shot 01.
+function shot01() {
   push();
   imageMode(CENTER);
   tint(255, fade);
@@ -191,17 +185,17 @@ function panel01() {
   image(headerimage, width / 2, height / 2, width, height);
   pop();
 
-  push();
   textAlign(CENTER, CENTER);
   textFont(courierfont);
   textSize(18);
-  fill(255, 255, 255, fadeText);
-  text(
-    "You're travelling to a dimension beyond the boundaries of time and space...",
-    width / 2,
-    height / 2
-  );
-  pop();
+  fill(255, 255, 255);
+  text(panel01[currentSlide].substring(0, n), width / 2, 625);
+
+  if (n < panel01[currentSlide].length) {
+    n++;
+  } else {
+    n = panel01[currentSlide].length;
+  }
 
   if (fade < 0) fadeAmount = 1;
   fade += fadeAmount;
@@ -210,8 +204,8 @@ function panel01() {
   fadeText += fadeTextAmount;
 }
 
-function panel02() {
-  /// Panel 02.
+// Shot 02.
+function shot02() {
   push();
   imageMode(CENTER);
   tint(255, fade);
@@ -224,143 +218,23 @@ function panel02() {
   image(headerimage, width / 2, height / 2, width, height);
   pop();
 
-  if (fade < 0) fadeAmount = 1;
-  fade += fadeAmount;
+  textAlign(CENTER, CENTER);
+  textFont(courierfont);
+  textSize(18);
+  fill(255, 255, 255);
+  text(panel02[currentSlide].substring(0, n), width / 2, 625);
 
-  if (fadeText < 0) fadeTextAmount = 1;
-  fadeText += fadeTextAmount;
-
-  if (slide == 1) {
-    textAlign(CENTER, CENTER);
-    textFont(courierfont);
-    textSize(18);
-    fill(255, 255, 255);
-    text(slide2_01.substring(0, n), width / 2, 625);
-
-    if (n < slide2_01.length) {
-      n++;
-    } else {
-      n = slide2_01.length;
-    }
-  } else if (slide == 2) {
-    textAlign(CENTER, CENTER);
-    textFont(courierfont);
-    textSize(18);
-    fill(255, 255, 255);
-    text(slide2_02.substring(0, n), width / 2, 625);
-
-    if (n < slide2_02.length) {
-      n++;
-    } else {
-      n = slide2_02.length;
-    }
-  } else if (slide == 3) {
-    textAlign(CENTER, CENTER);
-    textFont(courierfont);
-    textSize(18);
-    fill(255, 255, 255);
-    text(slide2_03.substring(0, n), width / 2, 625);
-
-    if (n < slide2_03.length) {
-      n++;
-    } else {
-      n = slide2_03.length;
-    }
+  if (n < panel02[currentSlide].length) {
+    n++;
+  } else {
+    n = panel02[currentSlide].length;
   }
-}
-
-function panel03() {
-  /// Panel 03.
-  push();
-  imageMode(CENTER);
-  tint(255, fade);
-  image(panel03image, width / 2, height / 2, width, height);
-  pop();
-
-  // Header.
-  push();
-  imageMode(CENTER);
-  image(headerimage, width / 2, height / 2, width, height);
-  pop();
 
   if (fade < 0) fadeAmount = 1;
   fade += fadeAmount;
 
   if (fadeText < 0) fadeTextAmount = 1;
   fadeText += fadeTextAmount;
-
-  if (slide == 1) {
-    textAlign(CENTER, CENTER);
-    textFont(courierfont);
-    textSize(18);
-    fill(255, 255, 255);
-    text(slide3_01.substring(0, n), width / 2, 625);
-
-    if (n < slide3_01.length) {
-      n++;
-    } else {
-      n = slide3_01.length;
-    }
-  } else if (slide == 2) {
-    textAlign(CENTER, CENTER);
-    textFont(courierfont);
-    textSize(18);
-    fill(255, 255, 255);
-    text(slide3_02.substring(0, n), width / 2, 625);
-
-    if (n < slide3_02.length) {
-      n++;
-    } else {
-      n = slide3_02.length;
-    }
-  }
-}
-
-function panel04() {
-  /// Panel 03.
-  push();
-  imageMode(CENTER);
-  tint(255, fade);
-  image(panel04image, width / 2, height / 2, width, height);
-  pop();
-
-  // Header.
-  push();
-  imageMode(CENTER);
-  image(headerimage, width / 2, height / 2, width, height);
-  pop();
-
-  if (fade < 0) fadeAmount = 1;
-  fade += fadeAmount;
-
-  if (fadeText < 0) fadeTextAmount = 1;
-  fadeText += fadeTextAmount;
-
-  if (slide == 1) {
-    textAlign(CENTER, CENTER);
-    textFont(courierfont);
-    textSize(18);
-    fill(255, 255, 255);
-    text(slide4_01.substring(0, n), width / 2, 625);
-
-    if (n < slide4_01.length) {
-      n++;
-    } else {
-      n = slide4_01.length;
-    }
-  } else if (slide == 2) {
-    textAlign(CENTER, CENTER);
-    textFont(courierfont);
-    textSize(18);
-    fill(255, 255, 255);
-    text(slide4_02.substring(0, n), width / 2, 625);
-
-    if (n < slide4_02.length) {
-      n++;
-    } else {
-      n = slide4_02.length;
-    }
-  }
 }
 
 // Keypress function.
@@ -368,101 +242,47 @@ function keyPressed() {
   // Switch from titlemenu to game.
   if (state === "titlemenu") {
     if (keyCode == 13) {
-      state = "panel_01";
+      state = "shot01";
+      currentSlide = 0;
       fade = 0;
       fadeText = 0;
       paneltimeleft = 3;
     }
   }
-  // Panel 01.
-  if (state === "panel_01") {
-    if (paneltimeleft < 0) {
-      if (keyCode == 32) {
-        state = "panel_02";
-        fade = 0;
-        fadeText = 0;
-        paneltimeleft = 3;
+
+  // Space Bar.
+  if (keyCode == 32) {
+    // Shot 01.
+    if (state === "shot01") {
+      // Switches to next slide.
+      if (n == panel01[currentSlide].length) {
+        // Current Sldie;
+        currentSlide = currentSlide + 1;
         n = 0;
       }
-    }
-  }
-  // Panel 02.
-  if (state === "panel_02") {
-    // Switches to next slide.
-    if (slide == 1) {
-      if (n > 10) {
-        if (keyCode == 32) {
-          slide = 2;
-          n = 0;
-        }
+      // If it's the last slide it'll switch over to the next panel.
+      if (currentSlide == panel01.length) {
+        state = "shot02";
+        currentSlide = 0;
+        fade = 0;
+        fadeText = 0;
       }
     }
-    // Switches to next slide.
-    if (slide == 2) {
-      if (n > 10) {
-        if (keyCode == 32) {
-          slide = 3;
-          n = 0;
-        }
+
+    // Shot 02.
+    if (state === "shot02") {
+      // Switches to next slide.
+      if (n == panel02[currentSlide].length) {
+        // Current Sldie;
+        currentSlide = currentSlide + 1;
+        n = 0;
       }
-    }
-    // Switches last slide to next Panel.
-    if (slide == 3) {
-      if (n > 10) {
-        if (keyCode == 32) {
-          state = "panel_03";
-          slide = 1;
-          fade = 0;
-          fadeText = 0;
-          paneltimeleft = 3;
-          n = 0;
-        }
-      }
-    }
-  }
-  // Panel 03.
-  if (state === "panel_03") {
-    // Switches to next slide.
-    if (slide == 1) {
-      if (n > 10) {
-        if (keyCode == 32) {
-          slide = 2;
-          n = 0;
-        }
-      }
-    }
-    // Switches last slide to next Panel.
-    if (slide == 2) {
-      if (n > 10) {
-        if (keyCode == 32) {
-          state = "panel_04";
-          slide = 1;
-          fade = 0;
-          fadeText = 0;
-          paneltimeleft = 3;
-          n = 0;
-        }
-      }
-    }
-  }
-  // Panel 04.
-  if (state === "panel_04") {
-    // Switches to next slide.
-    if (slide == 1) {
-      if (n > 10) {
-        if (keyCode == 32) {
-          slide = 2;
-          n = 0;
-        }
-      }
-    }
-    // Switches to next slide.
-    if (slide == 2) {
-      if (n > 10) {
-        if (keyCode == 32) {
-          slide = 3;
-          n = 0;
-        }
+      // If it's the last slide it'll switch over to the next panel.
+      if (currentSlide == panel02.length) {
+        state = "shot03";
+        currentSlide = 0;
+        fade = 0;
+        fadeText = 0;
       }
     }
   }
