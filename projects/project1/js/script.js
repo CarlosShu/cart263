@@ -603,7 +603,7 @@ function keyPressed() {
     if (keyCode == 32) {
       state = "movie";
       currentSlide = 0;
-      currentPanel = 41;
+      currentPanel = 1;
       fade = 0;
       // Sound effect.
       messagesound.play();
