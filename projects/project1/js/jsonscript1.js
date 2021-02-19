@@ -436,121 +436,121 @@ function keyPressed() {
     if (state === "movie") {
       // Sound player for specific slides.
       if (currentPanel == 7 && currentSlide == 4) {
-        if (n == panelsData.panels[7][4].length) {
+        if (n == panel[7][4].length) {
           // Plays sound.
           settingsound.play();
         }
       }
       if (currentPanel == 10 && currentSlide == 1) {
-        if (n == panelsData.panels[10][1].length) {
+        if (n == panel[10][1].length) {
           // Plays sound.
           magic1sound.play();
         }
       }
       if (currentPanel == 13 && currentSlide == 2) {
-        if (n == panelsData.panels[13][2].length) {
+        if (n == panel[13][2].length) {
           // Plays sound.
           dogsound.play();
         }
       }
       if (currentPanel == 13 && currentSlide == 3) {
-        if (n == panelsData.panels[13][3].length) {
+        if (n == panel[13][3].length) {
           // Plays sound.
           dogsound.play();
         }
       }
       if (currentPanel == 14 && currentSlide == 0) {
-        if (n == panelsData.panels[14][0].length) {
+        if (n == panel[14][0].length) {
           // Plays sound.
           dogsound.play();
         }
       }
       if (currentPanel == 14 && currentSlide == 1) {
-        if (n == panelsData.panels[14][1].length) {
+        if (n == panel[14][1].length) {
           // Plays sound.
           magic1sound.play();
         }
       }
       if (currentPanel == 14 && currentSlide == 5) {
-        if (n == panelsData.panels[14][5].length) {
+        if (n == panel[14][5].length) {
           // Plays sound.
           settingsound.play();
         }
       }
       if (currentPanel == 16 && currentSlide == 1) {
-        if (n == panelsData.panels[16][1].length) {
+        if (n == panel[16][1].length) {
           // Plays sound.
           unwrapsound.play();
         }
       }
       if (currentPanel == 20 && currentSlide == 0) {
-        if (n == panelsData.panels[20][0].length) {
+        if (n == panel[20][0].length) {
           // Plays sound.
           chugsound.play();
         }
       }
       if (currentPanel == 21 && currentSlide == 0) {
-        if (n == panelsData.panels[21][0].length) {
+        if (n == panel[21][0].length) {
           // Plays sound.
           swoopsound.play();
         }
       }
       if (currentPanel == 22 && currentSlide == 3) {
-        if (n == panelsData.panels[22][3].length) {
+        if (n == panel[22][3].length) {
           // Plays sound.
           swoopsound.play();
         }
       }
       if (currentPanel == 23 && currentSlide == 1) {
-        if (n == panelsData.panels[23][1].length) {
+        if (n == panel[23][1].length) {
           // Plays sound.
           glasssound.play();
         }
       }
       if (currentPanel == 25 && currentSlide == 2) {
-        if (n == panelsData.panels[25][2].length) {
+        if (n == panel[25][2].length) {
           // Plays sound.
           bang1sound.play();
         }
       }
       if (currentPanel == 26 && currentSlide == 1) {
-        if (n == panelsData.panels[26][1].length) {
+        if (n == panel[26][1].length) {
           // Plays sound.
           bang2sound.play();
         }
       }
       if (currentPanel == 27 && currentSlide == 3) {
-        if (n == panelsData.panels[27][3].length) {
+        if (n == panel[27][3].length) {
           // Plays sound.
           bang3sound.play();
         }
       }
       if (currentPanel == 28 && currentSlide == 1) {
-        if (n == panelsData.panels[28][1].length) {
+        if (n == panel[28][1].length) {
           // Plays sound.
           bang1sound.play();
         }
       }
       if (currentPanel == 29 && currentSlide == 1) {
-        if (n == panelsData.panels[29][1].length) {
+        if (n == panel[29][1].length) {
           // Plays sound.
           magic2sound.play();
         }
       }
       if (currentPanel == 36 && currentSlide == 1) {
-        if (n == panelsData.panels[36][1].length) {
+        if (n == panel[36][1].length) {
           // Plays sound.
           settingsound.play();
         }
       }
       if (currentPanel == 38 && currentSlide == 1) {
-        if (n == panelsData.panels[38][1].length) {
+        if (n == panel[38][1].length) {
           // Plays sound.
           bang1sound.play();
         }
       }
       if (currentPanel == 39 && currentSlide == 3) {
-        if (n == panelsData.panels[39][3].length) {
+        if (n == panel[39][3].length) {
           // Plays sound.
           swoopsound.play();
         }
@@ -558,7 +558,7 @@ function keyPressed() {
 
       // Final panel.
       if (currentPanel == 41 && currentSlide == 3) {
-        if (n == panelsData.panels[41][3].length) {
+        if (n == panel[41][3].length) {
           state = "end";
         }
       }
@@ -571,10 +571,10 @@ function keyPressed() {
           n = 0;
 
           // Slide effects.
-          if (n == panelsData.panels[10][1].length) {
+          if (n == panel[10][1].length) {
             paneltimeleft = 3;
           }
-          if (n == panelsData.panels[14][1].length) {
+          if (n == panel[14][1].length) {
             paneltimeleft = 3;
           }
         }
@@ -584,7 +584,7 @@ function keyPressed() {
       if (currentSlide == panelsData.panels[currentPanel].length) {
         if (paneltimeleft <= 0) {
           // Panel effects.
-          if (currentSlide == panelsData.panels[29].length) {
+          if (currentSlide == panel[29].length) {
             paneltimeleft = 3;
           }
 

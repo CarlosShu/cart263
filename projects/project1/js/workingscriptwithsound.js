@@ -6,9 +6,6 @@ Carlos-Enrique Salazar Aguilar
 
 A re-telling of the classic Twilight Zone Episode "It's a Good Life".
 **************************************************/
-// JSON variables.
-let panelsData;
-
 // Sounds variables.
 let screamsound;
 let magic1sound;
@@ -65,9 +62,6 @@ let currentSlide = 0;
 let currentPanel = 1;
 
 function preload() {
-  // JSON.
-  panelsData = loadJSON("assets/data/panels.json"); // Loads JSON.
-
   // Sounds.
   screamsound = loadSound("assets/sounds/sounds/scream.mp3");
   magic1sound = loadSound("assets/sounds/sounds/magic1.wav");
@@ -152,6 +146,195 @@ function setup() {
 
   // Fade.
   fade = 0;
+
+  // Panel arrays.
+  panel[1] = [
+    "You're travelling to another dimension...",
+    "One not only of sight and sound but of mind...",
+    "Your next stop...",
+    "The Twilight Zone.",
+  ];
+
+  panel[2] = [
+    ".....",
+    "Hello, my name is Rob Sterling.",
+    "In tonight's story, we'll be exploring a little Town by the name of Peaksville.",
+    "You see, not too long ago, Peaksville was isolated from the rest of the world...",
+  ];
+
+  panel[3] = [
+    "Its inhabitants were never sure of what happened to everyone else...",
+    "...they were however sure of one thing, the cause.",
+    "A Monster had arrived in their town.",
+  ];
+
+  panel[4] = [
+    "With one fell swoop he took away all technology simply because it displeased him...",
+    "...and he reduced humanity back into the dark ages...",
+  ];
+
+  panel[5] = [
+    "Now, I'd like to introduce you to some of the residents in Peaksville.",
+    "These are Mr. and Ms. Fremont, they house the Monster.",
+  ];
+
+  panel[6] = [
+    "The Monster can read minds, and wish away anyone whom he doesn't like.",
+    "To avoid this, the residents must always cloud their heads with happy thoughts.",
+  ];
+
+  panel[7] = [
+    "Oh, and I guess I forgot...",
+    "This is the Monster.",
+    "A Six year old named Anthony Fremont.",
+    "He looks innocent, but if he looks your way you better think happy thoughts...",
+    "For the mind behind him is absolutely merciless and in charge.",
+  ];
+
+  panel[8] = [`Peaksville Ohio, 1973`];
+
+  panel[9] = [
+    `"Hello Anthony, it sure is a good day today isn't it?"`,
+    `"What'd you got there?"`,
+  ];
+
+  panel[10] = [
+    `"I made a three-headed Gopher, but I'm tired of playing with him now."`,
+    `"Gopher, you be dead!"`,
+    `"......!!"`,
+    `"........"`,
+  ];
+
+  panel[11] = [
+    `"My- it's...."`,
+    `"It's a good thing you did that!"`,
+    `"You're a good boy Anthony!"`,
+    `"We all love you!"`,
+  ];
+
+  panel[12] = [
+    `"Woaw- I didn't see you there son!"`,
+    `"Can I get you anything?"`,
+    `"Dad, how come no one ever wants to play with me?"`,
+  ];
+
+  panel[13] = [
+    `"Well son, don't you remember the last time you played with children?"`,
+    `"You wished them all away, their parents were really upset!"`,
+    `"....but they deserved it! You did a good thing that day..."`,
+    `*Bark!* *Bark!*`,
+  ];
+
+  panel[14] = [
+    `"That Dog, that stupid dog!"`,
+    `"He doesn't like me! He's a bad a dog!"`,
+    `"......!!"`,
+    `"What did you do son?"`,
+    `"I sent him away."`,
+    `"...It's- it's a good thing you did that... you're a good boy Anthony..."`,
+  ];
+
+  panel[15] = ["Later that same day."];
+
+  panel[16] = [
+    `"As you all know, today is Dan's birthday!"`,
+    `"So let's get on with opening some presents!"`,
+  ];
+
+  panel[17] = [
+    `*Unwrapping presents*`,
+    `"Is this Perry Como? My- I haven't heard Perry Como in years!"`,
+    `"Happy Birthday Honey."`,
+    `"Do you think we can play it?"`,
+  ];
+
+  panel[18] = [
+    `"I don't think we should Dan, you know Anthony doesn't like singing."`,
+    `"You're right, it's a good thing that I can't play it! Real good thing!"`,
+  ];
+
+  panel[19] = [`A litte while later.`];
+
+  panel[20] = [`*Music is playing.*`];
+
+  panel[21] = [`*Gulp* *Gulp* *Gulp*`];
+
+  panel[22] = [
+    `"You know everyone, this is really good brandy..."`,
+    `"In fact, it's the last bottle that exists..."`,
+    `"Once it's gone..."`,
+    `"......"`,
+  ];
+
+  panel[23] = [
+    `"It's my birthday today...."`,
+    `"It's my birthday today and I can't even listen to good music!!"`,
+  ];
+
+  panel[24] = [`"!!!!!"`];
+
+  panel[25] = [
+    `"You....!!!"`,
+    `"This is all your fault...!!"`,
+    `"Because you gave birth to that monster!!"`,
+  ];
+
+  panel[26] = [`"Dan stop please!!"`, `"Just stop talking!!"`];
+
+  panel[27] = [
+    `"And you... you little murderer...!!"`,
+    `"You watch yourself, because maybe... maybe someone with guts...!!"`,
+    `"...will sneak up behind you and smash you upon your skull...!!"`,
+    `"...and put an end to this once and for all!!"`,
+  ];
+
+  panel[28] = [`"YOU'RE A BAD MAN!!"`, `"YOU'RE A VERY BAD MAN!!"`];
+
+  panel[29] = [
+    `"WILL SOMEBODY GRAB A LAMP OR A BOTTLE OR SOMETHING!?"`,
+    `"PUT AN END TO THIS NIGHTMARE WHILE HE'S FOCUSED ON ME!!"`,
+  ];
+
+  panel[30] = [`".....!!"`];
+
+  panel[31] = [`"!!!!!"`];
+
+  panel[32] = [`"*SCREAMING*"`];
+
+  panel[33] = [`"....."`];
+
+  panel[34] = [`"Send it away son!"`, `"Please son, please send it away!"`];
+
+  panel[35] = [`"....."`];
+
+  panel[36] = [
+    `"Let this be a warning to everyone."`,
+    `"You better not think bad things about me, or I'll do the same to you!"`,
+  ];
+
+  panel[37] = [`Later that night.`];
+
+  panel[38] = [`"What's going on?"`, `"Is it- is it snowing!?"`];
+
+  panel[39] = [
+    `"Son, are you making it snow!?"`,
+    `"Yes, I am."`,
+    `"But that'll kill all the crops...!!"`,
+    `"That'll kill all the crops and-!"`,
+  ];
+
+  panel[40] = [
+    `"I mean... it's a good thing that you're making it snow!"`,
+    `"It's a real good thing, and tomorrow..."`,
+    `"Tomorrow's gonna be a real good day!"`,
+  ];
+
+  panel[41] = [
+    `No comment here, no comment at all.`,
+    `We only wanted to introduce you to one of our very special citizens.`,
+    `If by any chance you ever run across Anthony Fremont...`,
+    `You will know that you have entered The Twilight Zone.`,
+  ];
 }
 
 function draw() {
@@ -240,7 +423,7 @@ function movie() {
     textSize(18);
     fill(255, 255, 255);
     text(
-      panelsData.panels[currentPanel][currentSlide].substring(0, n),
+      panel[currentPanel][currentSlide].substring(0, n),
       width / 2,
       height / 2
     );
@@ -250,18 +433,14 @@ function movie() {
     textFont(courierfont);
     textSize(18);
     fill(255, 255, 255);
-    text(
-      panelsData.panels[currentPanel][currentSlide].substring(0, n),
-      width / 2,
-      625
-    );
+    text(panel[currentPanel][currentSlide].substring(0, n), width / 2, 625);
   }
 
   // Typewriter code.
-  if (n < panelsData.panels[currentPanel][currentSlide].length) {
+  if (n < panel[currentPanel][currentSlide].length) {
     n++;
   } else {
-    n = panelsData.panels[currentPanel][currentSlide].length;
+    n = panel[currentPanel][currentSlide].length;
   }
 
   // Image fade effect.
@@ -436,121 +615,121 @@ function keyPressed() {
     if (state === "movie") {
       // Sound player for specific slides.
       if (currentPanel == 7 && currentSlide == 4) {
-        if (n == panelsData.panels[7][4].length) {
+        if (n == panel[7][4].length) {
           // Plays sound.
           settingsound.play();
         }
       }
       if (currentPanel == 10 && currentSlide == 1) {
-        if (n == panelsData.panels[10][1].length) {
+        if (n == panel[10][1].length) {
           // Plays sound.
           magic1sound.play();
         }
       }
       if (currentPanel == 13 && currentSlide == 2) {
-        if (n == panelsData.panels[13][2].length) {
+        if (n == panel[13][2].length) {
           // Plays sound.
           dogsound.play();
         }
       }
       if (currentPanel == 13 && currentSlide == 3) {
-        if (n == panelsData.panels[13][3].length) {
+        if (n == panel[13][3].length) {
           // Plays sound.
           dogsound.play();
         }
       }
       if (currentPanel == 14 && currentSlide == 0) {
-        if (n == panelsData.panels[14][0].length) {
+        if (n == panel[14][0].length) {
           // Plays sound.
           dogsound.play();
         }
       }
       if (currentPanel == 14 && currentSlide == 1) {
-        if (n == panelsData.panels[14][1].length) {
+        if (n == panel[14][1].length) {
           // Plays sound.
           magic1sound.play();
         }
       }
       if (currentPanel == 14 && currentSlide == 5) {
-        if (n == panelsData.panels[14][5].length) {
+        if (n == panel[14][5].length) {
           // Plays sound.
           settingsound.play();
         }
       }
       if (currentPanel == 16 && currentSlide == 1) {
-        if (n == panelsData.panels[16][1].length) {
+        if (n == panel[16][1].length) {
           // Plays sound.
           unwrapsound.play();
         }
       }
       if (currentPanel == 20 && currentSlide == 0) {
-        if (n == panelsData.panels[20][0].length) {
+        if (n == panel[20][0].length) {
           // Plays sound.
           chugsound.play();
         }
       }
       if (currentPanel == 21 && currentSlide == 0) {
-        if (n == panelsData.panels[21][0].length) {
+        if (n == panel[21][0].length) {
           // Plays sound.
           swoopsound.play();
         }
       }
       if (currentPanel == 22 && currentSlide == 3) {
-        if (n == panelsData.panels[22][3].length) {
+        if (n == panel[22][3].length) {
           // Plays sound.
           swoopsound.play();
         }
       }
       if (currentPanel == 23 && currentSlide == 1) {
-        if (n == panelsData.panels[23][1].length) {
+        if (n == panel[23][1].length) {
           // Plays sound.
           glasssound.play();
         }
       }
       if (currentPanel == 25 && currentSlide == 2) {
-        if (n == panelsData.panels[25][2].length) {
+        if (n == panel[25][2].length) {
           // Plays sound.
           bang1sound.play();
         }
       }
       if (currentPanel == 26 && currentSlide == 1) {
-        if (n == panelsData.panels[26][1].length) {
+        if (n == panel[26][1].length) {
           // Plays sound.
           bang2sound.play();
         }
       }
       if (currentPanel == 27 && currentSlide == 3) {
-        if (n == panelsData.panels[27][3].length) {
+        if (n == panel[27][3].length) {
           // Plays sound.
           bang3sound.play();
         }
       }
       if (currentPanel == 28 && currentSlide == 1) {
-        if (n == panelsData.panels[28][1].length) {
+        if (n == panel[28][1].length) {
           // Plays sound.
           bang1sound.play();
         }
       }
       if (currentPanel == 29 && currentSlide == 1) {
-        if (n == panelsData.panels[29][1].length) {
+        if (n == panel[29][1].length) {
           // Plays sound.
           magic2sound.play();
         }
       }
       if (currentPanel == 36 && currentSlide == 1) {
-        if (n == panelsData.panels[36][1].length) {
+        if (n == panel[36][1].length) {
           // Plays sound.
           settingsound.play();
         }
       }
       if (currentPanel == 38 && currentSlide == 1) {
-        if (n == panelsData.panels[38][1].length) {
+        if (n == panel[38][1].length) {
           // Plays sound.
           bang1sound.play();
         }
       }
       if (currentPanel == 39 && currentSlide == 3) {
-        if (n == panelsData.panels[39][3].length) {
+        if (n == panel[39][3].length) {
           // Plays sound.
           swoopsound.play();
         }
@@ -558,33 +737,33 @@ function keyPressed() {
 
       // Final panel.
       if (currentPanel == 41 && currentSlide == 3) {
-        if (n == panelsData.panels[41][3].length) {
+        if (n == panel[41][3].length) {
           state = "end";
         }
       }
 
       // Switches to next slide.
-      if (n == panelsData.panels[currentPanel][currentSlide].length) {
+      if (n == panel[currentPanel][currentSlide].length) {
         if (paneltimeleft <= 0) {
           // Current Sldie;
           currentSlide = currentSlide + 1;
           n = 0;
 
           // Slide effects.
-          if (n == panelsData.panels[10][1].length) {
+          if (n == panel[10][1].length) {
             paneltimeleft = 3;
           }
-          if (n == panelsData.panels[14][1].length) {
+          if (n == panel[14][1].length) {
             paneltimeleft = 3;
           }
         }
       }
 
       // If it's the last slide it'll switch over to the next panel.
-      if (currentSlide == panelsData.panels[currentPanel].length) {
+      if (currentSlide == panel[currentPanel].length) {
         if (paneltimeleft <= 0) {
           // Panel effects.
-          if (currentSlide == panelsData.panels[29].length) {
+          if (currentSlide == panel[29].length) {
             paneltimeleft = 3;
           }
 
