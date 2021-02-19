@@ -483,6 +483,12 @@ function keyPressed() {
           unwrapsound.play();
         }
       }
+      if (currentPanel == 18 && currentSlide == 1) {
+        if (n == panelsData.panels[18][1].length) {
+          // Plays sound.
+          settingsound.play();
+        }
+      }
       if (currentPanel == 20 && currentSlide == 0) {
         if (n == panelsData.panels[20][0].length) {
           // Plays sound.
@@ -557,7 +563,7 @@ function keyPressed() {
       }
 
       // Final panel.
-      if (currentPanel == 41 && currentSlide == 3) {
+      if (currentPanel == 41 && currentSlide == 4) {
         if (n == panelsData.panels[41][3].length) {
           state = "end";
         }
