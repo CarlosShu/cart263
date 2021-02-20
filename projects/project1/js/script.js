@@ -25,6 +25,16 @@ let bang2sound;
 let bang3sound;
 let glasssound;
 
+// Music variables.
+let intromusic;
+let explanationmusic;
+let outdoormusic;
+let horrormusic;
+let partymusic;
+let pianomusic;
+let suspensemusic;
+let endmusic;
+
 // Font variable.
 let courierfont;
 
@@ -83,6 +93,16 @@ function preload() {
   bang2sound = loadSound("assets/sounds/sounds/bang2.wav");
   bang3sound = loadSound("assets/sounds/sounds/bang3.wav");
   glasssound = loadSound("assets/sounds/sounds/glass.mp3");
+
+  // Music.
+  intromusic = loadSound("assets/sounds/music/intro.wav");
+  explanationmusic = loadSound("assets/sounds/music/explanation.wav");
+  outdoormusic = loadSound("assets/sounds/music/outdoor.wav");
+  horrormusic = loadSound("assets/sounds/music/horror.wav");
+  partymusic = loadSound("assets/sounds/music/party.wav");
+  pianomusic = loadSound("assets/sounds/music/piano.wav");
+  suspensemusic = loadSound("assets/sounds/music/suspense.wav");
+  endmusic = loadSound("assets/sounds/music/end.wav");
 
   // Font.
   courierfont = loadFont("assets/courier.otf"); // Practically the Nintendo Logo Font.
@@ -333,6 +353,8 @@ function movie() {
       currentSlide = 0;
       // Plays sound.
       bang1sound.play();
+      // Music.
+      suspensemusic.play();
     }
   }
 
@@ -428,6 +450,9 @@ function keyPressed() {
       fade = 0;
       // Sound effect.
       messagesound.play();
+
+      // Music.
+      intromusic.play();
     }
   }
 
@@ -435,6 +460,12 @@ function keyPressed() {
   if (keyCode == 32) {
     if (state === "movie") {
       // Sound player for specific slides.
+      if (currentPanel == 1 && currentSlide == 3) {
+        if (n == panelsData.panels[1][3].length) {
+          // Music.
+          intromusic.stop();
+        }
+      }
       if (currentPanel == 7 && currentSlide == 4) {
         if (n == panelsData.panels[7][4].length) {
           // Plays sound.
@@ -541,6 +572,8 @@ function keyPressed() {
         if (n == panelsData.panels[29][1].length) {
           // Plays sound.
           magic2sound.play();
+          // Music.
+          suspensemusic.stop();
         }
       }
       if (currentPanel == 36 && currentSlide == 1) {
