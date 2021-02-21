@@ -48,13 +48,6 @@ let effectimage;
 // FPS variable.
 let fr = 15;
 
-// Fade variables.
-var fade;
-var fadeAmount = 15;
-
-// State Variable.
-let state = "titlemenu";
-
 // Number Variables.
 let counter = 0;
 
@@ -62,22 +55,25 @@ let counter = 0;
 let paneltimecounter = 0;
 let paneltimeleft = 0;
 
+// Fade variables.
+var fade;
+var fadeAmount = 15;
+
+// State Variable.
+let state = "titlemenu";
+
 // Sentence starts at zero characters. Ettiene helped.
 let n = 0;
 
 // Array of panel images variables.
 let panelimage = [];
 
-// Panel number, loads from JSON.
 let panel = [];
 
-// Curent Panel number variable.
-let currentPanel = 1;
-
-// Current Slide number variable.
 let currentSlide = 0;
 
-// Preload function.
+let currentPanel = 1;
+
 function preload() {
   // JSON.
   panelsData = loadJSON("assets/data/panels.json"); // Loads JSON.
@@ -181,7 +177,6 @@ function setup() {
 function draw() {
   background(backgroundimage);
 
-  // States.
   if (state === "titlemenu") {
     titlemenu();
   } else if (state === "instructions") {
@@ -193,7 +188,6 @@ function draw() {
   }
 }
 
-// Title Menu function.
 function titlemenu() {
   // Title.
   push();
@@ -207,7 +201,6 @@ function titlemenu() {
   image(headerimage, width / 2, height / 2, width, height);
   pop();
 
-  // Press Enter.
   if (counter >= 10) {
     push();
     textAlign(CENTER, CENTER);
@@ -224,7 +217,6 @@ function titlemenu() {
   counter++;
 }
 
-// Instructions function.
 function instructions() {
   // Header.
   push();
@@ -232,7 +224,6 @@ function instructions() {
   image(headerimage, width / 2, height / 2, width, height);
   pop();
 
-  // Instructions.
   push();
   textAlign(CENTER, CENTER);
   textFont(courierfont);
@@ -257,7 +248,6 @@ function movie() {
   image(headerimage, width / 2, height / 2, width, height);
   pop();
 
-  // Text gets placed in the center.
   if (
     currentPanel == 8 ||
     currentPanel == 15 ||
@@ -427,7 +417,6 @@ function movie() {
   paneltimecounter++;
 }
 
-// End Menu function.
 function endmenu() {
   // End.
   push();
