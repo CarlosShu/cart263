@@ -366,6 +366,8 @@ function movie() {
       paneltimeleft = 2;
       // Plays sound.
       magic2sound.play();
+      // Music.
+      horrormusic.play();
     }
   }
 
@@ -464,12 +466,21 @@ function keyPressed() {
         if (n == panelsData.panels[1][3].length) {
           // Music.
           intromusic.stop();
+          explanationmusic.play();
         }
       }
       if (currentPanel == 7 && currentSlide == 4) {
         if (n == panelsData.panels[7][4].length) {
           // Plays sound.
           settingsound.play();
+          // Music.
+          explanationmusic.stop();
+        }
+      }
+      if (currentPanel == 8 && currentSlide == 0) {
+        if (n == panelsData.panels[8][0].length) {
+          // Music.
+          outdoormusic.play();
         }
       }
       if (currentPanel == 10 && currentSlide == 1) {
@@ -478,36 +489,51 @@ function keyPressed() {
           magic1sound.play();
         }
       }
+
       if (currentPanel == 13 && currentSlide == 2) {
         if (n == panelsData.panels[13][2].length) {
           // Plays sound.
           dogsound.play();
         }
       }
+
       if (currentPanel == 13 && currentSlide == 3) {
         if (n == panelsData.panels[13][3].length) {
           // Plays sound.
           dogsound.play();
         }
       }
+
       if (currentPanel == 14 && currentSlide == 0) {
         if (n == panelsData.panels[14][0].length) {
           // Plays sound.
           dogsound.play();
         }
       }
+
       if (currentPanel == 14 && currentSlide == 1) {
         if (n == panelsData.panels[14][1].length) {
           // Plays sound.
           magic1sound.play();
         }
       }
+
       if (currentPanel == 14 && currentSlide == 5) {
         if (n == panelsData.panels[14][5].length) {
           // Plays sound.
           settingsound.play();
+          // Music.
+          outdoormusic.stop();
         }
       }
+
+      if (currentPanel == 15 && currentSlide == 0) {
+        if (n == panelsData.panels[15][0].length) {
+          // Music.
+          partymusic.play();
+        }
+      }
+
       if (currentPanel == 16 && currentSlide == 1) {
         if (n == panelsData.panels[16][1].length) {
           // Plays sound.
@@ -518,6 +544,14 @@ function keyPressed() {
         if (n == panelsData.panels[18][1].length) {
           // Plays sound.
           settingsound.play();
+          // Music.
+          partymusic.stop();
+        }
+      }
+      if (currentPanel == 19 && currentSlide == 0) {
+        if (n == panelsData.panels[19][0].length) {
+          // Music.
+          pianomusic.play();
         }
       }
       if (currentPanel == 20 && currentSlide == 0) {
@@ -536,6 +570,8 @@ function keyPressed() {
         if (n == panelsData.panels[22][3].length) {
           // Plays sound.
           swoopsound.play();
+          // Music.
+          pianomusic.stop();
         }
       }
       if (currentPanel == 23 && currentSlide == 1) {
@@ -580,6 +616,14 @@ function keyPressed() {
         if (n == panelsData.panels[36][1].length) {
           // Plays sound.
           settingsound.play();
+          // Music.
+          horrormusic.stop();
+        }
+      }
+      if (currentPanel == 37 && currentSlide == 0) {
+        if (n == panelsData.panels[37][0].length) {
+          // Music.
+          endmusic.play();
         }
       }
       if (currentPanel == 38 && currentSlide == 1) {
@@ -597,7 +641,7 @@ function keyPressed() {
 
       // Final panel.
       if (currentPanel == 41 && currentSlide == 4) {
-        if (n == panelsData.panels[41][3].length) {
+        if (n == panelsData.panels[41][4].length) {
           state = "end";
         }
       }
