@@ -5,6 +5,12 @@ Project 1: A Night at the Movies
 Carlos-Enrique Salazar Aguilar
 
 A re-telling of the classic Twilight Zone Episode "It's a Good Life".
+
+Credit:
+Typewriter Code - https://gist.github.com/mjvo/2dce29799eb75b7ee1a571380f12ef1b
+Fade Effects and Others - https://editor.p5js.org/remarkability/sketches/rtM08miUD
+
+As well as to people who helped me in the class' discord.
 **************************************************/
 // JSON variables.
 let panelsData;
