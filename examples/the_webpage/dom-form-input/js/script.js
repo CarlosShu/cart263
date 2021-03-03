@@ -1,8 +1,10 @@
-let colorPicker = document.getElementById(`color-picker`);
+let textInput = document.getElementById(`example-text-input`);
 
-// Set the background color of the document when the color
-// picker is used
-colorPicker.addEventListener(`input`, function (event) {
-  let color = event.target.value;
-  document.body.style[`background-color`] = color;
+textInput.addEventListener(`keydown`, function (event) {
+  // Check if they hit return
+  if (event.keyCode === 13) {
+    // Show the content of the text input
+    let input = event.target.value;
+    alert(input);
+  }
 });
