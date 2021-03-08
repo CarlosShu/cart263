@@ -1,16 +1,22 @@
-#secret-document {
-  font-family: monospace;
-  font-size: 1.5rem;
-  width: 50vw;
-  margin: auto;
+html,
+body {
+  height: 100%;
 }
 
-.redacted {
-  background-color: black;
-  user-select: none;
+body {
+  margin: 0;
+  display: grid;
+
+  /* This centers our sketch horizontally. */
+  justify-content: center;
+
+  /* This centers our sketch vertically. */
+  align-items: center;
 }
 
-.revealed {
-  color: red;
-  text-decoration: underline;
+#game {
+  font-family: FOT-RodinHimawari Pro UB;
+  font-size: 5rem;
+  text-align: center;
+  color: #7f8c8d;
 }
