@@ -1,0 +1,37 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: grid;
+
+  /* This centers our sketch horizontally. */
+  justify-content: center;
+
+  /* This centers our sketch vertically. */
+  align-items: center;
+}
+
+img {
+  width: 10rem;
+  height: 5.5rem;
+}
+
+#jigsaw {
+  display: grid;
+  grid-template-columns: 10rem 10rem 10rem 10rem;
+  grid-template-rows: 5.5rem 5.5rem 5.5rem 5.5rem;
+  background-color: white;
+  padding: 0.2rem;
+}
+
+#puzzle {
+  display: grid;
+  grid-template-columns: 10rem 10rem 10rem 10rem;
+  grid-template-rows: 5.5rem 5.5rem 5.5rem 5.5rem;
+  background-color: grey;
+  padding: 0.2rem;
+  width: 40rem;
+}
