@@ -18,6 +18,7 @@ var config = {
 
 var player;
 var facing = "right";
+
 var cursors;
 var movingPlatform;
 
@@ -54,14 +55,6 @@ function create() {
   // Sky Background.
   this.add.image(720, 360, "sky");
 
-  // Ground.
-  var ground = this.physics.add.staticGroup({
-    defaultKey: "ground",
-    isStatic: true,
-    collideWorldBounds: true,
-  });
-  ground.create(720, 670).setScale().refreshBody().setSize(1500, 180, true);
-
   // Blocks.
   var blocks = this.physics.add.group({
     defaultKey: "block",
@@ -70,10 +63,18 @@ function create() {
     dragX: 750,
     collideWorldBounds: true,
   });
-  blocks.create(500, 400).setScale(0.25);
+  blocks.create(100, 400).setScale(0.25);
+
+  // Ground.
+  var ground = this.physics.add.staticGroup({
+    defaultKey: "ground",
+    isStatic: true,
+    collideWorldBounds: true,
+  });
+  ground.create(720, 670).setScale().refreshBody();
 
   // Moving platform.
-  movingPlatform = this.physics.add.image(800, 425, "platform").setScale(0.25); // Platform. You can change the scale.
+  movingPlatform = this.physics.add.image(800, 485, "platform").setScale(0.25); // Platform. You can change the scale.
   movingPlatform.setImmovable(true);
   movingPlatform.body.allowGravity = false;
   movingPlatform.setVelocityX(60);

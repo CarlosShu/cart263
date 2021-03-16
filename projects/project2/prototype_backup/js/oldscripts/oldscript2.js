@@ -1,23 +1,26 @@
 var config = {
   type: Phaser.AUTO,
-  width: 1440,
+  width: 1280,
   height: 720,
   parent: "phaser-example",
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 1000 }, // World gravity.
+      debug: false,
+    },
+  },
   scene: {
     preload: preload,
     create: create,
     update: update,
-    physics: {
-      arcade: {
-        debug: false,
-        gravity: { y: 1000 },
-      },
-    },
   },
 };
 
 var player;
 var facing = "right";
+var stars;
+var platforms;
 var cursors;
 var movingPlatform;
 
@@ -28,61 +31,46 @@ function preload() {
   this.load.image("ground", "assets/images/ground.png");
   this.load.image("platform", "assets/images/platform.png");
   this.load.image("block", "assets/images/block.png");
+  this.load.image("star", "assets/images/star.png");
   this.load.spritesheet("avatar", "assets/images/avatar.png", {
-    frameWidth: 200,
-    frameHeight: 252,
-  });
-  this.load.spritesheet("avatar-run", "assets/images/avatar-run.png", {
-    frameWidth: 200,
-    frameHeight: 252,
+    frameWidth: 50,
+    frameHeight: 66,
   });
   this.load.spritesheet("avatar-idle", "assets/images/avatar-idle.png", {
-    frameWidth: 200,
-    frameHeight: 252,
+    frameWidth: 50,
+    frameHeight: 66,
   });
   this.load.spritesheet("avatar-jump", "assets/images/avatar-jump.png", {
-    frameWidth: 200,
-    frameHeight: 252,
+    frameWidth: 50,
+    frameHeight: 66,
   });
   this.load.spritesheet("avatar-crouch", "assets/images/avatar-crouch.png", {
-    frameWidth: 200,
-    frameHeight: 252,
+    frameWidth: 50,
+    frameHeight: 66,
   });
 }
 
 function create() {
-  // Sky Background.
-  this.add.image(720, 360, "sky");
+  this.add.image(640, 360, "sky"); // Sky Background.
 
-  // Ground.
-  var ground = this.physics.add.staticGroup({
-    defaultKey: "ground",
-    isStatic: true,
-    collideWorldBounds: true,
-  });
-  ground.create(720, 670).setScale().refreshBody().setSize(1500, 180, true);
+  platforms = this.physics.add.staticGroup();
 
-  // Blocks.
-  var blocks = this.physics.add.group({
-    defaultKey: "block",
-    bounceY: 0.25,
-    bounceX: 0.25,
-    dragX: 750,
-    collideWorldBounds: true,
-  });
-  blocks.create(500, 400).setScale(0.25);
+  platforms.create(640, 670, "ground").setScale().refreshBody(); // Main Ground. You can change the scale.
 
-  // Moving platform.
-  movingPlatform = this.physics.add.image(800, 425, "platform").setScale(0.25); // Platform. You can change the scale.
+  // platforms.create(600, 400, "platform").setScale(0.25);
+  // platforms.create(50, 250, "platform").setScale(0.25);
+  // platforms.create(750, 220, "platform").setScale(0.25);
+
+  movingPlatform = this.physics.add.image(400, 485, "platform").setScale(0.25); // Platform. You can change the scale.
+
   movingPlatform.setImmovable(true);
   movingPlatform.body.allowGravity = false;
   movingPlatform.setVelocityX(60);
 
-  //  Player.
-  player = this.physics.add.sprite(100, 0, "avatar").setScale(0.25);
+  player = this.physics.add.sprite(100, 450, "avatar");
+
   player.setBounce(0.25); // Player bounce off of the ground.
   player.setCollideWorldBounds(true); // Boundaries of the world.
-  player.setSize(100, 252, true);
 
   // Idle left animation.
   this.anims.create({
@@ -106,7 +94,7 @@ function create() {
     repeat: -1,
   });
 
-  // Walking left animation.
+  // Going left animation.
   this.anims.create({
     key: "left",
     frames: this.anims.generateFrameNumbers("avatar", { start: 0, end: 15 }),
@@ -114,33 +102,11 @@ function create() {
     repeat: -1,
   });
 
-  // Walking Right animation.
+  // Going Right animation.
   this.anims.create({
     key: "right",
     frames: this.anims.generateFrameNumbers("avatar", { start: 17, end: 32 }),
     frameRate: 30,
-    repeat: -1,
-  });
-
-  // Running left animation.
-  this.anims.create({
-    key: "run-left",
-    frames: this.anims.generateFrameNumbers("avatar-run", {
-      start: 0,
-      end: 19,
-    }),
-    frameRate: 60,
-    repeat: -1,
-  });
-
-  // Running Right animation.
-  this.anims.create({
-    key: "run-right",
-    frames: this.anims.generateFrameNumbers("avatar-run", {
-      start: 20,
-      end: 39,
-    }),
-    frameRate: 60,
     repeat: -1,
   });
 
@@ -149,7 +115,7 @@ function create() {
     key: "up-left",
     frames: this.anims.generateFrameNumbers("avatar-jump", {
       start: 0,
-      end: 10,
+      end: 9,
     }),
     frameRate: 30,
     repeat: -1,
@@ -159,8 +125,8 @@ function create() {
   this.anims.create({
     key: "up-right",
     frames: this.anims.generateFrameNumbers("avatar-jump", {
-      start: 11,
-      end: 21,
+      start: 10,
+      end: 19,
     }),
     frameRate: 30,
     repeat: -1,
@@ -194,43 +160,44 @@ function create() {
     down: Phaser.Input.Keyboard.KeyCodes.S,
     left: Phaser.Input.Keyboard.KeyCodes.A,
     right: Phaser.Input.Keyboard.KeyCodes.D,
-    shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
   });
 
-  this.physics.add.collider(player, ground);
+  stars = this.physics.add.group({
+    key: "star",
+    repeat: 18,
+    setXY: { x: 12, y: 0, stepX: 70 },
+  });
+
+  stars.children.iterate(function (child) {
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+  });
+
+  this.physics.add.collider(player, platforms);
   this.physics.add.collider(player, movingPlatform);
-  this.physics.add.collider(player, blocks);
-  this.physics.add.collider(blocks, ground);
+  this.physics.add.collider(stars, platforms);
+  this.physics.add.collider(stars, movingPlatform);
+
+  this.physics.add.overlap(player, stars, collectStar, null, this);
+
+  //  Arcade Physics:
+  var block = this.physics.add.image(400, -100, "block");
+
+  block.setBounce(0.5, 0.15);
+  block.setCollideWorldBounds(true);
 }
 
 function update() {
-  // Walking left.
+  // Going left.
   if (cursors.left.isDown) {
-    if (cursors.shift.isDown) {
-      if (player.body.touching.down) {
-        player.setVelocityX(-360);
-        player.anims.play("run-left", true);
-        facing = "left";
-      }
-    } else {
-      player.setVelocityX(-180);
-      player.anims.play("left", true);
-      facing = "left";
-    }
+    player.setVelocityX(-240);
+    player.anims.play("left", true);
+    facing = "left";
 
-    // Walking right.
+    // Going right.
   } else if (cursors.right.isDown) {
-    if (cursors.shift.isDown) {
-      if (player.body.touching.down) {
-        player.setVelocityX(360);
-        player.anims.play("run-right", true);
-        facing = "right";
-      }
-    } else {
-      player.setVelocityX(180);
-      player.anims.play("right", true);
-      facing = "right";
-    }
+    player.setVelocityX(240);
+    player.anims.play("right", true);
+    facing = "right";
 
     // Crouching.
   } else if (cursors.down.isDown) {
@@ -264,7 +231,7 @@ function update() {
 
   // Jump.
   if (cursors.up.isDown && player.body.touching.down) {
-    player.setVelocityY(-500);
+    player.setVelocityY(-600);
   }
 
   // Moving platform.
@@ -273,4 +240,9 @@ function update() {
   } else if (movingPlatform.x <= 300) {
     movingPlatform.setVelocityX(50);
   }
+}
+
+// Star.
+function collectStar(player, star) {
+  star.disableBody(true, true);
 }

@@ -17,7 +17,10 @@ var config = {
 };
 
 var player;
+var shadow;
+
 var facing = "right";
+
 var cursors;
 var movingPlatform;
 
@@ -73,7 +76,7 @@ function create() {
   blocks.create(500, 400).setScale(0.25);
 
   // Moving platform.
-  movingPlatform = this.physics.add.image(800, 425, "platform").setScale(0.25); // Platform. You can change the scale.
+  movingPlatform = this.physics.add.image(800, 485, "platform").setScale(0.25); // Platform. You can change the scale.
   movingPlatform.setImmovable(true);
   movingPlatform.body.allowGravity = false;
   movingPlatform.setVelocityX(60);

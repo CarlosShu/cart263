@@ -12,12 +12,19 @@ var config = {
         debug: false,
         gravity: { y: 1000 },
       },
+      matter: {
+        debug: true,
+        gravity: { y: 0.5 },
+      },
     },
   },
 };
 
 var player;
 var facing = "right";
+var stars;
+var ground;
+
 var cursors;
 var movingPlatform;
 
@@ -28,6 +35,7 @@ function preload() {
   this.load.image("ground", "assets/images/ground.png");
   this.load.image("platform", "assets/images/platform.png");
   this.load.image("block", "assets/images/block.png");
+  this.load.image("star", "assets/images/star.png");
   this.load.spritesheet("avatar", "assets/images/avatar.png", {
     frameWidth: 200,
     frameHeight: 252,
@@ -51,38 +59,37 @@ function preload() {
 }
 
 function create() {
-  // Sky Background.
-  this.add.image(720, 360, "sky");
+  this.add.image(720, 360, "sky"); // Sky Background.
 
-  // Ground.
-  var ground = this.physics.add.staticGroup({
-    defaultKey: "ground",
-    isStatic: true,
-    collideWorldBounds: true,
-  });
-  ground.create(720, 670).setScale().refreshBody().setSize(1500, 180, true);
+  ground = this.physics.add.staticGroup();
 
-  // Blocks.
   var blocks = this.physics.add.group({
     defaultKey: "block",
     bounceY: 0.25,
     bounceX: 0.25,
-    dragX: 750,
+    dragX: 500,
+
     collideWorldBounds: true,
   });
-  blocks.create(500, 400).setScale(0.25);
 
-  // Moving platform.
-  movingPlatform = this.physics.add.image(800, 425, "platform").setScale(0.25); // Platform. You can change the scale.
+  blocks.create(100, 100).setScale(0.25);
+
+  // Ground.
+  ground
+    .create(720, 670, "ground", null, { isStatic: true })
+    .setScale()
+    .refreshBody();
+
+  movingPlatform = this.physics.add.image(400, 485, "platform").setScale(0.25); // Platform. You can change the scale.
+
   movingPlatform.setImmovable(true);
   movingPlatform.body.allowGravity = false;
   movingPlatform.setVelocityX(60);
 
   //  Player.
-  player = this.physics.add.sprite(100, 0, "avatar").setScale(0.25);
+  player = this.physics.add.sprite(100, 450, "avatar").setScale(0.25);
   player.setBounce(0.25); // Player bounce off of the ground.
   player.setCollideWorldBounds(true); // Boundaries of the world.
-  player.setSize(100, 252, true);
 
   // Idle left animation.
   this.anims.create({
@@ -197,10 +204,24 @@ function create() {
     shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
   });
 
+  stars = this.physics.add.group({
+    key: "star",
+    repeat: 18,
+    setXY: { x: 12, y: 0, stepX: 70 },
+  });
+
+  stars.children.iterate(function (child) {
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+  });
+
   this.physics.add.collider(player, ground);
   this.physics.add.collider(player, movingPlatform);
   this.physics.add.collider(player, blocks);
   this.physics.add.collider(blocks, ground);
+  this.physics.add.collider(stars, ground);
+  this.physics.add.collider(stars, movingPlatform);
+
+  this.physics.add.overlap(player, stars, collectStar, null, this);
 }
 
 function update() {
@@ -264,7 +285,7 @@ function update() {
 
   // Jump.
   if (cursors.up.isDown && player.body.touching.down) {
-    player.setVelocityY(-500);
+    player.setVelocityY(-600);
   }
 
   // Moving platform.
@@ -273,4 +294,9 @@ function update() {
   } else if (movingPlatform.x <= 300) {
     movingPlatform.setVelocityX(50);
   }
+}
+
+// Star.
+function collectStar(player, star) {
+  star.disableBody(true, true);
 }
