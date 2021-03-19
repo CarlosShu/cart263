@@ -19,7 +19,6 @@ var config = {
 var facing = "right";
 var cursors;
 var game = new Phaser.Game(config);
-var score = 0;
 
 function preload() {
   this.load.image("sky", "assets/images/sky.png");
@@ -73,58 +72,19 @@ function create() {
     collideWorldBounds: true,
   });
   block.create(500, 400).setScale(0.25);
-  block.create(800, 400).setScale(0.25);
-
-  // // Ramp.
-  // var ramp = this.physics.add.group({
-  //   defaultKey: "ramp",
-  //   bounceY: 0.25,
-  //   bounceX: 0.25,
-  //   dragX: 750,
-  //   collideWorldBounds: true,
-  // });
-  // ramp.create(1100, 400).setScale(0.25);
-
-  // Moving platform X.
-  var movingPlatformX = this.physics.add.group({
-    defaultKey: "platform",
-    bounceY: 0.25,
-    bounceX: 0.25,
-    collideWorldBounds: true,
-    immovable: true,
-    allowGravity: false,
-  });
-  movingPlatformX.create(800, 325).setScale(0.25);
-
-  // Moving platform Y.
-  var movingPlatformY = this.physics.add.group({
-    defaultKey: "platform",
-    bounceY: 0.25,
-    bounceX: 0.25,
-    collideWorldBounds: true,
-    immovable: true,
-    allowGravity: false,
-  });
-  movingPlatformY.create(400, 325).setScale(0.25);
-
-  // Platform.
-  var platform = this.physics.add.group({
-    defaultKey: "platform",
-    bounceY: 0.25,
-    bounceX: 0.25,
-    collideWorldBounds: true,
-    immovable: true,
-    allowGravity: false,
-  });
-  platform.create(200, 425).setScale(0.25);
-  platform.create(600, 425).setScale(0.25);
-  platform.create(1200, 325).setScale(0.25);
 
   //  Player.
-  player = this.physics.add.sprite(0, 0, "avatar").setScale(0.25);
+  player = this.physics.add.sprite(100, 0, "avatar").setScale(0.25);
   player.setBounce(0.25); // Player bounce off of the ground.
   player.setCollideWorldBounds(true); // Boundaries of the world.
   player.setSize(100, 252, true);
+
+  // Text.
+  var text = this.add
+    .text(720, 60, "Use WASD to walk, jump, crouch, and hold SHIFT to sprint.")
+    .setFontSize(20)
+    .setFontFamily("Arial")
+    .setOrigin(0.5);
 
   // Idle left animation.
   this.anims.create({
@@ -164,72 +124,6 @@ function create() {
     repeat: -1,
   });
 
-  // Running left animation.
-  this.anims.create({
-    key: "run-left",
-    frames: this.anims.generateFrameNumbers("avatar-run", {
-      start: 0,
-      end: 19,
-    }),
-    frameRate: 60,
-    repeat: -1,
-  });
-
-  // Running Right animation.
-  this.anims.create({
-    key: "run-right",
-    frames: this.anims.generateFrameNumbers("avatar-run", {
-      start: 20,
-      end: 39,
-    }),
-    frameRate: 60,
-    repeat: -1,
-  });
-
-  // Jump left animation.
-  this.anims.create({
-    key: "up-left",
-    frames: this.anims.generateFrameNumbers("avatar-jump", {
-      start: 0,
-      end: 10,
-    }),
-    frameRate: 30,
-    repeat: -1,
-  });
-
-  // Jump Right animation.
-  this.anims.create({
-    key: "up-right",
-    frames: this.anims.generateFrameNumbers("avatar-jump", {
-      start: 11,
-      end: 21,
-    }),
-    frameRate: 30,
-    repeat: -1,
-  });
-
-  // Crouch left animation.
-  this.anims.create({
-    key: "down-left",
-    frames: this.anims.generateFrameNumbers("avatar-crouch", {
-      start: 0,
-      end: 0,
-    }),
-    frameRate: 15,
-    repeat: 0,
-  });
-
-  // Crouch Right animation.
-  this.anims.create({
-    key: "down-right",
-    frames: this.anims.generateFrameNumbers("avatar-crouch", {
-      start: 7,
-      end: 7,
-    }),
-    frameRate: 15,
-    repeat: 0,
-  });
-
   // Replaces cursor keys with WASD.
   cursors = this.input.keyboard.addKeys({
     up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -240,40 +134,12 @@ function create() {
   });
 
   this.physics.add.collider(player, ground);
-  this.physics.add.collider(player, movingPlatformX);
-  this.physics.add.collider(player, movingPlatformY);
-  this.physics.add.collider(player, platform);
   this.physics.add.collider(player, block);
   this.physics.add.collider(block, ground);
   this.physics.add.collider(block, block);
-  // this.physics.add.collider(player, ramp);
-  // this.physics.add.collider(ramp, ground);
-  // this.physics.add.collider(ramp, block);
-
-  // Camera function.
-  this.cameras.main.startFollow(player);
-
-  hud = this.add.container(player.x, player.y);
-  instructions = this.add
-    .text(
-      player.x,
-      player.y - 350,
-      "Use WASD to walk, jump, crouch, and hold SHIFT to sprint.",
-      {
-        fontSize: "15px",
-        align: "center",
-        fontFamily: "arial",
-      }
-    )
-    .setOrigin(0.5);
-
-  hud.add(instructions);
 }
 
 function update() {
-  instructions.x = player.body.position.x;
-  instructions.y = player.body.position.y + 350;
-
   // Walking left.
   if (cursors.left.isDown) {
     if (cursors.shift.isDown) {

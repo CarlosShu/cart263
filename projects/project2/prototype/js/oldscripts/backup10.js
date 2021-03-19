@@ -121,7 +121,7 @@ function create() {
   platform.create(1200, 325).setScale(0.25);
 
   //  Player.
-  player = this.physics.add.sprite(0, 0, "avatar").setScale(0.25);
+  player = this.physics.add.sprite(100, 0, "avatar").setScale(0.25);
   player.setBounce(0.25); // Player bounce off of the ground.
   player.setCollideWorldBounds(true); // Boundaries of the world.
   player.setSize(100, 252, true);
@@ -254,25 +254,21 @@ function create() {
   this.cameras.main.startFollow(player);
 
   hud = this.add.container(player.x, player.y);
-  instructions = this.add
-    .text(
-      player.x,
-      player.y - 350,
-      "Use WASD to walk, jump, crouch, and hold SHIFT to sprint.",
-      {
-        fontSize: "15px",
-        align: "center",
-        fontFamily: "arial",
-      }
-    )
-    .setOrigin(0.5);
+  scoreText = this.add.text(
+    player.x,
+    player.y,
+    "Use WASD to walk, jump, and crouch. Hold SHIFT to sprint.",
+    {
+      fontSize: "30px",
+    }
+  );
 
-  hud.add(instructions);
+  hud.add(scoreText);
 }
 
 function update() {
-  instructions.x = player.body.position.x;
-  instructions.y = player.body.position.y + 350;
+  scoreText.x = player.body.position.x;
+  scoreText.y = player.body.position.y;
 
   // Walking left.
   if (cursors.left.isDown) {

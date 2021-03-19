@@ -10,23 +10,22 @@ var config = {
     physics: {
       arcade: {
         debug: false,
-        gravity: { y: 800 },
+        gravity: { y: 1000 },
       },
     },
   },
 };
 
+var player;
 var facing = "right";
 var cursors;
 var game = new Phaser.Game(config);
-var score = 0;
 
 function preload() {
   this.load.image("sky", "assets/images/sky.png");
   this.load.image("ground", "assets/images/ground.png");
   this.load.image("platform", "assets/images/platform.png");
   this.load.image("block", "assets/images/block.png");
-  this.load.image("ramp", "assets/images/ramp.png");
   this.load.spritesheet("avatar", "assets/images/avatar.png", {
     frameWidth: 200,
     frameHeight: 252,
@@ -51,10 +50,7 @@ function preload() {
 
 function create() {
   // Sky Background.
-  var sky = this.add.group({
-    defaultKey: "sky",
-  });
-  sky.create(720, 360);
+  this.add.image(720, 360, "sky");
 
   // Ground.
   var ground = this.physics.add.staticGroup({
@@ -74,16 +70,6 @@ function create() {
   });
   block.create(500, 400).setScale(0.25);
   block.create(800, 400).setScale(0.25);
-
-  // // Ramp.
-  // var ramp = this.physics.add.group({
-  //   defaultKey: "ramp",
-  //   bounceY: 0.25,
-  //   bounceX: 0.25,
-  //   dragX: 750,
-  //   collideWorldBounds: true,
-  // });
-  // ramp.create(1100, 400).setScale(0.25);
 
   // Moving platform X.
   var movingPlatformX = this.physics.add.group({
@@ -121,10 +107,17 @@ function create() {
   platform.create(1200, 325).setScale(0.25);
 
   //  Player.
-  player = this.physics.add.sprite(0, 0, "avatar").setScale(0.25);
+  player = this.physics.add.sprite(100, 0, "avatar").setScale(0.25);
   player.setBounce(0.25); // Player bounce off of the ground.
   player.setCollideWorldBounds(true); // Boundaries of the world.
   player.setSize(100, 252, true);
+
+  // Text.
+  var text = this.add
+    .text(720, 60, "Use WASD to walk, jump, crouch, and hold SHIFT to sprint.")
+    .setFontSize(20)
+    .setFontFamily("Arial")
+    .setOrigin(0.5);
 
   // Idle left animation.
   this.anims.create({
@@ -246,34 +239,9 @@ function create() {
   this.physics.add.collider(player, block);
   this.physics.add.collider(block, ground);
   this.physics.add.collider(block, block);
-  // this.physics.add.collider(player, ramp);
-  // this.physics.add.collider(ramp, ground);
-  // this.physics.add.collider(ramp, block);
-
-  // Camera function.
-  this.cameras.main.startFollow(player);
-
-  hud = this.add.container(player.x, player.y);
-  instructions = this.add
-    .text(
-      player.x,
-      player.y - 350,
-      "Use WASD to walk, jump, crouch, and hold SHIFT to sprint.",
-      {
-        fontSize: "15px",
-        align: "center",
-        fontFamily: "arial",
-      }
-    )
-    .setOrigin(0.5);
-
-  hud.add(instructions);
 }
 
 function update() {
-  instructions.x = player.body.position.x;
-  instructions.y = player.body.position.y + 350;
-
   // Walking left.
   if (cursors.left.isDown) {
     if (cursors.shift.isDown) {
