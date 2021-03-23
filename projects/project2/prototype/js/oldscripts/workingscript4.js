@@ -20,9 +20,6 @@ var facing = "right";
 var cursors;
 var game = new Phaser.Game(config);
 var score = 0;
-var text;
-var currentTime = 150;
-var timedEvent;
 
 function preload() {
   this.load.image("sky", "assets/images/sky.png");
@@ -77,6 +74,16 @@ function create() {
   });
   block.create(500, 400).setScale(0.25);
   block.create(800, 400).setScale(0.25);
+
+  // // Ramp.
+  // var ramp = this.physics.add.group({
+  //   defaultKey: "ramp",
+  //   bounceY: 0.25,
+  //   bounceX: 0.25,
+  //   dragX: 750,
+  //   collideWorldBounds: true,
+  // });
+  // ramp.create(1100, 400).setScale(0.25);
 
   // Moving platform X.
   var movingPlatformX = this.physics.add.group({
@@ -230,7 +237,6 @@ function create() {
     left: Phaser.Input.Keyboard.KeyCodes.A,
     right: Phaser.Input.Keyboard.KeyCodes.D,
     shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
-    reset: Phaser.Input.Keyboard.KeyCodes.R,
   });
 
   this.physics.add.collider(player, ground);
@@ -240,49 +246,33 @@ function create() {
   this.physics.add.collider(player, block);
   this.physics.add.collider(block, ground);
   this.physics.add.collider(block, block);
+  // this.physics.add.collider(player, ramp);
+  // this.physics.add.collider(ramp, ground);
+  // this.physics.add.collider(ramp, block);
 
   // Camera function.
   this.cameras.main.startFollow(player);
 
-  //  So we can see how much health we have left
-  text = this.add
-    .text(0, 0, "TEXT", {
-      fontSize: "15px",
-      align: "center",
-      fontFamily: "arial",
-    })
+  hud = this.add.container(player.x, player.y);
+  instructions = this.add
+    .text(
+      player.x,
+      player.y - 350,
+      "Use WASD to walk, jump, crouch, and hold SHIFT to sprint.",
+      {
+        fontSize: "15px",
+        align: "center",
+        fontFamily: "arial",
+      }
+    )
     .setOrigin(0.5);
 
-  // Time loop.
-  timedEvent = this.time.addEvent({
-    delay: 50,
-    callback: currentText,
-    callbackScope: this,
-    loop: true,
-  });
-}
-
-// Changes the text based on a timer.
-function currentText() {
-  currentTime--;
-  if (currentTime === 0) {
-    currentTime = 150;
-  }
+  hud.add(instructions);
 }
 
 function update() {
-  // Updates the text.
-  if (currentTime > 100) {
-    text.setText("Use WASD to walk, jump, and crouch.");
-  } else if (currentTime <= 100 && currentTime > 50) {
-    text.setText("Hold SHIFT to sprint.");
-  } else if (currentTime <= 50) {
-    text.setText("Press R to reset the level.");
-  }
-
-  // Updates the position of the text relative to the player's position.
-  text.x = player.body.position.x;
-  text.y = player.body.position.y + 350;
+  instructions.x = player.body.position.x;
+  instructions.y = player.body.position.y + 350;
 
   // Walking left.
   if (cursors.left.isDown) {
@@ -345,10 +335,5 @@ function update() {
   // Jump.
   if (cursors.up.isDown && player.body.touching.down) {
     player.setVelocityY(-500);
-  }
-
-  // Reset scene.
-  if (cursors.reset.isDown) {
-    this.scene.restart();
   }
 }

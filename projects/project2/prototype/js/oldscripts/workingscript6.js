@@ -20,9 +20,6 @@ var facing = "right";
 var cursors;
 var game = new Phaser.Game(config);
 var score = 0;
-var text;
-var currentTime = 150;
-var timedEvent;
 
 function preload() {
   this.load.image("sky", "assets/images/sky.png");
@@ -244,43 +241,24 @@ function create() {
   // Camera function.
   this.cameras.main.startFollow(player);
 
-  //  So we can see how much health we have left
+  hud = this.add.container(player.x, player.y);
   text = this.add
-    .text(0, 0, "TEXT", {
-      fontSize: "15px",
-      align: "center",
-      fontFamily: "arial",
-    })
+    .text(
+      player.x,
+      player.y - 350,
+      "Use WASD to walk, jump, crouch, and hold SHIFT to sprint.",
+      {
+        fontSize: "15px",
+        align: "center",
+        fontFamily: "arial",
+      }
+    )
     .setOrigin(0.5);
 
-  // Time loop.
-  timedEvent = this.time.addEvent({
-    delay: 50,
-    callback: currentText,
-    callbackScope: this,
-    loop: true,
-  });
-}
-
-// Changes the text based on a timer.
-function currentText() {
-  currentTime--;
-  if (currentTime === 0) {
-    currentTime = 150;
-  }
+  hud.add(text);
 }
 
 function update() {
-  // Updates the text.
-  if (currentTime > 100) {
-    text.setText("Use WASD to walk, jump, and crouch.");
-  } else if (currentTime <= 100 && currentTime > 50) {
-    text.setText("Hold SHIFT to sprint.");
-  } else if (currentTime <= 50) {
-    text.setText("Press R to reset the level.");
-  }
-
-  // Updates the position of the text relative to the player's position.
   text.x = player.body.position.x;
   text.y = player.body.position.y + 350;
 
