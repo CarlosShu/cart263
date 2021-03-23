@@ -7,6 +7,7 @@ Jigsaw Puzzle
 
 "use strict";
 
+// Draggable pieces that snap to the jigsaw grid.
 $("#jigsaw").one("mouseover", function (event) {
   $("#piece01").draggable({ snap: "#puzzle > div", revert: "invalid" });
   $("#piece02").draggable({ snap: "#puzzle > div", revert: "invalid" });
@@ -26,8 +27,10 @@ $("#jigsaw").one("mouseover", function (event) {
   $("#piece16").draggable({ snap: "#puzzle > div", revert: "invalid" });
 });
 
+// Makes the puzzle div droppable.
 $("#puzzle > div").droppable({});
 
+// Makes the jigsaw div droppable.
 $("#jigsaw").droppable({
   drop: function (event, ui) {},
 });
