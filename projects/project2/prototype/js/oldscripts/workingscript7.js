@@ -284,28 +284,28 @@ function update() {
   text.x = player.body.position.x;
   text.y = player.body.position.y + 350;
 
-  // Going left.
+  // Walking left.
   if (cursors.left.isDown) {
-    // Sprinting left.
     if (cursors.shift.isDown) {
-      player.setVelocityX(-360);
-      player.anims.play("run-left", true);
-      facing = "left";
-      // Waling left.
+      if (player.body.touching.down) {
+        player.setVelocityX(-360);
+        player.anims.play("run-left", true);
+        facing = "left";
+      }
     } else {
       player.setVelocityX(-180);
       player.anims.play("left", true);
       facing = "left";
     }
 
-    // Going right.
+    // Walking right.
   } else if (cursors.right.isDown) {
-    // Sprinting Right.
     if (cursors.shift.isDown) {
-      player.setVelocityX(360);
-      player.anims.play("run-right", true);
-      facing = "right";
-      // Waling right.
+      if (player.body.touching.down) {
+        player.setVelocityX(360);
+        player.anims.play("run-right", true);
+        facing = "right";
+      }
     } else {
       player.setVelocityX(180);
       player.anims.play("right", true);
