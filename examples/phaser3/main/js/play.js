@@ -4,12 +4,19 @@ class Play extends Phaser.Scene {
   }
 
   create() {
-    // Block.
-    this.block = this.physics.add.image(400, 300, "block");
-    // this.block.setTint(0x33dd33); // Sets tint.
-    this.block.setScale(0.25); // Sets scale.
-    this.block.setImmovable(true);
-    this.block.setCollideWorldBounds(true);
+    // Block group.
+    this.block = this.physics.add.group({
+      key: "block",
+      immovable: true,
+      quantity: 24,
+    });
+    // Block children.
+    this.block.children.each(function (block) {
+      let x = Math.random() * this.sys.canvas.width;
+      let y = Math.random() * this.sys.canvas.height;
+      block.setPosition(x, y);
+      block.setScale(0.25);
+    }, this);
 
     // Collectable.
     this.collectable = this.physics.add.image(200, 100, "block");
@@ -29,7 +36,13 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.avatar, this.block);
 
     // Adds overlaps.
-    this.physics.add.overlap(this.avatar, this.collectable, this.collectItem);
+    this.physics.add.overlap(
+      this.avatar,
+      this.collectable,
+      this.collectItem,
+      null,
+      this
+    );
 
     // Replaces cursor keys with WASD.
     this.cursors = this.input.keyboard.addKeys({
@@ -43,9 +56,9 @@ class Play extends Phaser.Scene {
   }
 
   // Collect item function.
-  collectItem(avatar, item) {
+  collectItem(avatar, collectable) {
     // Destroys the collectable.
-    item.destroy();
+    collectable.destroy();
   }
 
   update() {
