@@ -50,7 +50,7 @@ class Boot extends Phaser.Scene {
     };
     // Loading text.
     let loadingString = "Loading...";
-    this.add.text(100, 100, loadingString, style);
+    this.add.text(720, 360, loadingString, style);
   }
 
   update() {}

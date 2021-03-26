@@ -107,8 +107,7 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.block, this.block);
 
     // Camera function.
-    this.camera = this.cameras.main.startFollow(this.player);
-    this.camera.setZoom(1);
+    this.cameras.main.startFollow(this.player);
 
     //  So we can see how much health we have left
     text = this.add
@@ -119,11 +118,11 @@ class Play extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    // Dim light that follows the player.
-    this.light = this.lights.addLight(0, 0, 720);
-    this.light.setIntensity(1);
+    this.light = this.lights.addLight(0, 0, 1000);
+    this.light.setIntensity(3);
+
     this.lights.enable();
-    this.lights.setAmbientColor(0xc0c0c0);
+    this.lights.setAmbientColor(0x202020);
 
     // Time loop.
     timedEvent = this.time.addEvent({
@@ -258,16 +257,6 @@ class Play extends Phaser.Scene {
     if (this.cursors.reset.isDown) {
       this.scene.restart();
     }
-
-    this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
-      if (deltaY > 0) {
-        this.camera.setZoom(1);
-      }
-      if (deltaY < 0) {
-        this.camera.setZoom(1.5);
-      } else {
-      }
-    });
   }
 
   // Create animations function.
