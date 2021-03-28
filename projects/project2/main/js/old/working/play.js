@@ -23,6 +23,19 @@ class Play extends Phaser.Scene {
       .setSize(1500, 150, true)
       .setPipeline("Light2D");
 
+    //first we create a group, just in case we have move ladders later
+    this.ladder = this.physics.add.group({
+      defaultKey: "ladder",
+      bounceY: 0.25,
+      bounceX: 0.25,
+      immovable: true,
+      collideWorldBounds: true,
+      enableBody: true,
+    });
+
+    //then add out sprite to the group
+    this.ladder.create(266, 164, "ladder").setScale(0.25);
+
     //  Shadow of the player.
     this.shadow = this.add.sprite(0, 0, "avatar-idle");
     this.shadow.setScale(0.25);
@@ -39,15 +52,6 @@ class Play extends Phaser.Scene {
 
     // Calls create animation function.
     this.createAnimations();
-
-    // Ladder.
-    this.ladder = this.physics.add.group({
-      defaultKey: "ladder",
-      bounceY: 0.25,
-      collideWorldBounds: true,
-    });
-
-    this.ladder.create(300, 400).setScale(0.25).setPipeline("Light2D");
 
     // Block.
     this.block = this.physics.add.group({
@@ -107,7 +111,6 @@ class Play extends Phaser.Scene {
       reset: Phaser.Input.Keyboard.KeyCodes.R,
     });
 
-    this.physics.add.collider(this.ladder, this.ground);
     this.physics.add.collider(this.player, this.ground);
     this.physics.add.collider(this.player, this.movingPlatformX);
     this.physics.add.collider(this.player, this.movingPlatformY);
@@ -151,10 +154,13 @@ class Play extends Phaser.Scene {
     }
   }
 
-  update() {
-    // Adds overlaps.
-    this.physics.add.overlap(this.player, this.ladder, this.isOnLadder);
+  // Collect item function.
+  collectItem(avatar, collectable) {
+    // Destroys the collectable.
+    collectable.destroy();
+  }
 
+  update() {
     // Updates the text.
     if (currentTime > 100) {
       text.setText("Use WASD to walk, jump, and crouch.");
@@ -199,7 +205,7 @@ class Play extends Phaser.Scene {
       }
       // If the player is touching the block.
       else if (this.player.body.touching.left) {
-        this.player.setVelocityX(-120);
+        this.player.setVelocityX(-90);
         this.player.anims.play("push-left", true);
         this.shadow.anims.play("push-left", true);
         facing = "left";
@@ -227,7 +233,7 @@ class Play extends Phaser.Scene {
         facing = "right";
       } // If the player is touching the block.
       else if (this.player.body.touching.right) {
-        this.player.setVelocityX(120);
+        this.player.setVelocityX(90);
         this.player.anims.play("push-right", true);
         this.shadow.anims.play("push-right", true);
         facing = "right";
@@ -274,21 +280,9 @@ class Play extends Phaser.Scene {
       }
     }
 
-    // Jump.
-    if (onLadder == "false") {
-      if (this.cursors.up.isDown && this.player.body.touching.down) {
-        this.player.setVelocityY(-500);
-      }
-    }
-
-    // Ladder.
-    if (onLadder == "true") {
-      if (this.cursors.up.isDown) {
-        this.player.body.velocity.y = -250;
-      }
-      if (this.cursors.down.isDown) {
-        this.player.body.velocity.y = -250;
-      }
+    if (this.cursors.up.isDown && this.player.body.touching.down) {
+      // Jump.
+      this.player.setVelocityY(-500);
     }
 
     // Reset scene.
@@ -305,12 +299,6 @@ class Play extends Phaser.Scene {
       } else {
       }
     });
-  }
-
-  // Collect item function.
-  isOnLadder() {
-    onLadder = "true";
-    return false;
   }
 
   // Create animations function.
