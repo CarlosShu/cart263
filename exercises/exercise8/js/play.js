@@ -4,6 +4,13 @@ class Play extends Phaser.Scene {
   }
 
   create() {
+    // Variables.
+    this.level = 1;
+    this.game.registry.set(`level`, this.level);
+
+    this.asteroidSpeed = 200;
+    this.game.registry.set(`asteroidSpeed`, this.asteroidSpeed);
+
     // Background.
     this.background = this.add.group({
       defaultKey: "background",
@@ -45,6 +52,13 @@ class Play extends Phaser.Scene {
     this.light = this.lights.addLight(0, 0, 500);
     this.light.setIntensity(20);
     this.lights.enable();
+
+    // Hud.
+    this.text = this.add.text(10, 10, "Level " + this.level, {
+      fontSize: "15px",
+      align: "center",
+      fontFamily: "arial",
+    });
   }
 
   getHit(spaceship, asteroid) {
@@ -52,12 +66,6 @@ class Play extends Phaser.Scene {
   }
 
   update() {
-    //  Hud.
-    this.text = this.add.text(10, 10, "Level " + level, {
-      fontSize: "15px",
-      align: "center",
-    });
-
     if (this.cursors.left.isDown) {
       this.spaceship.body.acceleration.x = -300;
       this.spaceship.body.rotation = -30;
@@ -70,18 +78,24 @@ class Play extends Phaser.Scene {
     }
 
     if (this.asteroid.y <= 0) {
-      this.asteroid.setVelocityY(asteroidSpeed);
+      this.asteroid.setVelocityY(this.asteroidSpeed);
     }
 
     if (this.asteroid.y > 700) {
       this.asteroid.x = Math.random() * this.sys.canvas.width;
       this.asteroid.y = -100;
-      level += 1;
-      asteroidSpeed = asteroidSpeed + 20;
+      this.level += 1;
+      this.asteroidSpeed = this.asteroidSpeed + 20;
     }
 
     // Light.
     this.light.x = this.spaceship.x;
     this.light.y = this.spaceship.y;
+
+    // Text updates.
+    this.text.text = `Level ${this.level}`;
+
+    // Setting a new level
+    this.game.registry.set(`level`, this.level);
   }
 }

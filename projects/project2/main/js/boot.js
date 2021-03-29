@@ -36,22 +36,23 @@ class Boot extends Phaser.Scene {
       frameHeight: 260,
     });
 
-    // When it finishes loading it will switch to the play scene.
-    this.load.on("complete", () => {
-      this.scene.start("play");
-    });
-  }
-
-  create() {
     let style = {
-      fontFamily: "sans-serif",
-      fontSize: "40px",
+      fontSize: "30px",
+      align: "center",
+      fontFamily: "arial",
       color: "#ffffff",
     };
     // Loading text.
     let loadingString = "Loading...";
-    this.add.text(720, 360, loadingString, style);
+    this.add.text(720, 360, loadingString, style).setOrigin(0.5);
+
+    // When it finishes loading it will switch to the play scene.
+    this.load.on("complete", () => {
+      this.scene.start("title");
+    });
   }
+
+  create() {}
 
   update() {}
 }

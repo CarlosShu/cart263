@@ -12,7 +12,7 @@ let config = {
       gravity: { y: 800 },
     },
   },
-  scene: [Boot, Play],
+  scene: [Boot, Title, Play],
 };
 
 let game = new Phaser.Game(config);

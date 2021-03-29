@@ -16,5 +16,3 @@ let config = {
 };
 
 let game = new Phaser.Game(config);
-let level = 1;
-let asteroidSpeed = 200;

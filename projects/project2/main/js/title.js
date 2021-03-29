@@ -6,17 +6,19 @@ class Title extends Phaser.Scene {
   create() {
     // Title.
     this.text = this.add
-      .text(300, 300, "SPACE GAME", {
-        fontSize: "45px",
+      .text(720, 360, "BLOCK MANIA", {
+        fontSize: "100px",
         align: "center",
+        fontFamily: "arial",
       })
       .setOrigin(0.5);
 
-    // Play again.
+    // Start to Play.
     this.play = this.add
-      .text(300, 550, "Press SPACE to start.", {
+      .text(720, 680, "Press SPACE to Play", {
         fontSize: "15px",
         align: "center",
+        fontFamily: "arial",
       })
       .setOrigin(0.5);
 
@@ -29,7 +31,7 @@ class Title extends Phaser.Scene {
   update() {
     // Reset.
     if (this.cursors.space.isDown) {
-      this.scene.start("instructions");
+      this.scene.start("play");
     }
   }
 }

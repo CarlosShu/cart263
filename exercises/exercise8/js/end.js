@@ -4,9 +4,11 @@ class End extends Phaser.Scene {
   }
 
   create() {
+    this.furthestLevel = this.game.registry.get(`level`);
+
     // End Score.
     this.text = this.add
-      .text(300, 300, "Your Final Score: " + level, {
+      .text(300, 300, "Your Final Score: " + this.furthestLevel, {
         fontSize: "30px",
         align: "center",
       })
@@ -30,8 +32,8 @@ class End extends Phaser.Scene {
     // Reset.
     if (this.cursors.reset.isDown) {
       this.scene.start("play");
-      level = 1;
-      asteroidSpeed = 200;
+      this.level = 1;
+      this.asteroidSpeed = 200;
     }
   }
 }
