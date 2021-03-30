@@ -4,9 +4,6 @@ class Play extends Phaser.Scene {
   }
 
   create() {
-    let scene = this;
-
-    // Variables.
     this.facing = "right";
     this.text;
     this.currentTime = 150;
@@ -16,7 +13,7 @@ class Play extends Phaser.Scene {
     this.sky = this.add.group({
       defaultKey: "sky",
     });
-    this.sky.create(720, 360).setDepth(-3).setPipeline("Light2D");
+    this.sky.create(720, 360).setPipeline("Light2D");
 
     // Ground.
     this.ground = this.physics.add.staticGroup({
@@ -26,7 +23,6 @@ class Play extends Phaser.Scene {
     });
     this.ground
       .create(720, 670)
-      .setDepth(-2)
       .setScale(0.5)
       .refreshBody()
       .setSize(1500, 150, true)
@@ -45,7 +41,6 @@ class Play extends Phaser.Scene {
     this.player.setBounce(0.4); // Player bounce off of the ground.
     this.player.setCollideWorldBounds(true); // Boundaries of the world.
     this.player.setSize(75, 260, true);
-    this.player.touchesladder = false;
 
     // Calls the Create Animation function.
     this.createAnimations();
@@ -53,14 +48,11 @@ class Play extends Phaser.Scene {
     // Ladder.
     this.ladder = this.physics.add.group({
       defaultKey: "ladder",
+      bounceY: 0.25,
       collideWorldBounds: true,
     });
 
-    this.ladder
-      .create(300, 150)
-      .setDepth(-1)
-      .setScale(0.25)
-      .setPipeline("Light2D");
+    this.ladder.create(300, 400).setScale(0.25).setPipeline("Light2D");
 
     // Block.
     this.block = this.physics.add.group({
@@ -74,6 +66,26 @@ class Play extends Phaser.Scene {
 
     // Set the tint.
     // .setTint(0x00ff00)
+
+    // Moving platform X.
+    this.movingPlatformX = this.physics.add.group({
+      defaultKey: "platform",
+      bounceY: 0.25,
+      bounceX: 0.25,
+      collideWorldBounds: true,
+      immovable: true,
+      allowGravity: false,
+    });
+
+    // Moving platform Y.
+    this.movingPlatformY = this.physics.add.group({
+      defaultKey: "platform",
+      bounceY: 0.25,
+      bounceX: 0.25,
+      collideWorldBounds: true,
+      immovable: true,
+      allowGravity: false,
+    });
 
     // Platform.
     this.platform = this.physics.add.group({
@@ -89,21 +101,6 @@ class Play extends Phaser.Scene {
     this.platform.create(800, 325).setScale(0.25).setPipeline("Light2D");
     this.platform.create(1200, 325).setScale(0.25).setPipeline("Light2D");
 
-    // Colliders.
-    this.physics.add.collider(this.player, this.ground);
-    this.physics.add.collider(this.player, this.movingPlatformX);
-    this.physics.add.collider(this.player, this.movingPlatformY);
-    this.physics.add.collider(this.player, this.platform);
-    this.physics.add.collider(this.player, this.block);
-    this.physics.add.collider(this.block, this.ground);
-    this.physics.add.collider(this.block, this.block);
-    this.physics.add.collider(this.ladder, this.ground);
-
-    // Overlaps.
-    this.physics.add.overlap(this.player, this.ladder, function (b1, b2) {
-      scene.player.touchesladder = true;
-    });
-
     // Cursor keys.
     this.cursors = this.input.keyboard.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -113,6 +110,17 @@ class Play extends Phaser.Scene {
       shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
       reset: Phaser.Input.Keyboard.KeyCodes.R,
     });
+
+    // Colliders.
+
+    this.physics.add.collider(this.player, this.ground);
+    this.physics.add.collider(this.player, this.movingPlatformX);
+    this.physics.add.collider(this.player, this.movingPlatformY);
+    this.physics.add.collider(this.player, this.platform);
+    this.physics.add.collider(this.player, this.block);
+    this.physics.add.collider(this.block, this.ground);
+    this.physics.add.collider(this.block, this.block);
+    this.physics.add.collider(this.ladder, this.ground);
 
     // Camera function.
     this.camera = this.cameras.main.startFollow(this.player);
@@ -129,7 +137,7 @@ class Play extends Phaser.Scene {
       .text(0, 0, "TEXT", {
         fontSize: "15px",
         align: "center",
-        fontFamily: "block",
+        fontFamily: "arial",
       })
       .setOrigin(0.5);
 
@@ -145,11 +153,11 @@ class Play extends Phaser.Scene {
   update() {
     // Updates the text.
     if (this.currentTime > 100) {
-      this.text.setText("Use WASD to walk, jump, and crouch");
+      this.text.setText("Use WASD to walk, jump, and crouch.");
     } else if (this.currentTime <= 100 && this.currentTime > 50) {
-      this.text.setText("Hold SHIFT to sprint");
+      this.text.setText("Hold SHIFT to sprint.");
     } else if (this.currentTime <= 50) {
-      this.text.setText("Press R to reset the level");
+      this.text.setText("Press R to reset the level.");
     }
 
     // Updates the position of the text relative to the player's position.
@@ -176,8 +184,8 @@ class Play extends Phaser.Scene {
       // Waling left.
       else if (!this.player.body.touching.left) {
         this.player.setVelocityX(-180);
-        this.player.anims.play("walk-left", true);
-        this.shadow.anims.play("walk-left", true);
+        this.player.anims.play("left", true);
+        this.shadow.anims.play("left", true);
         this.facing = "left";
       } else if (this.cursors.shift.isDown && this.player.body.touching.left) {
         this.player.setVelocityX(-360);
@@ -204,8 +212,8 @@ class Play extends Phaser.Scene {
         // Waling right.
       } else if (!this.player.body.touching.right) {
         this.player.setVelocityX(180);
-        this.player.anims.play("walk-right", true);
-        this.shadow.anims.play("walk-right", true);
+        this.player.anims.play("right", true);
+        this.shadow.anims.play("right", true);
         this.facing = "right";
         // Sprinting right.
       } else if (this.cursors.shift.isDown && this.player.body.touching.right) {
@@ -251,10 +259,7 @@ class Play extends Phaser.Scene {
           this.player.anims.play("idle-left", true);
           this.shadow.anims.play("idle-left", true);
         }
-      } else if (
-        !this.player.body.touching.down &&
-        !this.player.touchesladder
-      ) {
+      } else if (!this.player.body.touching.down) {
         if (this.facing == "right") {
           this.player.anims.play("up-right", true);
           this.shadow.anims.play("up-right", true);
@@ -265,30 +270,31 @@ class Play extends Phaser.Scene {
       }
     }
 
-    // Jump.
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-500);
-    }
+    // Adds overlaps.
+    this.physics.add.overlap(this.player, this.ladder, this.isOnLadder);
 
-    // If the player is touching the Ladder.
-    if (this.player.touchesladder) {
-      if (this.cursors.up.isDown) {
-        this.player.body.velocity.y = -250;
-        this.player.anims.play("climb", true);
-        this.shadow.anims.play("climb", true);
-        this.facing = "left";
+    // Jump.
+    if (onLadder == "false") {
+      if (this.cursors.up.isDown && this.player.body.touching.down) {
+        this.player.setVelocityY(-500);
       }
     }
 
-    // Resets ladder variable.
-    this.player.touchesladder = false;
+    // Ladder.
+    if (onLadder == "true") {
+      if (this.cursors.up.isDown) {
+        this.player.body.velocity.y = -250;
+      }
+      if (this.cursors.down.isDown) {
+        this.player.body.velocity.y = -250;
+      }
+    }
 
     // Resets the scene.
     if (this.cursors.reset.isDown) {
       this.scene.restart();
     }
 
-    // Camera zoom.
     this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       if (deltaY > 0) {
         this.camera.setZoom(1);
@@ -298,6 +304,11 @@ class Play extends Phaser.Scene {
       } else {
       }
     });
+  }
+
+  // Checks if the player is on the ladder.
+  isOnLadder() {
+    onLadder = "true";
   }
 
   // Create animations function.
@@ -326,7 +337,7 @@ class Play extends Phaser.Scene {
 
     // Walking left animation.
     this.anims.create({
-      key: "walk-left",
+      key: "left",
       frames: this.anims.generateFrameNumbers("avatar-walk", {
         start: 0,
         end: 31,
@@ -337,7 +348,7 @@ class Play extends Phaser.Scene {
 
     // Walking Right animation.
     this.anims.create({
-      key: "walk-right",
+      key: "right",
       frames: this.anims.generateFrameNumbers("avatar-walk", {
         start: 32,
         end: 63,
@@ -429,17 +440,6 @@ class Play extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers("avatar-push", {
         start: 32,
         end: 63,
-      }),
-      frameRate: 30,
-      repeat: -1,
-    });
-
-    // Climb animation.
-    this.anims.create({
-      key: "climb",
-      frames: this.anims.generateFrameNumbers("avatar-climb", {
-        start: 0,
-        end: 32,
       }),
       frameRate: 30,
       repeat: -1,

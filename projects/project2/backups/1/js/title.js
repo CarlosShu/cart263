@@ -9,7 +9,7 @@ class Title extends Phaser.Scene {
       .text(720, 360, "BLOCK MANIA", {
         fontSize: "100px",
         align: "center",
-        fontFamily: "block",
+        fontFamily: "arial",
       })
       .setOrigin(0.5);
 
@@ -18,7 +18,7 @@ class Title extends Phaser.Scene {
       .text(720, 680, "Press SPACE to Play", {
         fontSize: "15px",
         align: "center",
-        fontFamily: "block",
+        fontFamily: "arial",
       })
       .setOrigin(0.5);
 

@@ -51,16 +51,11 @@ class Play extends Phaser.Scene {
     this.createAnimations();
 
     // Ladder.
-    this.ladder = this.physics.add.group({
-      defaultKey: "ladder",
-      collideWorldBounds: true,
-    });
-
-    this.ladder
-      .create(300, 150)
+    this.ladder = this.physics.add
+      .sprite(250, 150, "ladder")
       .setDepth(-1)
-      .setScale(0.25)
-      .setPipeline("Light2D");
+      .setOrigin(0, 0)
+      .setScale(0.25);
 
     // Block.
     this.block = this.physics.add.group({
@@ -98,6 +93,7 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.block, this.ground);
     this.physics.add.collider(this.block, this.block);
     this.physics.add.collider(this.ladder, this.ground);
+    this.physics.add.collider(this.ladder, this.block);
 
     // Overlaps.
     this.physics.add.overlap(this.player, this.ladder, function (b1, b2) {
@@ -129,7 +125,7 @@ class Play extends Phaser.Scene {
       .text(0, 0, "TEXT", {
         fontSize: "15px",
         align: "center",
-        fontFamily: "block",
+        fontFamily: "arial",
       })
       .setOrigin(0.5);
 
@@ -145,11 +141,11 @@ class Play extends Phaser.Scene {
   update() {
     // Updates the text.
     if (this.currentTime > 100) {
-      this.text.setText("Use WASD to walk, jump, and crouch");
+      this.text.setText("Use WASD to walk, jump, and crouch.");
     } else if (this.currentTime <= 100 && this.currentTime > 50) {
-      this.text.setText("Hold SHIFT to sprint");
+      this.text.setText("Hold SHIFT to sprint.");
     } else if (this.currentTime <= 50) {
-      this.text.setText("Press R to reset the level");
+      this.text.setText("Press R to reset the level.");
     }
 
     // Updates the position of the text relative to the player's position.
@@ -186,7 +182,7 @@ class Play extends Phaser.Scene {
         this.facing = "left";
       }
       // If the player is touching the block.
-      else if (this.player.body.touching.left) {
+      else if (this.player.body.touching.left && !this.player.touchesladder) {
         this.player.setVelocityX(-120);
         this.player.anims.play("push-left", true);
         this.shadow.anims.play("push-left", true);
@@ -214,7 +210,7 @@ class Play extends Phaser.Scene {
         this.shadow.anims.play("push-right", true);
         this.facing = "right";
       } // If the player is touching the block.
-      else if (this.player.body.touching.right) {
+      else if (this.player.body.touching.right && !this.player.touchesladder) {
         this.player.setVelocityX(120);
         this.player.anims.play("push-right", true);
         this.shadow.anims.play("push-right", true);
@@ -276,7 +272,6 @@ class Play extends Phaser.Scene {
         this.player.body.velocity.y = -250;
         this.player.anims.play("climb", true);
         this.shadow.anims.play("climb", true);
-        this.facing = "left";
       }
     }
 

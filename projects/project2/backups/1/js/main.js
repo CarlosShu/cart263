@@ -16,3 +16,11 @@ let config = {
 };
 
 let game = new Phaser.Game(config);
+
+let facing = "right";
+let cursors;
+let score = 0;
+let text;
+let currentTime = 150;
+let timedEvent;
+let onLadder = "false";
