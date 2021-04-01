@@ -7,10 +7,8 @@ class Play extends Phaser.Scene {
     let scene = this;
 
     // Variables.
+    this.hubStars = 0;
     this.facing = "right";
-    this.text;
-    this.currentTime = 150;
-    this.timedEvent;
 
     // Sky Background.
     this.sky = this.add.group({
@@ -42,7 +40,7 @@ class Play extends Phaser.Scene {
     //  Player.
     this.player = this.physics.add.sprite(0, 0, "avatar-idle");
     this.player.setScale(0.25);
-    this.player.setBounce(0.4); // Player bounce off of the ground.
+    //  this.player.setBounce(0.4); // Player bounce off of the ground.
     this.player.setCollideWorldBounds(false); // Boundaries of the world.
     this.player.setSize(75, 260, true);
     this.player.touchesdoor = false;
@@ -66,6 +64,19 @@ class Play extends Phaser.Scene {
       .setScale(0.25)
       .setSize(250, 599, true)
       .setTint(0x00ff00)
+      .setPipeline("Light2D");
+
+    // Door.
+    this.star = this.physics.add.group({
+      defaultKey: "star",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    this.star
+      .create(1200, 225)
+      .setScale(0.5)
+      .setTint(0xffffff)
       .setPipeline("Light2D");
 
     // Ladder.
@@ -118,7 +129,6 @@ class Play extends Phaser.Scene {
 
     // Colliders.
     this.physics.add.collider(this.player, this.ground);
-    this.physics.add.collider(this.player, this.block);
     this.physics.add.collider(this.player, this.movingPlatformX);
     this.physics.add.collider(this.player, this.movingPlatformY);
     this.physics.add.collider(this.player, this.platform);
@@ -128,6 +138,13 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.ladder, this.ground);
 
     // COlliders with functions.
+    this.physics.add.collider(
+      this.player,
+      this.block,
+      this.hitBlock,
+      null,
+      this
+    );
     this.physics.add.collider(this.player, this.bouncingBlock, function (
       b1,
       b2
@@ -136,6 +153,13 @@ class Play extends Phaser.Scene {
     });
 
     // Overlaps with functions.
+    this.physics.add.overlap(
+      this.player,
+      this.star,
+      this.collectStar,
+      null,
+      this
+    );
     this.physics.add.overlap(this.player, this.door, function (b1, b2) {
       scene.player.touchesdoor = true;
     });
@@ -158,47 +182,35 @@ class Play extends Phaser.Scene {
     this.camera = this.cameras.main.startFollow(this.player);
     this.camera.setZoom(1);
 
+    // Lights.
+    this.lights.enable();
+    this.lights.setAmbientColor(0x808080);
+
     // Dim light that follows the player.
     this.light = this.lights.addLight(0, 0, 720);
     this.light.setIntensity(1);
-    this.lights.enable();
-    this.lights.setAmbientColor(0xc0c0c0);
 
-    //  So we can see how much health we have left
-    this.text = this.add
-      .text(0, 0, "TEXT", {
+    // Star glowing light.
+    this.starLight = this.lights.addLight(1200, 225, 360, 0xffffff);
+    this.starLight.setIntensity(2);
+
+    //  Stars collected.
+    this.hud = this.add
+      .text(0, 0, this.hubStars + "/3 Stars", {
         fontSize: "15px",
         align: "center",
         fontFamily: "block",
       })
       .setOrigin(0.5);
-
-    // Time loop.
-    this.timedEvent = this.time.addEvent({
-      delay: 50,
-      callback: this.currentText,
-      callbackScope: this,
-      loop: true,
-    });
   }
 
   update() {
-    // Updates the text.
-    if (this.player.touchesdoor == false) {
-      if (this.currentTime > 100) {
-        this.text.setText("Use WASD to walk, jump, and crouch");
-      } else if (this.currentTime <= 100 && this.currentTime > 50) {
-        this.text.setText("Hold SHIFT to sprint");
-      } else if (this.currentTime <= 50) {
-        this.text.setText("Press R to reset the level");
-      }
-    } else if (this.player.touchesdoor == true) {
-      this.text.setText("Press SPACE to enter The Forest");
-    }
-
     // Updates the position of the text relative to the player's position.
-    this.text.x = this.player.body.position.x;
-    this.text.y = this.player.body.position.y + 350;
+    this.hud.x = this.player.body.position.x + 650;
+    this.hud.y = this.player.body.position.y - 300;
+
+    // Text updates.
+    this.hud.text = `${this.hubStars}/3 Stars`;
 
     // Shadow offset.
     this.shadow.x = this.player.body.position.x - 5;
@@ -276,6 +288,7 @@ class Play extends Phaser.Scene {
       // Crouching.
     } else if (this.cursors.down.isDown) {
       this.player.setVelocityX(0);
+      this.player.setVelocityY(800);
       if (
         this.facing === "right" &&
         this.player.anims.currentAnim.key !== "down-right"
@@ -344,11 +357,6 @@ class Play extends Phaser.Scene {
       }
     }
 
-    // Resets the scene.
-    if (this.cursors.reset.isDown) {
-      this.scene.restart();
-    }
-
     // Camera zoom.
     this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       if (deltaY > 0) {
@@ -368,6 +376,11 @@ class Play extends Phaser.Scene {
 
     // Resets Door variable.
     this.player.touchesladder = false;
+
+    // Resets the scene.
+    if (this.cursors.reset.isDown) {
+      this.scene.restart();
+    }
   }
 
   // Create animations function.
@@ -516,11 +529,17 @@ class Play extends Phaser.Scene {
     });
   }
 
-  // Timer that switches between the displayed text.
-  currentText() {
-    this.currentTime--;
-    if (this.currentTime === 0) {
-      this.currentTime = 150;
+  // Prevents the block from pushing through the ground.
+  hitBlock(player, block) {
+    if (this.player.body.touching.down) {
+      this.player.setVelocityY(0);
+      this.block.setVelocityY(0);
     }
+  }
+
+  // COllects the star.
+  collectStar(player, star) {
+    star.destroy();
+    this.hubStars += 1;
   }
 }
