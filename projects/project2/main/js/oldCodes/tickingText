@@ -49,3 +49,13 @@ currentText() {
     this.currentTime = 150;
   }
 }
+
+// Foreground.
+this.foreground = this.add.group({
+  key: "groundFloor",
+  setScale: { x: 0.5, y: 0.5 },
+  repeat: 2,
+  setXY: { x: -720, y: 0, stepX: 1500 },
+});
+this.foreground.children.iterateLocal("setDepth", -1);
+this.foreground.children.iterateLocal("setPipeline", "Light2D");

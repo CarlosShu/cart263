@@ -11,11 +11,27 @@ class Boot extends Phaser.Scene {
 
     this.load.image("sky", "assets/images/sky.png");
     this.load.image("ground", "assets/images/ground.png");
+    this.load.image("groundFloor", "assets/images/groundFloor.png");
     this.load.image("door", "assets/images/door.png");
     this.load.image("star", "assets/images/star.png");
-    this.load.image("block", "assets/images/block.png");
-    this.load.image("platform", "assets/images/platform.png");
     this.load.image("ladder", "assets/images/ladder.png");
+
+    // Blocks.
+    this.load.image("block", "assets/images/block.png");
+    this.load.image("blockWide", "assets/images/blockWide.png");
+    this.load.image("bigBlock", "assets/images/bigBlock.png");
+    this.load.image("bigBlockWide", "assets/images/bigBlockWide.png");
+    this.load.image("blockTall", "assets/images/blockTall.png");
+
+    // Platforms.
+    this.load.image("platform", "assets/images/platform.png");
+    this.load.image("platformWide", "assets/images/platformWide.png");
+    this.load.image("platformWider", "assets/images/platformWider.png");
+
+    // Forest Assets.
+    this.load.image("forestTree", "assets/images/forestTree.png");
+
+    // Avatar Sprites.
     this.load.spritesheet("avatar-idle", "assets/images/avatar-idle.png", {
       frameWidth: 200,
       frameHeight: 260,

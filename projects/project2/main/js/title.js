@@ -31,7 +31,7 @@ class Title extends Phaser.Scene {
   update() {
     // Start.
     if (this.cursors.space.isDown) {
-      this.scene.start("play");
+      this.scene.start("forest");
     }
   }
 }

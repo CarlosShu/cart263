@@ -39,7 +39,7 @@ class Play extends Phaser.Scene {
     this.shadow.setPipeline("Light2D");
 
     //  Player.
-    this.player = this.physics.add.sprite(0, 550, "avatar-idle");
+    this.player = this.physics.add.sprite(0, 0, "avatar-idle");
     this.player.setScale(0.25);
     this.player.setCollideWorldBounds(false); // Boundaries of the world.
     this.player.setSize(75, 260, true);
@@ -54,13 +54,12 @@ class Play extends Phaser.Scene {
     this.door = this.physics.add.group({
       defaultKey: "door",
       dragX: 1500,
-      immovable: true,
-      allowGravity: false,
     });
-    this.door.create(1200, 550);
-    this.door.children.iterateLocal("setDepth", -1);
+    this.door.create(1200, 400);
+    this.door.children.iterateLocal("setDepth", "-1");
     this.door.children.iterateLocal("setScale", "0.25");
     this.door.children.iterateLocal("setSize", 250, 599);
+    this.door.children.iterateLocal("setTint", "0x00ff00");
     this.door.children.iterateLocal("setPipeline", "Light2D");
 
     // Star.
@@ -380,7 +379,7 @@ class Play extends Phaser.Scene {
       // Crouching.
     } else if (this.cursors.down.isDown) {
       this.player.setVelocityX(0);
-      this.player.setVelocityY(600);
+      this.player.setVelocityY(800);
       if (
         this.facing === "right" &&
         this.player.anims.currentAnim.key !== "down-right"
@@ -435,7 +434,7 @@ class Play extends Phaser.Scene {
     // If the player is touching the Ladder.
     if (this.player.touchesladder) {
       if (this.cursors.up.isDown) {
-        this.player.body.velocity.y = -150;
+        this.player.body.velocity.y = -250;
         this.player.anims.play("climb", true);
         this.shadow.anims.play("climb", true);
         this.facing = "left";
@@ -445,7 +444,7 @@ class Play extends Phaser.Scene {
     // Go to the next level.
     if (this.player.touchesdoor == true) {
       if (this.cursors.space.isDown) {
-        this.scene.start("forest");
+        this.scene.start("title");
       }
     }
 

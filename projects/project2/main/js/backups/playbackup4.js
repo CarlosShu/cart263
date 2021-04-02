@@ -25,7 +25,7 @@ class Play extends Phaser.Scene {
       isStatic: true,
       setScale: { x: 0.5, y: 0.5 },
       repeat: 2,
-      setXY: { x: -720, y: 700, stepX: 1500 },
+      setXY: { x: -720, y: 670, stepX: 1500 },
     });
     this.ground.children.iterateLocal("setSize", 1500, 150);
     this.ground.children.iterateLocal("setDepth", -2);
@@ -39,7 +39,7 @@ class Play extends Phaser.Scene {
     this.shadow.setPipeline("Light2D");
 
     //  Player.
-    this.player = this.physics.add.sprite(0, 550, "avatar-idle");
+    this.player = this.physics.add.sprite(0, 0, "avatar-idle");
     this.player.setScale(0.25);
     this.player.setCollideWorldBounds(false); // Boundaries of the world.
     this.player.setSize(75, 260, true);
@@ -54,13 +54,12 @@ class Play extends Phaser.Scene {
     this.door = this.physics.add.group({
       defaultKey: "door",
       dragX: 1500,
-      immovable: true,
-      allowGravity: false,
     });
-    this.door.create(1200, 550);
-    this.door.children.iterateLocal("setDepth", -1);
+    this.door.create(1200, 400);
+    this.door.children.iterateLocal("setDepth", "-1");
     this.door.children.iterateLocal("setScale", "0.25");
     this.door.children.iterateLocal("setSize", 250, 599);
+    this.door.children.iterateLocal("setTint", "0x00ff00");
     this.door.children.iterateLocal("setPipeline", "Light2D");
 
     // Star.
@@ -106,7 +105,7 @@ class Play extends Phaser.Scene {
       defaultKey: "blockTall",
       dragX: 2500,
     });
-    this.blockTall.create(-400, 400);
+    this.blockTall.create(-200, 400);
     this.blockTall.children.iterateLocal("setScale", "0.25");
     this.blockTall.children.iterateLocal("setPipeline", "Light2D");
 
@@ -116,7 +115,7 @@ class Play extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
-    this.bigBlock.create(-100, 550);
+    this.bigBlock.create(2400, 520);
     this.bigBlock.children.iterateLocal("setScale", "0.25");
     this.bigBlock.children.iterateLocal("setPipeline", "Light2D");
 
@@ -126,7 +125,7 @@ class Play extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
-    this.bigBlockWide.create(2000, 550);
+    this.bigBlockWide.create(2800, 520);
     this.bigBlockWide.children.iterateLocal("setScale", "0.25");
     this.bigBlockWide.children.iterateLocal("setPipeline", "Light2D");
 
@@ -287,7 +286,7 @@ class Play extends Phaser.Scene {
 
     // Random Text updates.
     if (this.player.touchesdoor == true) {
-      this.text.setText("Press SPACE to Go to the Forest");
+      this.text.setText("Press SPACE to enter The Forest");
     } else {
       this.text.setText("");
     }
@@ -306,23 +305,14 @@ class Play extends Phaser.Scene {
     // Going left.
     if (this.cursors.left.isDown) {
       // Sprinting left.
-      if (
-        this.cursors.shift.isDown & !this.player.body.touching.left ||
-        this.cursors.shift.isDown & this.player.touchesdoor ||
-        this.cursors.shift.isDown & this.player.touchesladder
-      ) {
+      if (this.cursors.shift.isDown) {
         this.player.setVelocityX(-240);
         this.player.anims.play("run-left", true);
         this.shadow.anims.play("run-left", true);
         this.facing = "left";
-        // If the player collides with the block it slows the speed down.
-      } else if (this.cursors.shift.isDown && this.player.body.touching.left) {
-        this.player.setVelocityX(-90);
-        this.player.anims.play("push-left", true);
-        this.shadow.anims.play("push-left", true);
-        this.facing = "left";
-        // Walking left
-      } else if (
+      }
+      // Waling left.
+      else if (
         !this.player.body.touching.left ||
         this.player.touchesdoor ||
         this.player.touchesladder
@@ -331,8 +321,13 @@ class Play extends Phaser.Scene {
         this.player.anims.play("walk-left", true);
         this.shadow.anims.play("walk-left", true);
         this.facing = "left";
+      } else if (this.cursors.shift.isDown && this.player.body.touching.left) {
+        this.player.setVelocityX(-90);
+        this.player.anims.play("push-left", true);
+        this.shadow.anims.play("push-left", true);
+        this.facing = "left";
       }
-      // If the player collides with the block it slows the speed down.
+      // If the player is touching the block.
       else if (this.player.body.touching.left) {
         this.player.setVelocityX(-90);
         this.player.anims.play("push-left", true);
@@ -343,22 +338,12 @@ class Play extends Phaser.Scene {
       // Going right.
     } else if (this.cursors.right.isDown) {
       // Sprinting Right.
-      if (
-        this.cursors.shift.isDown & !this.player.body.touching.right ||
-        this.cursors.shift.isDown & this.player.touchesdoor ||
-        this.cursors.shift.isDown & this.player.touchesladder
-      ) {
+      if (this.cursors.shift.isDown) {
         this.player.setVelocityX(240);
         this.player.anims.play("run-right", true);
         this.shadow.anims.play("run-right", true);
         this.facing = "right";
-        // If the player collides with the block it slows the speed down.
-      } else if (this.cursors.shift.isDown && this.player.body.touching.right) {
-        this.player.setVelocityX(90);
-        this.player.anims.play("push-right", true);
-        this.shadow.anims.play("push-right", true);
-        this.facing = "right";
-        // Walking right
+        // Waling right.
       } else if (
         !this.player.body.touching.right ||
         this.player.touchesdoor ||
@@ -368,8 +353,13 @@ class Play extends Phaser.Scene {
         this.player.anims.play("walk-right", true);
         this.shadow.anims.play("walk-right", true);
         this.facing = "right";
-      }
-      // If the player collides with the block it slows the speed down.
+        // Sprinting right.
+      } else if (this.cursors.shift.isDown && this.player.body.touching.right) {
+        this.player.setVelocityX(90);
+        this.player.anims.play("push-right", true);
+        this.shadow.anims.play("push-right", true);
+        this.facing = "right";
+      } // If the player is touching the block.
       else if (this.player.body.touching.right) {
         this.player.setVelocityX(90);
         this.player.anims.play("push-right", true);
@@ -380,7 +370,7 @@ class Play extends Phaser.Scene {
       // Crouching.
     } else if (this.cursors.down.isDown) {
       this.player.setVelocityX(0);
-      this.player.setVelocityY(600);
+      this.player.setVelocityY(800);
       if (
         this.facing === "right" &&
         this.player.anims.currentAnim.key !== "down-right"
@@ -435,7 +425,7 @@ class Play extends Phaser.Scene {
     // If the player is touching the Ladder.
     if (this.player.touchesladder) {
       if (this.cursors.up.isDown) {
-        this.player.body.velocity.y = -150;
+        this.player.body.velocity.y = -250;
         this.player.anims.play("climb", true);
         this.shadow.anims.play("climb", true);
         this.facing = "left";
@@ -445,7 +435,7 @@ class Play extends Phaser.Scene {
     // Go to the next level.
     if (this.player.touchesdoor == true) {
       if (this.cursors.space.isDown) {
-        this.scene.start("forest");
+        this.scene.start("title");
       }
     }
 

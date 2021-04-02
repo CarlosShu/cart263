@@ -1,12 +1,19 @@
-class Play extends Phaser.Scene {
+class Forest extends Phaser.Scene {
   constructor() {
-    super({ key: "play" });
+    super({ key: "forest" });
   }
 
   create() {
     let scene = this;
 
     // Variables.
+    this.skyDepth = -5;
+    this.backgroundDepth = -4;
+    this.midgroundDepth = -3;
+    this.playerDepth = -2;
+    this.objectsDepth = -1;
+    this.foregroundDepth = 0;
+
     this.hubStars = 0;
     this.facing = "right";
 
@@ -16,23 +23,81 @@ class Play extends Phaser.Scene {
       repeat: 2,
       setXY: { x: -720, y: 360, stepX: 1500 },
     });
-    this.sky.children.iterateLocal("setDepth", -2);
+    this.sky.children.iterateLocal("setDepth", this.skyDepth);
     this.sky.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground.
+    this.background = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 2,
+      setXY: { x: -720, y: 635, stepX: 1500 },
+    });
+    this.background.children.iterateLocal("setSize", 1500, 150);
+    this.background.children.iterateLocal("setDepth", this.backgroundDepth);
+    this.background.children.iterateLocal("setTint", "0x00ff00");
+    this.background.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground.
+    this.foreground = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 2,
+      setXY: { x: -720, y: 765, stepX: 1500 },
+    });
+    this.foreground.children.iterateLocal("setSize", 1500, 150);
+    this.foreground.children.iterateLocal("setDepth", this.foregroundDepth);
+    this.foreground.children.iterateLocal("setTint", "0x00ff00");
+    this.foreground.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background Forest Tree.
+    this.backgroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720, y: 412, stepX: 1000 },
+    });
+    this.backgroundForestTree.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundForestTree.children.iterateLocal(
+      "setDepth",
+      this.backgroundDepth
+    );
+    this.backgroundForestTree.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground Forest Tree.
+    this.foregroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720 + 500, y: 512, stepX: 2000 },
+    });
+    this.foregroundForestTree.children.iterateLocal("setSize", 1500, 150);
+    this.foregroundForestTree.children.iterateLocal(
+      "setDepth",
+      this.foregroundDepth
+    );
+    this.foregroundForestTree.children.iterateLocal("setPipeline", "Light2D");
 
     // Ground.
     this.ground = this.physics.add.staticGroup({
       key: "ground",
       isStatic: true,
       setScale: { x: 0.5, y: 0.5 },
-      repeat: 2,
+      repeat: 4,
       setXY: { x: -720, y: 700, stepX: 1500 },
     });
     this.ground.children.iterateLocal("setSize", 1500, 150);
-    this.ground.children.iterateLocal("setDepth", -2);
+    this.ground.children.iterateLocal("setDepth", this.midgroundDepth);
+    this.ground.children.iterateLocal("setTint", "0xFFC080");
     this.ground.children.iterateLocal("setPipeline", "Light2D");
 
     //  Shadow of the player.
     this.shadow = this.add.sprite(0, 0, "avatar-idle");
+    this.shadow.setDepth(this.playerDepth);
     this.shadow.setScale(0.25);
     this.shadow.setTint(0x000000);
     this.shadow.setAlpha(0.6);
@@ -40,6 +105,7 @@ class Play extends Phaser.Scene {
 
     //  Player.
     this.player = this.physics.add.sprite(0, 550, "avatar-idle");
+    this.player.setDepth(this.playerDepth);
     this.player.setScale(0.25);
     this.player.setCollideWorldBounds(false); // Boundaries of the world.
     this.player.setSize(75, 260, true);
@@ -57,10 +123,11 @@ class Play extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
-    this.door.create(1200, 550);
-    this.door.children.iterateLocal("setDepth", -1);
+    this.door.create(0, 550);
+    this.door.children.iterateLocal("setDepth", this.midgroundDepth);
     this.door.children.iterateLocal("setScale", "0.25");
     this.door.children.iterateLocal("setSize", 250, 599);
+    this.door.children.iterateLocal("setTint", "0x00ff00");
     this.door.children.iterateLocal("setPipeline", "Light2D");
 
     // Star.
@@ -70,6 +137,7 @@ class Play extends Phaser.Scene {
       allowGravity: false,
     });
     this.star.create(1200, 225);
+    this.star.children.iterateLocal("setDepth", this.midgroundDepth);
     this.star.children.iterateLocal("setScale", "0.5");
     this.star.children.iterateLocal("setTint", "0xffffff");
     this.star.children.iterateLocal("setPipeline", "Light2D");
@@ -79,7 +147,7 @@ class Play extends Phaser.Scene {
       defaultKey: "ladder",
     });
     this.ladder.create(300, 150);
-    this.ladder.children.iterateLocal("setDepth", -1);
+    this.ladder.children.iterateLocal("setDepth", this.midgroundDepth);
     this.ladder.children.iterateLocal("setScale", "0.25");
     this.ladder.children.iterateLocal("setPipeline", "Light2D");
 
@@ -89,6 +157,7 @@ class Play extends Phaser.Scene {
       dragX: 2500,
     });
     this.block.create(500, 400);
+    this.block.children.iterateLocal("setDepth", this.objectsDepth);
     this.block.children.iterateLocal("setScale", "0.25");
     this.block.children.iterateLocal("setPipeline", "Light2D");
 
@@ -98,6 +167,7 @@ class Play extends Phaser.Scene {
       dragX: 2500,
     });
     this.blockWide.create(1600, 500);
+    this.blockWide.children.iterateLocal("setDepth", this.objectsDepth);
     this.blockWide.children.iterateLocal("setScale", "0.25");
     this.blockWide.children.iterateLocal("setPipeline", "Light2D");
 
@@ -107,6 +177,7 @@ class Play extends Phaser.Scene {
       dragX: 2500,
     });
     this.blockTall.create(-400, 400);
+    this.blockTall.children.iterateLocal("setDepth", this.objectsDepth);
     this.blockTall.children.iterateLocal("setScale", "0.25");
     this.blockTall.children.iterateLocal("setPipeline", "Light2D");
 
@@ -116,7 +187,8 @@ class Play extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
-    this.bigBlock.create(-100, 550);
+    this.bigBlock.create(-600, 550);
+    this.bigBlock.children.iterateLocal("setDepth", this.objectsDepth);
     this.bigBlock.children.iterateLocal("setScale", "0.25");
     this.bigBlock.children.iterateLocal("setPipeline", "Light2D");
 
@@ -127,6 +199,7 @@ class Play extends Phaser.Scene {
       allowGravity: false,
     });
     this.bigBlockWide.create(2000, 550);
+    this.bigBlock.children.iterateLocal("setDepth", this.objectsDepth);
     this.bigBlockWide.children.iterateLocal("setScale", "0.25");
     this.bigBlockWide.children.iterateLocal("setPipeline", "Light2D");
 
@@ -137,6 +210,7 @@ class Play extends Phaser.Scene {
       allowGravity: false,
     });
     this.bouncingBlock.create(1000, 400);
+    this.bouncingBlock.children.iterateLocal("setDepth", this.objectsDepth);
     this.bouncingBlock.children.iterateLocal("setScale", "0.25");
     this.bouncingBlock.children.iterateLocal("setPipeline", "Light2D");
 
@@ -150,11 +224,11 @@ class Play extends Phaser.Scene {
     this.platform.create(600, 425);
     this.platform.create(800, 325);
     this.platform.create(1200, 325);
+    this.platform.children.iterateLocal("setDepth", this.objectsDepth);
     this.platform.children.iterateLocal("setScale", "0.25");
     this.platform.children.iterateLocal("setPipeline", "Light2D");
 
     // Colliders.
-
     this.physics.add.collider(this.ground, this.block);
     this.physics.add.collider(this.ground, this.blockTall);
     this.physics.add.collider(this.ground, this.blockWide);
@@ -234,14 +308,14 @@ class Play extends Phaser.Scene {
 
     // Lights.
     this.lights.enable();
-    this.lights.setAmbientColor(0x808080);
+    this.lights.setAmbientColor(0xff8000);
 
     // Dim light that follows the player.
     this.light = this.lights.addLight(0, 0, 720);
     this.light.setIntensity(1);
 
     // Star glowing light.
-    this.starLight = this.lights.addLight(1200, 225, 360, 0xffffff);
+    this.starLight = this.lights.addLight(1200, 225, 360, 0x00ff00);
     this.starLight.setIntensity(2);
 
     // Random text.
@@ -255,7 +329,7 @@ class Play extends Phaser.Scene {
 
     //  Stars collected.
     this.hudLevel = this.add
-      .text(0, 0, "Level: HUB", {
+      .text(0, 0, "Level: FOREST", {
         fontSize: "15px",
         align: "left",
         fontFamily: "block",
@@ -264,7 +338,7 @@ class Play extends Phaser.Scene {
 
     //  Stars collected.
     this.hudStars = this.add
-      .text(0, 0, this.hubStars + " / 3 Stars", {
+      .text(0, 0, this.hubStars + " / 6 Stars", {
         fontSize: "15px",
         align: "right",
         fontFamily: "block",
@@ -282,18 +356,18 @@ class Play extends Phaser.Scene {
     this.hudStars.y = this.player.body.position.y - 300;
 
     // Updates the position of the hud text relative to the player's position.
-    this.hudLevel.x = this.player.body.position.x - 650;
+    this.hudLevel.x = this.player.body.position.x - 635;
     this.hudLevel.y = this.player.body.position.y - 300;
 
     // Random Text updates.
     if (this.player.touchesdoor == true) {
-      this.text.setText("Press SPACE to Go to the Forest");
+      this.text.setText("Press SPACE to Go to the Hub");
     } else {
       this.text.setText("");
     }
 
     // Hud text updates.
-    this.hudStars.text = `${this.hubStars} / 3 Stars`;
+    this.hudStars.text = `${this.hubStars} / 6 Stars`;
 
     // Shadow offset.
     this.shadow.x = this.player.body.position.x - 5;
@@ -445,7 +519,7 @@ class Play extends Phaser.Scene {
     // Go to the next level.
     if (this.player.touchesdoor == true) {
       if (this.cursors.space.isDown) {
-        this.scene.start("forest");
+        this.scene.start("play");
       }
     }
 
