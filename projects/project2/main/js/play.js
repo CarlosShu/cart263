@@ -12,23 +12,24 @@ class Play extends Phaser.Scene {
 
     // Sky Background.
     this.sky = this.add.group({
-      defaultKey: "sky",
+      key: "sky",
+      repeat: 2,
+      setXY: { x: -720, y: 360, stepX: 1500 },
     });
-    this.sky.create(720, 360).setDepth(-3).setPipeline("Light2D");
+    this.sky.children.iterateLocal("setDepth", -2);
+    this.sky.children.iterateLocal("setPipeline", "Light2D");
 
     // Ground.
     this.ground = this.physics.add.staticGroup({
-      defaultKey: "ground",
+      key: "ground",
       isStatic: true,
-      collideWorldBounds: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 2,
+      setXY: { x: -720, y: 670, stepX: 1500 },
     });
-    this.ground
-      .create(720, 670)
-      .setDepth(-2)
-      .setScale(0.5)
-      .refreshBody()
-      .setSize(1500, 150, true)
-      .setPipeline("Light2D");
+    this.ground.children.iterateLocal("setSize", 1500, 150);
+    this.ground.children.iterateLocal("setDepth", -2);
+    this.ground.children.iterateLocal("setPipeline", "Light2D");
 
     //  Shadow of the player.
     this.shadow = this.add.sprite(0, 0, "avatar-idle");
@@ -40,7 +41,6 @@ class Play extends Phaser.Scene {
     //  Player.
     this.player = this.physics.add.sprite(0, 0, "avatar-idle");
     this.player.setScale(0.25);
-    //  this.player.setBounce(0.4); // Player bounce off of the ground.
     this.player.setCollideWorldBounds(false); // Boundaries of the world.
     this.player.setSize(75, 260, true);
     this.player.touchesdoor = false;
@@ -57,39 +57,33 @@ class Play extends Phaser.Scene {
       dragX: 1500,
       collideWorldBounds: true,
     });
+    this.door.create(1200, 400);
+    this.door.children.iterateLocal("setDepth", "-1");
+    this.door.children.iterateLocal("setScale", "0.25");
+    this.door.children.iterateLocal("setSize", 250, 599);
+    this.door.children.iterateLocal("setTint", "0x00ff00");
+    this.door.children.iterateLocal("setPipeline", "Light2D");
 
-    this.door
-      .create(1200, 400)
-      .setDepth(-1)
-      .setScale(0.25)
-      .setSize(250, 599, true)
-      .setTint(0x00ff00)
-      .setPipeline("Light2D");
-
-    // Door.
+    // Star.
     this.star = this.physics.add.group({
       defaultKey: "star",
       immovable: true,
       allowGravity: false,
     });
-
-    this.star
-      .create(1200, 225)
-      .setScale(0.5)
-      .setTint(0xffffff)
-      .setPipeline("Light2D");
+    this.star.create(1200, 225);
+    this.star.children.iterateLocal("setScale", "0.5");
+    this.star.children.iterateLocal("setTint", "0xffffff");
+    this.star.children.iterateLocal("setPipeline", "Light2D");
 
     // Ladder.
     this.ladder = this.physics.add.group({
       defaultKey: "ladder",
       collideWorldBounds: true,
     });
-
-    this.ladder
-      .create(300, 150)
-      .setDepth(-1)
-      .setScale(0.25)
-      .setPipeline("Light2D");
+    this.ladder.create(300, 150);
+    this.ladder.children.iterateLocal("setDepth", -1);
+    this.ladder.children.iterateLocal("setScale", "0.25");
+    this.ladder.children.iterateLocal("setPipeline", "Light2D");
 
     // Block.
     this.block = this.physics.add.group({
@@ -98,8 +92,9 @@ class Play extends Phaser.Scene {
       dragX: 1500,
       collideWorldBounds: true,
     });
-
-    this.block.create(500, 400).setScale(0.25).setPipeline("Light2D");
+    this.block.create(500, 400);
+    this.block.children.iterateLocal("setScale", "0.25");
+    this.block.children.iterateLocal("setPipeline", "Light2D");
 
     // Bouncing Block.
     this.bouncingBlock = this.physics.add.group({
@@ -109,11 +104,9 @@ class Play extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
-
-    this.bouncingBlock.create(1000, 400).setScale(0.25).setPipeline("Light2D");
-
-    // Set the tint.
-    // .setTint(0x00ff00)
+    this.bouncingBlock.create(1000, 400);
+    this.bouncingBlock.children.iterateLocal("setScale", "0.25");
+    this.bouncingBlock.children.iterateLocal("setPipeline", "Light2D");
 
     // Platform.
     this.platform = this.physics.add.group({
@@ -122,10 +115,12 @@ class Play extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
-    this.platform.create(200, 425).setScale(0.25).setPipeline("Light2D");
-    this.platform.create(600, 425).setScale(0.25).setPipeline("Light2D");
-    this.platform.create(800, 325).setScale(0.25).setPipeline("Light2D");
-    this.platform.create(1200, 325).setScale(0.25).setPipeline("Light2D");
+    this.platform.create(200, 425);
+    this.platform.create(600, 425);
+    this.platform.create(800, 325);
+    this.platform.create(1200, 325);
+    this.platform.children.iterateLocal("setScale", "0.25");
+    this.platform.children.iterateLocal("setPipeline", "Light2D");
 
     // Colliders.
     this.physics.add.collider(this.player, this.ground);
@@ -194,23 +189,56 @@ class Play extends Phaser.Scene {
     this.starLight = this.lights.addLight(1200, 225, 360, 0xffffff);
     this.starLight.setIntensity(2);
 
-    //  Stars collected.
-    this.hud = this.add
-      .text(0, 0, this.hubStars + "/3 Stars", {
+    // Random text.
+    this.text = this.add
+      .text(0, 0, "TEXT", {
         fontSize: "15px",
         align: "center",
+        fontFamily: "block",
+      })
+      .setOrigin(0.5);
+
+    //  Stars collected.
+    this.hudLevel = this.add
+      .text(0, 0, "Level: HUB", {
+        fontSize: "15px",
+        align: "left",
+        fontFamily: "block",
+      })
+      .setOrigin(0.5);
+
+    //  Stars collected.
+    this.hudStars = this.add
+      .text(0, 0, this.hubStars + " / 3 Stars", {
+        fontSize: "15px",
+        align: "right",
         fontFamily: "block",
       })
       .setOrigin(0.5);
   }
 
   update() {
-    // Updates the position of the text relative to the player's position.
-    this.hud.x = this.player.body.position.x + 650;
-    this.hud.y = this.player.body.position.y - 300;
+    // Updates the position of the random text relative to the player's position.
+    this.text.x = this.player.body.position.x;
+    this.text.y = this.player.body.position.y + 350;
 
-    // Text updates.
-    this.hud.text = `${this.hubStars}/3 Stars`;
+    // Updates the position of the hud text relative to the player's position.
+    this.hudStars.x = this.player.body.position.x + 670;
+    this.hudStars.y = this.player.body.position.y - 300;
+
+    // Updates the position of the hud text relative to the player's position.
+    this.hudLevel.x = this.player.body.position.x - 650;
+    this.hudLevel.y = this.player.body.position.y - 300;
+
+    // Random Text updates.
+    if (this.player.touchesdoor == true) {
+      this.text.setText("Press SPACE to enter The Forest");
+    } else {
+      this.text.setText("");
+    }
+
+    // Hud text updates.
+    this.hudStars.text = `${this.hubStars} / 3 Stars`;
 
     // Shadow offset.
     this.shadow.x = this.player.body.position.x - 5;

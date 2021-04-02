@@ -29,7 +29,7 @@ class Title extends Phaser.Scene {
   }
 
   update() {
-    // Reset.
+    // Start.
     if (this.cursors.space.isDown) {
       this.scene.start("play");
     }

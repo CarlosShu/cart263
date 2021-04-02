@@ -3,9 +3,6 @@ var config = {
   parent: "phaser-example",
   width: 800,
   height: 600,
-  physics: {
-    default: "arcade",
-  },
   scene: {
     preload: preload,
     create: create,
@@ -24,14 +21,14 @@ function preload() {
 }
 
 function create() {
-  this.invader1 = this.physics.add.staticGroup({
+  var invader1 = this.add.group({
     key: "invader1",
     frame: 0,
     repeat: 13,
     setXY: { x: 32, y: 100, stepX: 50 },
   });
 
-  Phaser.Actions.IncX(this.invader1.getChildren(), 100);
+  Phaser.Actions.IncX(invader1.getChildren(), 100);
 
-  Phaser.Actions.SetTint(this.invader1.getChildren(), 0xff0000);
+  Phaser.Actions.SetTint(invader1.getChildren(), 0xff0000);
 }
