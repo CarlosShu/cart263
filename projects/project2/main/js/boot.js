@@ -8,8 +8,11 @@ class Boot extends Phaser.Scene {
   preload() {
     // Load Font.
     this.loadFont("block", "assets/fonts/block.otf");
-
+    this.load.image("overlay", "assets/images/overlay.png");
     this.load.image("sky", "assets/images/sky.png");
+    this.load.image("logo", "assets/images/logo2.png");
+    this.load.image("instructions", "assets/images/instructions.png");
+
     this.load.image("ground", "assets/images/ground.png");
     this.load.image("groundFloor", "assets/images/groundFloor.png");
     this.load.image("door", "assets/images/door.png");
@@ -44,7 +47,6 @@ class Boot extends Phaser.Scene {
       frameWidth: 200,
       frameHeight: 260,
     });
-
     this.load.spritesheet("avatar-jump", "assets/images/avatar-jump.png", {
       frameWidth: 200,
       frameHeight: 260,

@@ -164,8 +164,6 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.ground, this.ladder);
 
     this.physics.add.collider(this.player, this.ground);
-    this.physics.add.collider(this.player, this.blockTall);
-    this.physics.add.collider(this.player, this.blockWide);
     this.physics.add.collider(this.player, this.bigBlock);
     this.physics.add.collider(this.player, this.bigBlockWide);
     this.physics.add.collider(this.player, this.movingPlatformX);
@@ -195,6 +193,23 @@ class Play extends Phaser.Scene {
       null,
       this
     );
+
+    this.physics.add.collider(
+      this.player,
+      this.blockTall,
+      this.hitBlockTall,
+      null,
+      this
+    );
+
+    this.physics.add.collider(
+      this.player,
+      this.blockWide,
+      this.hitBlockWide,
+      null,
+      this
+    );
+
     this.physics.add.collider(this.player, this.bouncingBlock, function (
       b1,
       b2
@@ -226,6 +241,7 @@ class Play extends Phaser.Scene {
       shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
       space: Phaser.Input.Keyboard.KeyCodes.SPACE,
       reset: Phaser.Input.Keyboard.KeyCodes.R,
+      pause: Phaser.Input.Keyboard.KeyCodes.ESC,
     });
 
     // Camera function.
@@ -237,12 +253,16 @@ class Play extends Phaser.Scene {
     this.lights.setAmbientColor(0x808080);
 
     // Dim light that follows the player.
-    this.light = this.lights.addLight(0, 0, 720);
-    this.light.setIntensity(1);
+    this.light = this.lights.addLight(0, 0, 1080);
+    this.light.setIntensity(1.5);
 
     // Star glowing light.
     this.starLight = this.lights.addLight(1200, 225, 360, 0xffffff);
     this.starLight.setIntensity(2);
+
+    // Overlay.
+    this.overlay = this.add.image(0, 0, "overlay");
+    this.overlay.setDepth(0);
 
     // Random text.
     this.text = this.add
@@ -264,7 +284,7 @@ class Play extends Phaser.Scene {
 
     //  Stars collected.
     this.hudStars = this.add
-      .text(0, 0, this.hubStars + " / 3 Stars", {
+      .text(0, 0, this.hubStars + " / 1 Stars", {
         fontSize: "15px",
         align: "right",
         fontFamily: "block",
@@ -293,7 +313,7 @@ class Play extends Phaser.Scene {
     }
 
     // Hud text updates.
-    this.hudStars.text = `${this.hubStars} / 3 Stars`;
+    this.hudStars.text = `${this.hubStars} / 1 Stars`;
 
     // Shadow offset.
     this.shadow.x = this.player.body.position.x - 5;
@@ -302,6 +322,10 @@ class Play extends Phaser.Scene {
     // Light.
     this.light.x = this.player.x;
     this.light.y = this.player.y;
+
+    // Overlay.
+    this.overlay.x = this.player.x;
+    this.overlay.y = this.player.y;
 
     // Going left.
     if (this.cursors.left.isDown) {
@@ -365,8 +389,10 @@ class Play extends Phaser.Scene {
         this.player.touchesladder
       ) {
         this.player.setVelocityX(180);
-        this.player.anims.play("walk-right", true);
-        this.shadow.anims.play("walk-right", true);
+        if (this.player.body.touching.down) {
+          this.player.anims.play("walk-right", true);
+          this.shadow.anims.play("walk-right", true);
+        }
         this.facing = "right";
       }
       // If the player collides with the block it slows the speed down.
@@ -380,7 +406,7 @@ class Play extends Phaser.Scene {
       // Crouching.
     } else if (this.cursors.down.isDown) {
       this.player.setVelocityX(0);
-      this.player.setVelocityY(600);
+      this.player.setVelocityY(400);
       if (
         this.facing === "right" &&
         this.player.anims.currentAnim.key !== "down-right"
@@ -424,7 +450,7 @@ class Play extends Phaser.Scene {
 
     // Jump.
     if (this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-450);
+      this.player.setVelocityY(-400);
     }
 
     // If the player is touching the bouncing block.
@@ -469,8 +495,14 @@ class Play extends Phaser.Scene {
     // Resets Door variable.
     this.player.touchesladder = false;
 
-    // Resets the scene.
+    // Pauses the scene.
+    if (this.cursors.pause.isDown) {
+      this.scene.launch("pause");
+      this.scene.pause();
+    }
+
     if (this.cursors.reset.isDown) {
+      // Resets the scene.
       this.scene.restart();
     }
   }
@@ -550,7 +582,7 @@ class Play extends Phaser.Scene {
         start: 0,
         end: 21,
       }),
-      frameRate: 45,
+      frameRate: 40,
       repeat: -1,
     });
 
@@ -561,7 +593,7 @@ class Play extends Phaser.Scene {
         start: 22,
         end: 43,
       }),
-      frameRate: 45,
+      frameRate: 40,
       repeat: -1,
     });
 
@@ -626,6 +658,22 @@ class Play extends Phaser.Scene {
     if (this.player.body.touching.down) {
       this.player.setVelocityY(0);
       this.block.setVelocityY(0);
+    }
+  }
+
+  // Prevents the block from pushing through the ground.
+  hitBlockTall(player, blockTall) {
+    if (this.player.body.touching.down) {
+      this.player.setVelocityY(0);
+      this.blockTall.setVelocityY(0);
+    }
+  }
+
+  // Prevents the block from pushing through the ground.
+  hitBlockWide(player, blockWide) {
+    if (this.player.body.touching.down) {
+      this.player.setVelocityY(0);
+      this.blockWide.setVelocityY(0);
     }
   }
 

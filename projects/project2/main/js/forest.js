@@ -269,6 +269,23 @@ class Forest extends Phaser.Scene {
       null,
       this
     );
+
+    this.physics.add.collider(
+      this.player,
+      this.blockTall,
+      this.hitBlockTall,
+      null,
+      this
+    );
+
+    this.physics.add.collider(
+      this.player,
+      this.blockWide,
+      this.hitBlockWide,
+      null,
+      this
+    );
+
     this.physics.add.collider(this.player, this.bouncingBlock, function (
       b1,
       b2
@@ -300,6 +317,7 @@ class Forest extends Phaser.Scene {
       shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
       space: Phaser.Input.Keyboard.KeyCodes.SPACE,
       reset: Phaser.Input.Keyboard.KeyCodes.R,
+      pause: Phaser.Input.Keyboard.KeyCodes.ESC,
     });
 
     // Camera function.
@@ -308,15 +326,19 @@ class Forest extends Phaser.Scene {
 
     // Lights.
     this.lights.enable();
-    this.lights.setAmbientColor(0xff8000);
+    this.lights.setAmbientColor(0x505050);
 
     // Dim light that follows the player.
-    this.light = this.lights.addLight(0, 0, 720);
-    this.light.setIntensity(1);
+    this.light = this.lights.addLight(0, 0, 1080);
+    this.light.setIntensity(1.5);
 
     // Star glowing light.
     this.starLight = this.lights.addLight(1200, 225, 360, 0x00ff00);
     this.starLight.setIntensity(2);
+
+    // Overlay.
+    this.overlay = this.add.image(0, 0, "overlay");
+    this.overlay.setDepth(0);
 
     // Random text.
     this.text = this.add
@@ -338,7 +360,7 @@ class Forest extends Phaser.Scene {
 
     //  Stars collected.
     this.hudStars = this.add
-      .text(0, 0, this.hubStars + " / 6 Stars", {
+      .text(0, 0, this.hubStars + " / 3 Stars", {
         fontSize: "15px",
         align: "right",
         fontFamily: "block",
@@ -367,7 +389,7 @@ class Forest extends Phaser.Scene {
     }
 
     // Hud text updates.
-    this.hudStars.text = `${this.hubStars} / 6 Stars`;
+    this.hudStars.text = `${this.hubStars} / 3 Stars`;
 
     // Shadow offset.
     this.shadow.x = this.player.body.position.x - 5;
@@ -376,6 +398,10 @@ class Forest extends Phaser.Scene {
     // Light.
     this.light.x = this.player.x;
     this.light.y = this.player.y;
+
+    // Overlay.
+    this.overlay.x = this.player.x;
+    this.overlay.y = this.player.y;
 
     // Going left.
     if (this.cursors.left.isDown) {
@@ -543,6 +569,12 @@ class Forest extends Phaser.Scene {
     // Resets Door variable.
     this.player.touchesladder = false;
 
+    // Pauses the scene.
+    if (this.cursors.pause.isDown) {
+      this.scene.launch("pause");
+      this.scene.pause();
+    }
+
     // Resets the scene.
     if (this.cursors.reset.isDown) {
       this.scene.restart();
@@ -703,6 +735,21 @@ class Forest extends Phaser.Scene {
     }
   }
 
+  // Prevents the block from pushing through the ground.
+  hitBlockTall(player, blockTall) {
+    if (this.player.body.touching.down) {
+      this.player.setVelocityY(0);
+      this.blockTall.setVelocityY(0);
+    }
+  }
+
+  // Prevents the block from pushing through the ground.
+  hitBlockWide(player, blockWide) {
+    if (this.player.body.touching.down) {
+      this.player.setVelocityY(0);
+      this.blockWide.setVelocityY(0);
+    }
+  }
   // COllects the star.
   collectStar(player, star) {
     star.destroy();
