@@ -13,8 +13,7 @@ class Pause extends Phaser.Scene {
   update() {
     // Resumes the scene.
     if (this.cursors.pause.isDown) {
-      this.scene.resume("hub");
-      this.scene.resume("forest");
+      this.scene.resume("play");
       this.scene.stop();
     }
   }

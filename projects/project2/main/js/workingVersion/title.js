@@ -1,6 +1,6 @@
-class Instructions extends Phaser.Scene {
+class Title extends Phaser.Scene {
   constructor() {
-    super({ key: "instructions" });
+    super({ key: "title" });
   }
 
   create() {
@@ -13,11 +13,11 @@ class Instructions extends Phaser.Scene {
 
     // Logo.
     this.logo = this.add.group({
-      key: "instructions",
+      key: "logo",
       setXY: { x: 720, y: 360 },
-      setScale: { x: 0.75, y: 0.75 },
+      setScale: { x: 0.5, y: 0.5 },
     });
-    this.logo.children.iterateLocal("setDepth", 1);
+    this.logo.children.iterateLocal("setDepth", 0);
 
     // Overlay.
     this.overlay = this.add.image(720, 360, "overlay");
@@ -25,7 +25,7 @@ class Instructions extends Phaser.Scene {
 
     // Start to Play.
     this.play = this.add
-      .text(720, 680, "PRESS SPACE TO PLAY", {
+      .text(720, 680, "Press SPACE to START", {
         fontSize: "15px",
         align: "center",
         fontFamily: "block",
@@ -41,7 +41,7 @@ class Instructions extends Phaser.Scene {
   update() {
     // Start.
     if (this.cursors.space.isDown) {
-      this.scene.start("hub");
+      this.scene.start("instructions");
     }
   }
 }

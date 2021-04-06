@@ -1,18 +1,16 @@
-"use strict";
-
 let config = {
   type: Phaser.AUTO,
-  width: 1440,
-  height: 720,
+  width: 800,
+  height: 600,
   parent: "phaser-example",
   physics: {
     default: "arcade",
     arcade: {
       debug: false,
-      gravity: { y: 800 },
+      gravity: { y: 0 },
     },
   },
-  scene: [Boot, Title, Instructions, Hub, Forest, Pause],
+  scene: [Boot, Player],
 };
 
 let game = new Phaser.Game(config);
