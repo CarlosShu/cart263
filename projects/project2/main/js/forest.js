@@ -545,7 +545,7 @@ class Forest extends Phaser.Scene {
     // Go to the next level.
     if (this.player.touchesdoor == true) {
       if (this.cursors.space.isDown) {
-        this.scene.start("play");
+        this.scene.start("hub");
       }
     }
 
