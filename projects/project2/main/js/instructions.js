@@ -11,13 +11,13 @@ class Instructions extends Phaser.Scene {
     });
     this.sky.children.iterateLocal("setDepth", -2);
 
-    // Logo.
-    this.logo = this.add.group({
+    // Instructions.
+    this.instructions = this.add.group({
       key: "instructions",
       setXY: { x: 720, y: 360 },
       setScale: { x: 0.75, y: 0.75 },
     });
-    this.logo.children.iterateLocal("setDepth", 1);
+    this.instructions.children.iterateLocal("setDepth", 1);
 
     // Overlay.
     this.overlay = this.add.image(720, 360, "overlay");
