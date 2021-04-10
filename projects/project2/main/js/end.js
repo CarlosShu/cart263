@@ -1,6 +1,6 @@
-class Title extends Phaser.Scene {
+class End extends Phaser.Scene {
   constructor() {
-    super({ key: "title" });
+    super({ key: "end" });
   }
 
   create() {
@@ -13,7 +13,7 @@ class Title extends Phaser.Scene {
 
     // Logo.
     this.logo = this.add.group({
-      key: "titleLogo",
+      key: "endLogo",
       setXY: { x: 720, y: 360 },
       setScale: { x: 0.5, y: 0.5 },
     });
@@ -25,7 +25,7 @@ class Title extends Phaser.Scene {
 
     // Start to Play.
     this.play = this.add
-      .text(720, 680, "Press SPACE to START", {
+      .text(720, 680, "Press SPACE to Play Again", {
         fontSize: "15px",
         align: "center",
         fontFamily: "block",
@@ -41,7 +41,7 @@ class Title extends Phaser.Scene {
   update() {
     // Start.
     if (this.cursors.space.isDown) {
-      this.scene.start("instructions");
+      this.scene.start("title");
     }
   }
 }

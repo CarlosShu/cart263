@@ -119,6 +119,7 @@ class Hub extends Phaser.Scene {
     this.colliders();
 
     // COlliders with functions.
+
     // Block.
     this.physics.add.collider(
       this.player,
@@ -147,12 +148,6 @@ class Hub extends Phaser.Scene {
       this
     );
 
-    this.overlapCollider = this.physics.add.overlap(
-      this.player,
-      this.flag,
-      this.checkPoint.bind(this)
-    );
-
     // Door.
     this.physics.add.overlap(this.player, this.door, function (b1, b2) {
       scene.player.touchesdoor = true;
@@ -163,6 +158,11 @@ class Hub extends Phaser.Scene {
       scene.player.touchesladder = true;
     });
 
+    // Flag.
+    this.physics.add.overlap(this.player, this.flag, function (b1, b2) {
+      scene.player.touchesflag = true;
+    });
+
     // Time loop.
     this.timedEvent = this.time.addEvent({
       delay: 0,
@@ -170,6 +170,13 @@ class Hub extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
+
+    // Chekpoint function.
+    this.overlapCollider = this.physics.add.overlap(
+      this.player,
+      this.flag,
+      this.checkPoint.bind(this)
+    );
 
     // Calls Cursor keys function.
     this.cursorKeys();
@@ -371,6 +378,7 @@ class Hub extends Phaser.Scene {
     this.player.touchesdoor = false;
     this.player.touchesladder = false;
     this.player.touchesbounce = false;
+    this.player.touchesflag = false;
   }
 
   // Game objects.
@@ -408,9 +416,10 @@ class Hub extends Phaser.Scene {
     // Star.
     this.star = this.physics.add.group({
       defaultKey: "star",
-      immovable: true,
-      allowGravity: false,
+      immovable: false,
+      allowGravity: true,
     });
+
     // Ladder.
     this.ladder = this.physics.add.group({
       defaultKey: "ladder",
@@ -579,7 +588,7 @@ class Hub extends Phaser.Scene {
 
   // Colliders.
   colliders() {
-    // Colliders
+    // [Player.
 
     this.physics.add.collider(this.player, this.ground);
     this.physics.add.collider(this.player, this.block);
@@ -592,6 +601,20 @@ class Hub extends Phaser.Scene {
     this.physics.add.collider(this.player, this.platformWider);
     this.physics.add.collider(this.player, this.movingPlatformX);
     this.physics.add.collider(this.player, this.movingPlatformY);
+
+    // Star.
+
+    this.physics.add.collider(this.star, this.ground);
+    this.physics.add.collider(this.star, this.block);
+    this.physics.add.collider(this.star, this.blockTall);
+    this.physics.add.collider(this.star, this.blockWide);
+    this.physics.add.collider(this.star, this.bigBlock);
+    this.physics.add.collider(this.star, this.bigBlockWide);
+    this.physics.add.collider(this.star, this.platform);
+    this.physics.add.collider(this.star, this.platformWide);
+    this.physics.add.collider(this.star, this.platformWider);
+    this.physics.add.collider(this.star, this.movingPlatformX);
+    this.physics.add.collider(this.star, this.movingPlatformY);
 
     // Moveable blocks.
 
@@ -730,6 +753,8 @@ class Hub extends Phaser.Scene {
       } else {
         this.text.setText("Press SPACE to ENTER the Forest");
       }
+    } else if (this.player.touchesflag == true) {
+      this.text.setText("Checkpoint!");
     } else {
       this.text.setText("");
     }
@@ -846,6 +871,8 @@ class Hub extends Phaser.Scene {
     // Jump.
     if (this.cursors.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-400);
+      // Plays sound.
+      this.sound.play("sound-jump");
     }
 
     // If the player is touching the bouncing block.
@@ -868,7 +895,7 @@ class Hub extends Phaser.Scene {
       // If the player has gathered the required amoount of stars.
       if (this.hubStars >= 3) {
         if (this.cursors.space.isDown) {
-          this.scene.start("forest");
+          this.scene.start("end");
         }
       }
     }
@@ -887,11 +914,14 @@ class Hub extends Phaser.Scene {
     // Resets ladder variable.
     this.player.touchesdoor = false;
 
-    // Resets bounce variable.
+    // Resets Bounce variable.
     this.player.touchesbounce = false;
 
     // Resets Door variable.
     this.player.touchesladder = false;
+
+    // Resets Flag variable.
+    this.player.touchesflag = false;
 
     // Pauses the scene.
     if (this.cursors.pause.isDown) {

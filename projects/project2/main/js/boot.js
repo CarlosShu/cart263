@@ -8,10 +8,17 @@ class Boot extends Phaser.Scene {
   preload() {
     // Load Font.
     this.loadFont("block", "assets/fonts/block.otf");
+
+    // Sounds.
+    this.load.audio("sound-jump", "assets/sounds/jump.wav");
+
+    this.load.image("titleLogo", "assets/images/titleLogo.png");
+    this.load.image("endLogo", "assets/images/endLogo.png");
+
+    this.load.image("instructions", "assets/images/instructions.png");
+
     this.load.image("overlay", "assets/images/overlay.png");
     this.load.image("sky", "assets/images/sky.png");
-    this.load.image("logo", "assets/images/logo2.png");
-    this.load.image("instructions", "assets/images/instructions.png");
 
     this.load.image("ground", "assets/images/ground.png");
     this.load.image("groundFloor", "assets/images/groundFloor.png");
