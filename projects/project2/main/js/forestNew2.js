@@ -1,6 +1,6 @@
-class Hub extends Phaser.Scene {
+class Forest extends Phaser.Scene {
   constructor() {
-    super({ key: "hub" });
+    super({ key: "forest" });
   }
 
   create() {
@@ -390,6 +390,24 @@ class Hub extends Phaser.Scene {
       setXY: { x: -1600, y: 360, stepX: 1500 },
     });
 
+    // Background ground.
+    this.backgroundGround2 = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 584, stepX: 1500 },
+    });
+
+    // Background ground.
+    this.backgroundGround = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 644, stepX: 1500 },
+    });
+
     // Ground.
     this.ground = this.physics.add.staticGroup({
       key: "ground",
@@ -397,6 +415,42 @@ class Hub extends Phaser.Scene {
       setScale: { x: 0.5, y: 0.5 },
       repeat: 6,
       setXY: { x: -1600, y: 700, stepX: 1500 },
+    });
+
+    // Foreground ground.
+    this.foregroundGround = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 756, stepX: 1500 },
+    });
+
+    // Background Forest Tree.
+    this.backgroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720, y: 330, stepX: 1000 },
+    });
+
+    // Background Plant.
+    this.backgroundForestRock = this.physics.add.staticGroup({
+      key: "forestRock",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720 - 120, y: 526, stepX: 1000 },
+    });
+
+    // Foreground Forest Tree.
+    this.foregroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720 + 500, y: 510, stepX: 2000 },
     });
 
     // Checkpoint.
@@ -507,12 +561,49 @@ class Hub extends Phaser.Scene {
   // Children of group objects properties.
   objectProperties() {
     // Sky.
-    this.sky.children.iterateLocal("setDepth", -5);
+    this.sky.children.iterateLocal("setDepth", -7);
     this.sky.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background ground.
+    this.backgroundGround2.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundGround2.children.iterateLocal("setDepth", -6);
+    this.backgroundGround2.children.iterateLocal("setTint", "0x006000");
+    this.backgroundGround2.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background ground.
+    this.backgroundGround.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundGround.children.iterateLocal("setDepth", -5);
+    this.backgroundGround.children.iterateLocal("setTint", "0x00A000");
+    this.backgroundGround.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background Trees.
+    this.backgroundForestTree.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundForestTree.children.iterateLocal("setDepth", -4);
+    this.backgroundForestTree.children.iterateLocal("setTint", "0x505050");
+    this.backgroundForestTree.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background Rocks.
+    this.backgroundForestRock.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundForestRock.children.iterateLocal("setDepth", -4);
+    this.backgroundForestRock.children.iterateLocal("setTint", "0xC0C0C0");
+    this.backgroundForestRock.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground ground.
+    this.foregroundGround.children.iterateLocal("setSize", 1500, 150);
+    this.foregroundGround.children.iterateLocal("setDepth", 1);
+    this.foregroundGround.children.iterateLocal("setTint", "0x008000");
+    this.foregroundGround.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground Forest Tree.
+    this.foregroundForestTree.children.iterateLocal("setSize", 1500, 150);
+    this.foregroundForestTree.children.iterateLocal("setDepth", 1);
+    this.foregroundForestTree.children.iterateLocal("setTint", "0xA0A0A0");
+    this.foregroundForestTree.children.iterateLocal("setPipeline", "Light2D");
 
     // Ground.
     this.ground.children.iterateLocal("setSize", 1500, 150);
-    this.ground.children.iterateLocal("setDepth", -4);
+    this.ground.children.iterateLocal("setDepth", -3);
+    this.ground.children.iterateLocal("setTint", "0x00C000");
     this.ground.children.iterateLocal("setPipeline", "Light2D");
 
     // Checkpoint.
@@ -680,13 +771,16 @@ class Hub extends Phaser.Scene {
     this.lights.setAmbientColor(0x808080);
 
     // Dim light that follows the player.
-    this.light = this.lights.addLight(0, 0, 1080);
+    this.light = this.lights.addLight(0, 0, 720);
     this.light.setIntensity(1.5);
 
     // Dark Overlay.
-    this.overlay = this.add.image(0, 0, "dark");
-    this.overlay.setDepth(2);
-    this.overlay.setBlendMode("MULTIPLY");
+    this.dark = this.add.image(0, 0, "dark");
+    this.dark.setDepth(-4);
+
+    // Overlay.
+    this.overlay = this.add.image(0, 0, "overlay");
+    this.overlay.setDepth(0);
   }
 
   // Hud and Text.
@@ -698,18 +792,16 @@ class Hub extends Phaser.Scene {
         align: "center",
         fontFamily: "block",
       })
-      .setOrigin(0.5)
-      .setDepth(3);
+      .setOrigin(0.5);
 
     //  Level.
     this.hudLevel = this.add
-      .text(0, 0, "Level: HUB", {
+      .text(0, 0, "Level: FOREST", {
         fontSize: "15px",
         align: "left",
         fontFamily: "block",
       })
-      .setOrigin(0.5)
-      .setDepth(3);
+      .setOrigin(0.5);
 
     //  Stars collected.
     this.hudStars = this.add
@@ -718,8 +810,7 @@ class Hub extends Phaser.Scene {
         align: "right",
         fontFamily: "block",
       })
-      .setOrigin(0.5)
-      .setDepth(3);
+      .setOrigin(0.5);
   }
 
   // Global elements position.
@@ -731,6 +822,10 @@ class Hub extends Phaser.Scene {
     // Overlay.
     this.overlay.x = this.player.x;
     this.overlay.y = this.player.y;
+
+    // Overlay.
+    this.dark.x = this.player.x;
+    this.dark.y = this.player.y;
   }
 
   // Position of the hud and text.
@@ -744,7 +839,7 @@ class Hub extends Phaser.Scene {
     this.hudStars.y = this.player.body.position.y - 300;
 
     // Updates the position of the hud text relative to the player's position.
-    this.hudLevel.x = this.player.body.position.x - 650;
+    this.hudLevel.x = this.player.body.position.x - 630;
     this.hudLevel.y = this.player.body.position.y - 300;
 
     // Hud text updates.

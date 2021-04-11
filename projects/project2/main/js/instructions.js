@@ -41,7 +41,7 @@ class Instructions extends Phaser.Scene {
   update() {
     // Start.
     if (this.cursors.space.isDown) {
-      this.scene.start("hub");
+      this.scene.start("forest");
     }
   }
 }

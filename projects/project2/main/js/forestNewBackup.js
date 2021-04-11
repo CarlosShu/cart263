@@ -1,17 +1,26 @@
-class Hub extends Phaser.Scene {
+class Forest extends Phaser.Scene {
   constructor() {
-    super({ key: "hub" });
+    super({ key: "forest" });
   }
 
   create() {
     let scene = this;
+
+    this.physics.world.setBounds(-1400, -1000, 7400, 2000);
+
+    this.hitCheckpoint = false;
+    this.currentTime = 0;
+    this.timedEvent;
+
+    this.checkpoint = { x: 0, y: 550 };
 
     // Variables.
     this.hubStars = 0;
     this.facing = "right";
 
     // The Player function.
-    this.player();
+    this.character();
+
     // Calls the Create Animation function.
     this.createAnimations();
 
@@ -19,31 +28,89 @@ class Hub extends Phaser.Scene {
     this.objects();
 
     // level assets.
-    this.door.create(-800, 550);
-    this.door.create(-400, 550);
-    this.door.create(400, 550);
-    this.door.create(800, 550);
-
-    this.star.create(1200, 225);
 
     //  this.ladder.create(300, 150);
 
-    this.block.create(200, 400);
+    this.moveableBlock1 = this.moveableBlockGroup.create(-600, 587.5);
 
-    this.blockWide.create(1600, 500);
+    this.star.create(-1200, 400);
 
-    this.blockTall.create(-800, 400);
+    this.bigBlock.create(-1200, 550);
 
-    this.bigBlock.create(400, 550);
+    this.blockTall.create(-1000, 550);
 
-    this.bigBlockWide.create(2000, 550);
+    this.block.create(400, 587.5);
+
+    this.bigBlock.create(600, 550);
+
+    this.block.create(800, 587.5);
+
+    this.flag.create(0, 552.5);
+
+    this.door.create(1100, 400);
+
+    this.bigBlockWide.create(1100, 550);
+
+    this.block.create(1400, 587.5);
+
+    this.blockWide.create(1600, 587.5);
+
+    this.blockTall.create(1800, 550);
+
+    this.bigBlockWide.create(2100, 550);
+
+    this.flag.create(2100, 410);
+
+    this.blockTall.create(2400, 550);
+
+    this.blockTall.create(2600, 550);
+
+    this.star.create(2600, 400);
+
+    this.blockTall.create(2800, 550);
+
+    this.moveableBlock2 = this.moveableBlockGroup.create(3200, 587.5);
+
+    this.bigBlockWide.create(3800, 550);
+
+    this.flag.create(3700, 410);
+
+    this.bigBlockWide.create(3600, 550);
+
+    this.moveableBlock3 = this.moveableBlockGroup.create(4200, 187.55);
+
+    this.blockTall.create(4500, 550);
+
+    this.blockTall.create(4700, 550);
+
+    this.block.create(4700, 437.5);
+
+    this.blockTall.create(4900, 550);
+    this.blockTall.create(4900, 400);
+
+    this.platform.create(5100, 335);
+
+    this.platform.create(5300, 335);
+
+    this.platformWide.create(5550, 335);
+
+    this.movingPlatformY.create(5750, 50);
+
+    this.platformWider.create(5450, 50);
+
+    this.flag.create(5450, -25);
+
+    this.movingPlatformX.create(4900, 50);
+
+    this.platform.create(4700, 50);
+
+    this.movingPlatformX.create(4300, 50);
+
+    this.platformWider.create(4000, 150);
+
+    this.star.create(4000, 100);
 
     // this.bouncingBlock.create(100, 600);
-
-    this.platform.create(200, 425);
-    this.platform.create(600, 425);
-    this.platform.create(800, 325);
-    this.platform.create(1200, 325);
 
     // Calls the Object Properties function.
     this.objectProperties();
@@ -52,27 +119,12 @@ class Hub extends Phaser.Scene {
     this.colliders();
 
     // COlliders with functions.
+
     // Block.
     this.physics.add.collider(
       this.player,
-      this.block,
+      this.moveableBlockGroup,
       this.hitBlock,
-      null,
-      this
-    );
-    // Tall Block.
-    this.physics.add.collider(
-      this.player,
-      this.blockTall,
-      this.hitBlockTall,
-      null,
-      this
-    );
-    // Wide Block.
-    this.physics.add.collider(
-      this.player,
-      this.blockWide,
-      this.hitBlockWide,
       null,
       this
     );
@@ -86,6 +138,7 @@ class Hub extends Phaser.Scene {
     });
 
     // Overlaps with functions.
+
     // Star.
     this.physics.add.overlap(
       this.player,
@@ -94,14 +147,36 @@ class Hub extends Phaser.Scene {
       null,
       this
     );
+
     // Door.
     this.physics.add.overlap(this.player, this.door, function (b1, b2) {
       scene.player.touchesdoor = true;
     });
+
     // Ladder.
     this.physics.add.overlap(this.player, this.ladder, function (b1, b2) {
       scene.player.touchesladder = true;
     });
+
+    // Flag.
+    this.physics.add.overlap(this.player, this.flag, function (b1, b2) {
+      scene.player.touchesflag = true;
+    });
+
+    // Time loop.
+    this.timedEvent = this.time.addEvent({
+      delay: 0,
+      callback: this.platformTimer,
+      callbackScope: this,
+      loop: true,
+    });
+
+    // Chekpoint function.
+    this.overlapCollider = this.physics.add.overlap(
+      this.player,
+      this.flag,
+      this.checkPoint.bind(this)
+    );
 
     // Calls Cursor keys function.
     this.cursorKeys();
@@ -114,8 +189,8 @@ class Hub extends Phaser.Scene {
   }
 
   update() {
-    // Position of the player's shadow.
-    this.shadowPosition();
+    // Moving Platform Timer.
+    this.platformTimer();
 
     // Position of global assets such as camera and lighting.
     this.globalPosition();
@@ -125,6 +200,21 @@ class Hub extends Phaser.Scene {
 
     // Player mechanics and control.
     this.controls();
+  }
+
+  platformTimer() {
+    this.currentTime++;
+    if (this.currentTime == 600) {
+      this.currentTime = 0;
+    }
+
+    if (this.currentTime < 300) {
+      this.movingPlatformX.setVelocityX(100);
+      this.movingPlatformY.setVelocityY(100);
+    } else if (this.currentTime >= 300) {
+      this.movingPlatformX.setVelocityX(-100);
+      this.movingPlatformY.setVelocityY(-100);
+    }
   }
 
   // Create animations function.
@@ -274,24 +364,21 @@ class Hub extends Phaser.Scene {
   }
 
   // Player.
-  player() {
+  character() {
     //  Player.
-    this.player = this.physics.add.sprite(0, 550, "avatar-idle");
+    this.player = this.physics.add.sprite(
+      this.checkpoint.x,
+      this.checkpoint.y,
+      "avatar-idle"
+    );
     this.player.setDepth(0);
     this.player.setScale(0.25);
-    this.player.setCollideWorldBounds(false); // Boundaries of the world.
+    this.player.setCollideWorldBounds(true); // Boundaries of the world.
     this.player.setSize(75, 260, true);
     this.player.touchesdoor = false;
     this.player.touchesladder = false;
     this.player.touchesbounce = false;
-
-    //  Shadow of the player.
-    this.shadow = this.add.sprite(0, 0, "avatar-idle");
-    this.shadow.setDepth(-1);
-    this.shadow.setScale(0.25);
-    this.shadow.setTint(0x000000);
-    this.shadow.setAlpha(0.6);
-    this.shadow.setPipeline("Light2D");
+    this.player.touchesflag = false;
   }
 
   // Game objects.
@@ -299,8 +386,17 @@ class Hub extends Phaser.Scene {
     // Sky Background.
     this.sky = this.add.group({
       key: "sky",
-      repeat: 2,
-      setXY: { x: -720, y: 360, stepX: 1500 },
+      repeat: 6,
+      setXY: { x: -1600, y: 360, stepX: 1500 },
+    });
+
+    // Background ground.
+    this.background = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 638, stepX: 1500 },
     });
 
     // Ground.
@@ -308,40 +404,89 @@ class Hub extends Phaser.Scene {
       key: "ground",
       isStatic: true,
       setScale: { x: 0.5, y: 0.5 },
-      repeat: 2,
-      setXY: { x: -720, y: 700, stepX: 1500 },
+      repeat: 6,
+      setXY: { x: -1600, y: 700, stepX: 1500 },
     });
+
+    // Foreground ground.
+    this.foreground = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 762, stepX: 1500 },
+    });
+
+    // Background Forest Tree.
+    this.backgroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720, y: 412, stepX: 1000 },
+    });
+
+    // Foreground Forest Tree.
+    this.foregroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720 + 500, y: 512, stepX: 2000 },
+    });
+
+    // Checkpoint.
+    this.flag = this.physics.add.group({
+      defaultKey: "checkpoint",
+      immovable: true,
+      allowGravity: false,
+    });
+
     // Door.
     this.door = this.physics.add.group({
       defaultKey: "door",
-      dragX: 1500,
       immovable: true,
       allowGravity: false,
     });
+
     // Star.
     this.star = this.physics.add.group({
       defaultKey: "star",
-      immovable: true,
-      allowGravity: false,
+      immovable: false,
+      allowGravity: true,
     });
+
     // Ladder.
     this.ladder = this.physics.add.group({
       defaultKey: "ladder",
+      immovable: true,
+      allowGravity: false,
     });
-    // Moveable Block.
+
+    this.moveableBlockGroup = this.physics.add.group({
+      defaultKey: "block",
+      immovable: false,
+      allowGravity: true,
+      dragX: 2500,
+    });
+
+    // Block.
     this.block = this.physics.add.group({
       defaultKey: "block",
-      dragX: 2500,
+      immovable: true,
+      allowGravity: false,
     });
-    // Moveable Block Wide.
+    // Block Wide.
     this.blockWide = this.physics.add.group({
       defaultKey: "blockWide",
-      dragX: 2500,
+      immovable: true,
+      allowGravity: false,
     });
-    // Moveable Block Tall.
+    // Block Tall.
     this.blockTall = this.physics.add.group({
       defaultKey: "blockTall",
-      dragX: 2500,
+      immovable: true,
+      allowGravity: false,
     });
     // Big Block.
     this.bigBlock = this.physics.add.group({
@@ -367,6 +512,32 @@ class Hub extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
+    // Wide Platform.
+    this.platformWide = this.physics.add.group({
+      defaultKey: "platformWide",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Wider Platform.
+    this.platformWider = this.physics.add.group({
+      defaultKey: "platformWider",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    // Moving Platform X.
+    this.movingPlatformX = this.physics.add.group({
+      defaultKey: "platform",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    // Moving Platform Y.
+    this.movingPlatformY = this.physics.add.group({
+      defaultKey: "platform",
+      immovable: true,
+      allowGravity: false,
+    });
   }
 
   // Children of group objects properties.
@@ -375,10 +546,38 @@ class Hub extends Phaser.Scene {
     this.sky.children.iterateLocal("setDepth", -5);
     this.sky.children.iterateLocal("setPipeline", "Light2D");
 
+    // Background ground.
+    this.background.children.iterateLocal("setSize", 1500, 150);
+    this.background.children.iterateLocal("setDepth", -4);
+    this.background.children.iterateLocal("setTint", "0x28C112");
+    this.background.children.iterateLocal("setPipeline", "Light2D");
+
     // Ground.
     this.ground.children.iterateLocal("setSize", 1500, 150);
     this.ground.children.iterateLocal("setDepth", -4);
+    this.ground.children.iterateLocal("setTint", "0xC17412");
     this.ground.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground ground.
+    this.foreground.children.iterateLocal("setSize", 1500, 150);
+    this.foreground.children.iterateLocal("setDepth", 1);
+    this.foreground.children.iterateLocal("setTint", "0x28C112");
+    this.foreground.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background Trees.
+    this.backgroundForestTree.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundForestTree.children.iterateLocal("setDepth", -4);
+    this.backgroundForestTree.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground Forest Tree.
+    this.foregroundForestTree.children.iterateLocal("setSize", 1500, 150);
+    this.foregroundForestTree.children.iterateLocal("setDepth", 1);
+    this.foregroundForestTree.children.iterateLocal("setPipeline", "Light2D");
+
+    // Checkpoint.
+    this.flag.children.iterateLocal("setDepth", -3);
+    this.flag.children.iterateLocal("setScale", "0.25");
+    this.flag.children.iterateLocal("setPipeline", "Light2D");
 
     // Door.
     this.door.children.iterateLocal("setDepth", -3);
@@ -390,14 +589,17 @@ class Hub extends Phaser.Scene {
     this.star.children.iterateLocal("setDepth", 0);
     this.star.children.iterateLocal("setScale", "0.5");
     this.star.children.iterateLocal("setTint", "0xffffff");
-    this.star.children.iterateLocal("setPipeline", "Light2D");
 
     // Ladder.
     this.ladder.children.iterateLocal("setDepth", -1);
     this.ladder.children.iterateLocal("setScale", "0.25");
     this.ladder.children.iterateLocal("setPipeline", "Light2D");
 
-    // Blocks.
+    // Moveable Blocks.
+    this.moveableBlockGroup.children.iterateLocal("setScale", "0.25");
+    this.moveableBlockGroup.children.iterateLocal("setPipeline", "Light2D");
+
+    // Block.
     this.block.children.iterateLocal("setScale", "0.25");
     this.block.children.iterateLocal("setPipeline", "Light2D");
 
@@ -413,7 +615,7 @@ class Hub extends Phaser.Scene {
     this.bigBlock.children.iterateLocal("setScale", "0.25");
     this.bigBlock.children.iterateLocal("setPipeline", "Light2D");
 
-    // Big Wide Blocks.
+    // Big Wide Block.
     this.bigBlockWide.children.iterateLocal("setScale", "0.25");
     this.bigBlockWide.children.iterateLocal("setPipeline", "Light2D");
 
@@ -424,64 +626,85 @@ class Hub extends Phaser.Scene {
     // Platforms.
     this.platform.children.iterateLocal("setScale", "0.25");
     this.platform.children.iterateLocal("setPipeline", "Light2D");
+
+    // Platforms.
+    this.platformWide.children.iterateLocal("setScale", "0.25");
+    this.platformWide.children.iterateLocal("setPipeline", "Light2D");
+
+    // Platforms.
+    this.platformWider.children.iterateLocal("setScale", "0.25");
+    this.platformWider.children.iterateLocal("setPipeline", "Light2D");
+
+    // Moving Platform X.
+    this.movingPlatformX.children.iterateLocal("setScale", "0.25");
+    this.movingPlatformX.children.iterateLocal("setFrictionX", "1");
+    this.movingPlatformX.children.iterateLocal("setPipeline", "Light2D");
+
+    // Moving Platform Y.
+    this.movingPlatformY.children.iterateLocal("setScale", "0.25");
+    this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
   }
 
   // Colliders.
   colliders() {
-    // Colliders
-    this.physics.add.collider(this.ground, this.block);
-    this.physics.add.collider(this.ground, this.blockTall);
-    this.physics.add.collider(this.ground, this.blockWide);
-    this.physics.add.collider(this.ground, this.bigBlock);
-    this.physics.add.collider(this.ground, this.bigBlockWide);
-    this.physics.add.collider(this.ground, this.door);
-    this.physics.add.collider(this.ground, this.ladder);
+    // [Player.
 
     this.physics.add.collider(this.player, this.ground);
+    this.physics.add.collider(this.player, this.block);
+    this.physics.add.collider(this.player, this.blockTall);
+    this.physics.add.collider(this.player, this.blockWide);
     this.physics.add.collider(this.player, this.bigBlock);
     this.physics.add.collider(this.player, this.bigBlockWide);
+    this.physics.add.collider(this.player, this.platform);
+    this.physics.add.collider(this.player, this.platformWide);
+    this.physics.add.collider(this.player, this.platformWider);
     this.physics.add.collider(this.player, this.movingPlatformX);
     this.physics.add.collider(this.player, this.movingPlatformY);
-    this.physics.add.collider(this.player, this.platform);
 
-    this.physics.add.collider(this.block, this.block);
-    this.physics.add.collider(this.block, this.blockWide);
-    this.physics.add.collider(this.block, this.blockTall);
-    this.physics.add.collider(this.block, this.bigBlock);
-    this.physics.add.collider(this.block, this.bigBlockWide);
+    // Star.
 
-    this.physics.add.collider(this.blockWide, this.blockWide);
-    this.physics.add.collider(this.blockWide, this.blockTall);
-    this.physics.add.collider(this.blockWide, this.bigBlock);
-    this.physics.add.collider(this.blockWide, this.bigBlockWide);
+    this.physics.add.collider(this.star, this.ground);
+    this.physics.add.collider(this.star, this.block);
+    this.physics.add.collider(this.star, this.blockTall);
+    this.physics.add.collider(this.star, this.blockWide);
+    this.physics.add.collider(this.star, this.bigBlock);
+    this.physics.add.collider(this.star, this.bigBlockWide);
+    this.physics.add.collider(this.star, this.platform);
+    this.physics.add.collider(this.star, this.platformWide);
+    this.physics.add.collider(this.star, this.platformWider);
+    this.physics.add.collider(this.star, this.movingPlatformX);
+    this.physics.add.collider(this.star, this.movingPlatformY);
 
-    this.physics.add.collider(this.blockTall, this.blockTall);
-    this.physics.add.collider(this.blockTall, this.bigBlock);
-    this.physics.add.collider(this.blockTall, this.bigBlockWide);
+    // Moveable blocks.
+
+    this.physics.add.collider(this.moveableBlockGroup, this.player);
+    this.physics.add.collider(this.moveableBlockGroup, this.ground);
+    this.physics.add.collider(this.moveableBlockGroup, this.moveableBlockGroup);
+    this.physics.add.collider(this.moveableBlockGroup, this.block);
+    this.physics.add.collider(this.moveableBlockGroup, this.blockWide);
+    this.physics.add.collider(this.moveableBlockGroup, this.blockTall);
+    this.physics.add.collider(this.moveableBlockGroup, this.bigBlock);
+    this.physics.add.collider(this.moveableBlockGroup, this.bigBlockWide);
   }
 
   // Prevents the moveable block from pushing through the ground.
   hitBlock(player, block) {
     if (this.player.body.touching.down) {
       this.player.setVelocityY(0);
-      this.block.setVelocityY(0);
+      this.moveableBlockGroup.setVelocityY(0);
     }
   }
 
-  // Prevents the moceable block from pushing through the ground.
-  hitBlockTall(player, blockTall) {
-    if (this.player.body.touching.down) {
-      this.player.setVelocityY(0);
-      this.blockTall.setVelocityY(0);
+  // Checkpoint function.
+  checkPoint() {
+    if (this.hitCheckpoint) {
+      this.checkpoint.x = this.player.x;
+      this.checkpoint.y = this.player.y;
+      this.player.body.touching.left = false;
+      this.player.body.touching.right = false;
+      return;
     }
-  }
-
-  // Prevents the moveable block from pushing through the ground.
-  hitBlockWide(player, blockWide) {
-    if (this.player.body.touching.down) {
-      this.player.setVelocityY(0);
-      this.blockWide.setVelocityY(0);
-    }
+    this.hitCheckpoint = true;
   }
 
   // Collects the star.
@@ -513,15 +736,11 @@ class Hub extends Phaser.Scene {
 
     // Lights.
     this.lights.enable();
-    this.lights.setAmbientColor(0x808080);
+    this.lights.setAmbientColor(0x505050);
 
     // Dim light that follows the player.
     this.light = this.lights.addLight(0, 0, 1080);
     this.light.setIntensity(1.5);
-
-    // Star glowing light.
-    this.starLight = this.lights.addLight(1200, 225, 360, 0xffffff);
-    this.starLight.setIntensity(2);
 
     // Overlay.
     this.overlay = this.add.image(0, 0, "overlay");
@@ -539,9 +758,9 @@ class Hub extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    //  Stars collected.
+    //  Level.
     this.hudLevel = this.add
-      .text(0, 0, "Level: HUB", {
+      .text(0, 0, "Level: FOREST", {
         fontSize: "15px",
         align: "left",
         fontFamily: "block",
@@ -550,19 +769,12 @@ class Hub extends Phaser.Scene {
 
     //  Stars collected.
     this.hudStars = this.add
-      .text(0, 0, this.hubStars + " / 1 Stars", {
+      .text(0, 0, this.hubStars + " / 3 Stars", {
         fontSize: "15px",
         align: "right",
         fontFamily: "block",
       })
       .setOrigin(0.5);
-  }
-
-  // Shadow position.
-  shadowPosition() {
-    // Shadow offset.
-    this.shadow.x = this.player.body.position.x - 5;
-    this.shadow.y = this.player.body.position.y + 20;
   }
 
   // Global elements position.
@@ -587,23 +799,29 @@ class Hub extends Phaser.Scene {
     this.hudStars.y = this.player.body.position.y - 300;
 
     // Updates the position of the hud text relative to the player's position.
-    this.hudLevel.x = this.player.body.position.x - 650;
+    this.hudLevel.x = this.player.body.position.x - 630;
     this.hudLevel.y = this.player.body.position.y - 300;
 
     // Hud text updates.
-    this.hudStars.text = `${this.hubStars} / 1 Stars`;
+    this.hudStars.text = `${this.hubStars} / 3 Stars`;
 
     // Random Text updates.
     if (this.player.touchesdoor == true) {
-      this.text.setText("Press SPACE to Go to the Forest");
+      if (this.hubStars < 1) {
+        this.text.setText("You need 3 stars to Enter the forest");
+      } else {
+        this.text.setText("Press SPACE to ENTER the Forest");
+      }
+    } else if (this.player.touchesflag == true) {
+      this.text.setText("Checkpoint!");
     } else {
       this.text.setText("");
     }
   }
 
   controls() {
-    // Going left.
     if (this.cursors.left.isDown) {
+      // Going left.
       this.facing = "left";
       // Sprinting left.
       if (
@@ -613,12 +831,11 @@ class Hub extends Phaser.Scene {
       ) {
         this.player.setVelocityX(-240);
         this.player.anims.play("run-left", true);
-        this.shadow.anims.play("run-left", true);
+
         // If the player collides with the block it slows the speed down.
       } else if (this.cursors.shift.isDown && this.player.body.touching.left) {
-        this.player.setVelocityX(-90);
+        this.player.setVelocityX(-120);
         this.player.anims.play("push-left", true);
-        this.shadow.anims.play("push-left", true);
 
         // Walking left
       } else if (
@@ -628,13 +845,11 @@ class Hub extends Phaser.Scene {
       ) {
         this.player.setVelocityX(-180);
         this.player.anims.play("walk-left", true);
-        this.shadow.anims.play("walk-left", true);
       }
       // If the player collides with the block it slows the speed down.
       else if (this.player.body.touching.left) {
         this.player.setVelocityX(-90);
         this.player.anims.play("push-left", true);
-        this.shadow.anims.play("push-left", true);
       }
 
       // Going right.
@@ -648,12 +863,11 @@ class Hub extends Phaser.Scene {
       ) {
         this.player.setVelocityX(240);
         this.player.anims.play("run-right", true);
-        this.shadow.anims.play("run-right", true);
+
         // If the player collides with the block it slows the speed down.
       } else if (this.cursors.shift.isDown && this.player.body.touching.right) {
-        this.player.setVelocityX(90);
+        this.player.setVelocityX(120);
         this.player.anims.play("push-right", true);
-        this.shadow.anims.play("push-right", true);
 
         // Walking right
       } else if (
@@ -663,13 +877,11 @@ class Hub extends Phaser.Scene {
       ) {
         this.player.setVelocityX(180);
         this.player.anims.play("walk-right", true);
-        this.shadow.anims.play("walk-right", true);
       }
       // If the player collides with the block it slows the speed down.
       else if (this.player.body.touching.right) {
         this.player.setVelocityX(90);
         this.player.anims.play("push-right", true);
-        this.shadow.anims.play("push-right", true);
       }
 
       // Crouching.
@@ -684,13 +896,11 @@ class Hub extends Phaser.Scene {
         this.player.anims.currentAnim.key !== "down-right"
       ) {
         this.player.anims.play("down-right");
-        this.shadow.anims.play("down-right", true);
       } else if (
         this.facing === "left" &&
         this.player.anims.currentAnim.key !== "down-left"
       ) {
         this.player.anims.play("down-left");
-        this.shadow.anims.play("down-left", true);
       }
 
       // Idle.
@@ -700,11 +910,10 @@ class Hub extends Phaser.Scene {
         // Idle Right.
         if (this.facing == "right") {
           this.player.anims.play("idle-right", true);
-          this.shadow.anims.play("idle-right", true);
+
           // Idle Left.
         } else if (this.facing == "left") {
           this.player.anims.play("idle-left", true);
-          this.shadow.anims.play("idle-left", true);
         }
       } else if (
         !this.player.body.touching.down &&
@@ -712,10 +921,8 @@ class Hub extends Phaser.Scene {
       ) {
         if (this.facing == "right") {
           this.player.anims.play("up-right", true);
-          this.shadow.anims.play("up-right", true);
         } else if (this.facing == "left") {
           this.player.anims.play("up-left", true);
-          this.shadow.anims.play("up-left", true);
         }
       }
     }
@@ -723,6 +930,8 @@ class Hub extends Phaser.Scene {
     // Jump.
     if (this.cursors.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-400);
+      // Plays sound.
+      this.sound.play("sound-jump");
     }
 
     // If the player is touching the bouncing block.
@@ -735,15 +944,18 @@ class Hub extends Phaser.Scene {
       if (this.cursors.up.isDown) {
         this.player.body.velocity.y = -150;
         this.player.anims.play("climb", true);
-        this.shadow.anims.play("climb", true);
+
         this.facing = "left";
       }
     }
 
     // Go to the next level.
     if (this.player.touchesdoor == true) {
-      if (this.cursors.space.isDown) {
-        this.scene.start("forest");
+      // If the player has gathered the required amoount of stars.
+      if (this.hubStars >= 3) {
+        if (this.cursors.space.isDown) {
+          this.scene.start("end");
+        }
       }
     }
 
@@ -761,21 +973,34 @@ class Hub extends Phaser.Scene {
     // Resets ladder variable.
     this.player.touchesdoor = false;
 
-    // Resets bounce variable.
+    // Resets Bounce variable.
     this.player.touchesbounce = false;
 
     // Resets Door variable.
     this.player.touchesladder = false;
 
+    // Resets Flag variable.
+    this.player.touchesflag = false;
+
     // Pauses the scene.
     if (this.cursors.pause.isDown) {
+      this.text.setText("Paused");
       this.scene.launch("pause");
       this.scene.pause();
     }
 
     if (this.cursors.reset.isDown) {
-      // Resets the scene.
-      this.scene.restart();
+      this.player.x = this.checkpoint.x;
+      this.player.y = this.checkpoint.y;
+
+      this.moveableBlock1.x = -600;
+      this.moveableBlock1.y = 587.5;
+
+      this.moveableBlock2.x = 3200;
+      this.moveableBlock2.y = 587.5;
+
+      this.moveableBlock3.x = 4200;
+      this.moveableBlock3.y = 587.5;
     }
   }
 }

@@ -6,286 +6,130 @@ class Forest extends Phaser.Scene {
   create() {
     let scene = this;
 
-    // Variables.
-    this.skyDepth = -5;
-    this.backgroundDepth = -4;
-    this.midgroundDepth = -3;
-    this.playerDepth = -2;
-    this.objectsDepth = -1;
-    this.foregroundDepth = 0;
+    this.physics.world.setBounds(-1400, -1000, 7400, 2000);
 
+    this.hitCheckpoint = false;
+    this.currentTime = 0;
+    this.timedEvent;
+
+    this.checkpoint = { x: 0, y: 550 };
+
+    // Variables.
     this.hubStars = 0;
     this.facing = "right";
 
-    // Sky Background.
-    this.sky = this.add.group({
-      key: "sky",
-      repeat: 2,
-      setXY: { x: -720, y: 360, stepX: 1500 },
-    });
-    this.sky.children.iterateLocal("setDepth", this.skyDepth);
-    this.sky.children.iterateLocal("setPipeline", "Light2D");
-
-    // Foreground.
-    this.background = this.physics.add.staticGroup({
-      key: "groundFloor",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 2,
-      setXY: { x: -720, y: 635, stepX: 1500 },
-    });
-    this.background.children.iterateLocal("setSize", 1500, 150);
-    this.background.children.iterateLocal("setDepth", this.backgroundDepth);
-    this.background.children.iterateLocal("setTint", "0x00ff00");
-    this.background.children.iterateLocal("setPipeline", "Light2D");
-
-    // Foreground.
-    this.foreground = this.physics.add.staticGroup({
-      key: "groundFloor",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 2,
-      setXY: { x: -720, y: 765, stepX: 1500 },
-    });
-    this.foreground.children.iterateLocal("setSize", 1500, 150);
-    this.foreground.children.iterateLocal("setDepth", this.foregroundDepth);
-    this.foreground.children.iterateLocal("setTint", "0x00ff00");
-    this.foreground.children.iterateLocal("setPipeline", "Light2D");
-
-    // Background Forest Tree.
-    this.backgroundForestTree = this.physics.add.staticGroup({
-      key: "forestTree",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 10,
-      setXY: { x: -720, y: 412, stepX: 1000 },
-    });
-    this.backgroundForestTree.children.iterateLocal("setSize", 1500, 150);
-    this.backgroundForestTree.children.iterateLocal(
-      "setDepth",
-      this.backgroundDepth
-    );
-    this.backgroundForestTree.children.iterateLocal("setPipeline", "Light2D");
-
-    // Foreground Forest Tree.
-    this.foregroundForestTree = this.physics.add.staticGroup({
-      key: "forestTree",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 10,
-      setXY: { x: -720 + 500, y: 512, stepX: 2000 },
-    });
-    this.foregroundForestTree.children.iterateLocal("setSize", 1500, 150);
-    this.foregroundForestTree.children.iterateLocal(
-      "setDepth",
-      this.foregroundDepth
-    );
-    this.foregroundForestTree.children.iterateLocal("setPipeline", "Light2D");
-
-    // Ground.
-    this.ground = this.physics.add.staticGroup({
-      key: "ground",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 4,
-      setXY: { x: -720, y: 700, stepX: 1500 },
-    });
-    this.ground.children.iterateLocal("setSize", 1500, 150);
-    this.ground.children.iterateLocal("setDepth", this.midgroundDepth);
-    this.ground.children.iterateLocal("setTint", "0xFFC080");
-    this.ground.children.iterateLocal("setPipeline", "Light2D");
-
-    //  Shadow of the player.
-    this.shadow = this.add.sprite(0, 0, "avatar-idle");
-    this.shadow.setDepth(this.playerDepth);
-    this.shadow.setScale(0.25);
-    this.shadow.setTint(0x000000);
-    this.shadow.setAlpha(0.6);
-    this.shadow.setPipeline("Light2D");
-
-    //  Player.
-    this.player = this.physics.add.sprite(0, 550, "avatar-idle");
-    this.player.setDepth(this.playerDepth);
-    this.player.setScale(0.25);
-    this.player.setCollideWorldBounds(false); // Boundaries of the world.
-    this.player.setSize(75, 260, true);
-    this.player.touchesdoor = false;
-    this.player.touchesladder = false;
-    this.player.touchesbounce = false;
+    // The Player function.
+    this.character();
 
     // Calls the Create Animation function.
     this.createAnimations();
 
-    // Door.
-    this.door = this.physics.add.group({
-      defaultKey: "door",
-      dragX: 1500,
-      immovable: true,
-      allowGravity: false,
-    });
-    this.door.create(0, 550);
-    this.door.children.iterateLocal("setDepth", this.midgroundDepth);
-    this.door.children.iterateLocal("setScale", "0.25");
-    this.door.children.iterateLocal("setSize", 250, 599);
-    this.door.children.iterateLocal("setTint", "0x00ff00");
-    this.door.children.iterateLocal("setPipeline", "Light2D");
+    // Call the game objects function.
+    this.objects();
 
-    // Star.
-    this.star = this.physics.add.group({
-      defaultKey: "star",
-      immovable: true,
-      allowGravity: false,
-    });
-    this.star.create(1200, 225);
-    this.star.children.iterateLocal("setDepth", this.midgroundDepth);
-    this.star.children.iterateLocal("setScale", "0.5");
-    this.star.children.iterateLocal("setTint", "0xffffff");
-    this.star.children.iterateLocal("setPipeline", "Light2D");
+    // level assets.
 
-    // Ladder.
-    this.ladder = this.physics.add.group({
-      defaultKey: "ladder",
-    });
-    this.ladder.create(300, 150);
-    this.ladder.children.iterateLocal("setDepth", this.midgroundDepth);
-    this.ladder.children.iterateLocal("setScale", "0.25");
-    this.ladder.children.iterateLocal("setPipeline", "Light2D");
+    //  this.ladder.create(300, 150);
 
-    // Moveable Block.
-    this.block = this.physics.add.group({
-      defaultKey: "block",
-      dragX: 2500,
-    });
-    this.block.create(500, 400);
-    this.block.children.iterateLocal("setDepth", this.objectsDepth);
-    this.block.children.iterateLocal("setScale", "0.25");
-    this.block.children.iterateLocal("setPipeline", "Light2D");
+    this.moveableBlock1 = this.moveableBlockGroup.create(-600, 587.5);
 
-    // Moveable Block Wide.
-    this.blockWide = this.physics.add.group({
-      defaultKey: "blockWide",
-      dragX: 2500,
-    });
-    this.blockWide.create(1600, 500);
-    this.blockWide.children.iterateLocal("setDepth", this.objectsDepth);
-    this.blockWide.children.iterateLocal("setScale", "0.25");
-    this.blockWide.children.iterateLocal("setPipeline", "Light2D");
+    this.star.create(-1200, 400);
 
-    // Moveable Block Tall.
-    this.blockTall = this.physics.add.group({
-      defaultKey: "blockTall",
-      dragX: 2500,
-    });
-    this.blockTall.create(-400, 400);
-    this.blockTall.children.iterateLocal("setDepth", this.objectsDepth);
-    this.blockTall.children.iterateLocal("setScale", "0.25");
-    this.blockTall.children.iterateLocal("setPipeline", "Light2D");
+    this.bigBlock.create(-1200, 550);
 
-    // Big Block.
-    this.bigBlock = this.physics.add.group({
-      defaultKey: "bigBlock",
-      immovable: true,
-      allowGravity: false,
-    });
-    this.bigBlock.create(-600, 550);
-    this.bigBlock.children.iterateLocal("setDepth", this.objectsDepth);
-    this.bigBlock.children.iterateLocal("setScale", "0.25");
-    this.bigBlock.children.iterateLocal("setPipeline", "Light2D");
+    this.blockTall.create(-1000, 550);
 
-    // Big Block Wide.
-    this.bigBlockWide = this.physics.add.group({
-      defaultKey: "bigBlockWide",
-      immovable: true,
-      allowGravity: false,
-    });
-    this.bigBlockWide.create(2000, 550);
-    this.bigBlock.children.iterateLocal("setDepth", this.objectsDepth);
-    this.bigBlockWide.children.iterateLocal("setScale", "0.25");
-    this.bigBlockWide.children.iterateLocal("setPipeline", "Light2D");
+    this.block.create(400, 587.5);
 
-    // Bouncing Block.
-    this.bouncingBlock = this.physics.add.group({
-      defaultKey: "block",
-      immovable: true,
-      allowGravity: false,
-    });
-    this.bouncingBlock.create(1000, 400);
-    this.bouncingBlock.children.iterateLocal("setDepth", this.objectsDepth);
-    this.bouncingBlock.children.iterateLocal("setScale", "0.25");
-    this.bouncingBlock.children.iterateLocal("setPipeline", "Light2D");
+    this.bigBlock.create(600, 550);
 
-    // Platform.
-    this.platform = this.physics.add.group({
-      defaultKey: "platform",
-      immovable: true,
-      allowGravity: false,
-    });
-    this.platform.create(200, 425);
-    this.platform.create(600, 425);
-    this.platform.create(800, 325);
-    this.platform.create(1200, 325);
-    this.platform.children.iterateLocal("setDepth", this.objectsDepth);
-    this.platform.children.iterateLocal("setScale", "0.25");
-    this.platform.children.iterateLocal("setPipeline", "Light2D");
+    this.block.create(800, 587.5);
 
-    // Colliders.
-    this.physics.add.collider(this.ground, this.block);
-    this.physics.add.collider(this.ground, this.blockTall);
-    this.physics.add.collider(this.ground, this.blockWide);
-    this.physics.add.collider(this.ground, this.bigBlock);
-    this.physics.add.collider(this.ground, this.bigBlockWide);
-    this.physics.add.collider(this.ground, this.door);
-    this.physics.add.collider(this.ground, this.ladder);
+    this.flag.create(0, 552.5);
 
-    this.physics.add.collider(this.player, this.ground);
-    this.physics.add.collider(this.player, this.blockTall);
-    this.physics.add.collider(this.player, this.blockWide);
-    this.physics.add.collider(this.player, this.bigBlock);
-    this.physics.add.collider(this.player, this.bigBlockWide);
-    this.physics.add.collider(this.player, this.movingPlatformX);
-    this.physics.add.collider(this.player, this.movingPlatformY);
-    this.physics.add.collider(this.player, this.platform);
+    this.door.create(1100, 400);
 
-    this.physics.add.collider(this.block, this.block);
-    this.physics.add.collider(this.block, this.blockWide);
-    this.physics.add.collider(this.block, this.blockTall);
-    this.physics.add.collider(this.block, this.bigBlock);
-    this.physics.add.collider(this.block, this.bigBlockWide);
+    this.bigBlockWide.create(1100, 550);
 
-    this.physics.add.collider(this.blockWide, this.blockWide);
-    this.physics.add.collider(this.blockWide, this.blockTall);
-    this.physics.add.collider(this.blockWide, this.bigBlock);
-    this.physics.add.collider(this.blockWide, this.bigBlockWide);
+    this.block.create(1400, 587.5);
 
-    this.physics.add.collider(this.blockTall, this.blockTall);
-    this.physics.add.collider(this.blockTall, this.bigBlock);
-    this.physics.add.collider(this.blockTall, this.bigBlockWide);
+    this.blockWide.create(1600, 587.5);
+
+    this.blockTall.create(1800, 550);
+
+    this.bigBlockWide.create(2100, 550);
+
+    this.flag.create(2100, 410);
+
+    this.blockTall.create(2400, 550);
+
+    this.blockTall.create(2600, 550);
+
+    this.star.create(2600, 400);
+
+    this.blockTall.create(2800, 550);
+
+    this.moveableBlock2 = this.moveableBlockGroup.create(3200, 587.5);
+
+    this.bigBlockWide.create(3800, 550);
+
+    this.flag.create(3700, 410);
+
+    this.bigBlockWide.create(3600, 550);
+
+    this.moveableBlock3 = this.moveableBlockGroup.create(4200, 187.55);
+
+    this.blockTall.create(4500, 550);
+
+    this.blockTall.create(4700, 550);
+
+    this.block.create(4700, 437.5);
+
+    this.blockTall.create(4900, 550);
+    this.blockTall.create(4900, 400);
+
+    this.platform.create(5100, 335);
+
+    this.platform.create(5300, 335);
+
+    this.platformWide.create(5550, 335);
+
+    this.movingPlatformY.create(5750, 50);
+
+    this.platformWider.create(5450, 50);
+
+    this.flag.create(5450, -25);
+
+    this.movingPlatformX.create(4900, 50);
+
+    this.platform.create(4700, 50);
+
+    this.movingPlatformX.create(4300, 50);
+
+    this.platformWider.create(4000, 150);
+
+    this.star.create(4000, 100);
+
+    // this.bouncingBlock.create(100, 600);
+
+    // Calls the Object Properties function.
+    this.objectProperties();
+
+    // Colliders function.
+    this.colliders();
 
     // COlliders with functions.
+
+    // Block.
     this.physics.add.collider(
       this.player,
-      this.block,
+      this.moveableBlockGroup,
       this.hitBlock,
       null,
       this
     );
 
-    this.physics.add.collider(
-      this.player,
-      this.blockTall,
-      this.hitBlockTall,
-      null,
-      this
-    );
-
-    this.physics.add.collider(
-      this.player,
-      this.blockWide,
-      this.hitBlockWide,
-      null,
-      this
-    );
-
+    // Bouncing block.
     this.physics.add.collider(this.player, this.bouncingBlock, function (
       b1,
       b2
@@ -294,6 +138,8 @@ class Forest extends Phaser.Scene {
     });
 
     // Overlaps with functions.
+
+    // Star.
     this.physics.add.overlap(
       this.player,
       this.star,
@@ -301,283 +147,73 @@ class Forest extends Phaser.Scene {
       null,
       this
     );
+
+    // Door.
     this.physics.add.overlap(this.player, this.door, function (b1, b2) {
       scene.player.touchesdoor = true;
     });
+
+    // Ladder.
     this.physics.add.overlap(this.player, this.ladder, function (b1, b2) {
       scene.player.touchesladder = true;
     });
 
-    // Cursor keys.
-    this.cursors = this.input.keyboard.addKeys({
-      up: Phaser.Input.Keyboard.KeyCodes.W,
-      down: Phaser.Input.Keyboard.KeyCodes.S,
-      left: Phaser.Input.Keyboard.KeyCodes.A,
-      right: Phaser.Input.Keyboard.KeyCodes.D,
-      shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
-      space: Phaser.Input.Keyboard.KeyCodes.SPACE,
-      reset: Phaser.Input.Keyboard.KeyCodes.R,
-      pause: Phaser.Input.Keyboard.KeyCodes.ESC,
+    // Flag.
+    this.physics.add.overlap(this.player, this.flag, function (b1, b2) {
+      scene.player.touchesflag = true;
     });
 
-    // Camera function.
-    this.camera = this.cameras.main.startFollow(this.player);
-    this.camera.setZoom(1);
+    // Time loop.
+    this.timedEvent = this.time.addEvent({
+      delay: 0,
+      callback: this.platformTimer,
+      callbackScope: this,
+      loop: true,
+    });
 
-    // Lights.
-    this.lights.enable();
-    this.lights.setAmbientColor(0x505050);
+    // Chekpoint function.
+    this.overlapCollider = this.physics.add.overlap(
+      this.player,
+      this.flag,
+      this.checkPoint.bind(this)
+    );
 
-    // Dim light that follows the player.
-    this.light = this.lights.addLight(0, 0, 1080);
-    this.light.setIntensity(1.5);
+    // Calls Cursor keys function.
+    this.cursorKeys();
 
-    // Star glowing light.
-    this.starLight = this.lights.addLight(1200, 225, 360, 0x00ff00);
-    this.starLight.setIntensity(2);
+    // Calls global rendering and lighting function.
+    this.global();
 
-    // Overlay.
-    this.overlay = this.add.image(0, 0, "overlay");
-    this.overlay.setDepth(0);
-
-    // Random text.
-    this.text = this.add
-      .text(0, 0, "TEXT", {
-        fontSize: "15px",
-        align: "center",
-        fontFamily: "block",
-      })
-      .setOrigin(0.5);
-
-    //  Stars collected.
-    this.hudLevel = this.add
-      .text(0, 0, "Level: FOREST", {
-        fontSize: "15px",
-        align: "left",
-        fontFamily: "block",
-      })
-      .setOrigin(0.5);
-
-    //  Stars collected.
-    this.hudStars = this.add
-      .text(0, 0, this.hubStars + " / 3 Stars", {
-        fontSize: "15px",
-        align: "right",
-        fontFamily: "block",
-      })
-      .setOrigin(0.5);
+    // Calls Hud Function.
+    this.hud();
   }
 
   update() {
-    // Updates the position of the random text relative to the player's position.
-    this.text.x = this.player.body.position.x;
-    this.text.y = this.player.body.position.y + 350;
+    // Moving Platform Timer.
+    this.platformTimer();
 
-    // Updates the position of the hud text relative to the player's position.
-    this.hudStars.x = this.player.body.position.x + 670;
-    this.hudStars.y = this.player.body.position.y - 300;
+    // Position of global assets such as camera and lighting.
+    this.globalPosition();
 
-    // Updates the position of the hud text relative to the player's position.
-    this.hudLevel.x = this.player.body.position.x - 635;
-    this.hudLevel.y = this.player.body.position.y - 300;
+    // Position of the Hud and text.
+    this.hudPosition();
 
-    // Random Text updates.
-    if (this.player.touchesdoor == true) {
-      this.text.setText("Press SPACE to Go to the Hub");
-    } else {
-      this.text.setText("");
+    // Player mechanics and control.
+    this.controls();
+  }
+
+  platformTimer() {
+    this.currentTime++;
+    if (this.currentTime == 600) {
+      this.currentTime = 0;
     }
 
-    // Hud text updates.
-    this.hudStars.text = `${this.hubStars} / 3 Stars`;
-
-    // Shadow offset.
-    this.shadow.x = this.player.body.position.x - 5;
-    this.shadow.y = this.player.body.position.y + 20;
-
-    // Light.
-    this.light.x = this.player.x;
-    this.light.y = this.player.y;
-
-    // Overlay.
-    this.overlay.x = this.player.x;
-    this.overlay.y = this.player.y;
-
-    // Going left.
-    if (this.cursors.left.isDown) {
-      // Sprinting left.
-      if (
-        this.cursors.shift.isDown & !this.player.body.touching.left ||
-        this.cursors.shift.isDown & this.player.touchesdoor ||
-        this.cursors.shift.isDown & this.player.touchesladder
-      ) {
-        this.player.setVelocityX(-240);
-        this.player.anims.play("run-left", true);
-        this.shadow.anims.play("run-left", true);
-        this.facing = "left";
-        // If the player collides with the block it slows the speed down.
-      } else if (this.cursors.shift.isDown && this.player.body.touching.left) {
-        this.player.setVelocityX(-90);
-        this.player.anims.play("push-left", true);
-        this.shadow.anims.play("push-left", true);
-        this.facing = "left";
-        // Walking left
-      } else if (
-        !this.player.body.touching.left ||
-        this.player.touchesdoor ||
-        this.player.touchesladder
-      ) {
-        this.player.setVelocityX(-180);
-        this.player.anims.play("walk-left", true);
-        this.shadow.anims.play("walk-left", true);
-        this.facing = "left";
-      }
-      // If the player collides with the block it slows the speed down.
-      else if (this.player.body.touching.left) {
-        this.player.setVelocityX(-90);
-        this.player.anims.play("push-left", true);
-        this.shadow.anims.play("push-left", true);
-        this.facing = "left";
-      }
-
-      // Going right.
-    } else if (this.cursors.right.isDown) {
-      // Sprinting Right.
-      if (
-        this.cursors.shift.isDown & !this.player.body.touching.right ||
-        this.cursors.shift.isDown & this.player.touchesdoor ||
-        this.cursors.shift.isDown & this.player.touchesladder
-      ) {
-        this.player.setVelocityX(240);
-        this.player.anims.play("run-right", true);
-        this.shadow.anims.play("run-right", true);
-        this.facing = "right";
-        // If the player collides with the block it slows the speed down.
-      } else if (this.cursors.shift.isDown && this.player.body.touching.right) {
-        this.player.setVelocityX(90);
-        this.player.anims.play("push-right", true);
-        this.shadow.anims.play("push-right", true);
-        this.facing = "right";
-        // Walking right
-      } else if (
-        !this.player.body.touching.right ||
-        this.player.touchesdoor ||
-        this.player.touchesladder
-      ) {
-        this.player.setVelocityX(180);
-        this.player.anims.play("walk-right", true);
-        this.shadow.anims.play("walk-right", true);
-        this.facing = "right";
-      }
-      // If the player collides with the block it slows the speed down.
-      else if (this.player.body.touching.right) {
-        this.player.setVelocityX(90);
-        this.player.anims.play("push-right", true);
-        this.shadow.anims.play("push-right", true);
-        this.facing = "right";
-      }
-
-      // Crouching.
-    } else if (this.cursors.down.isDown) {
-      this.player.setVelocityX(0);
-      this.player.setVelocityY(600);
-      if (
-        this.facing === "right" &&
-        this.player.anims.currentAnim.key !== "down-right"
-      ) {
-        this.player.anims.play("down-right");
-        this.shadow.anims.play("down-right", true);
-      } else if (
-        this.facing === "left" &&
-        this.player.anims.currentAnim.key !== "down-left"
-      ) {
-        this.player.anims.play("down-left");
-        this.shadow.anims.play("down-left", true);
-      }
-
-      // Idle.
-    } else {
-      this.player.setVelocityX(0);
-      if (this.player.body.touching.down) {
-        // Idle Right.
-        if (this.facing == "right") {
-          this.player.anims.play("idle-right", true);
-          this.shadow.anims.play("idle-right", true);
-          // Idle Left.
-        } else if (this.facing == "left") {
-          this.player.anims.play("idle-left", true);
-          this.shadow.anims.play("idle-left", true);
-        }
-      } else if (
-        !this.player.body.touching.down &&
-        !this.player.touchesladder
-      ) {
-        if (this.facing == "right") {
-          this.player.anims.play("up-right", true);
-          this.shadow.anims.play("up-right", true);
-        } else if (this.facing == "left") {
-          this.player.anims.play("up-left", true);
-          this.shadow.anims.play("up-left", true);
-        }
-      }
-    }
-
-    // Jump.
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-450);
-    }
-
-    // If the player is touching the bouncing block.
-    if (this.player.touchesbounce && this.player.body.touching.down) {
-      this.player.setVelocityY(-800);
-    }
-
-    // If the player is touching the Ladder.
-    if (this.player.touchesladder) {
-      if (this.cursors.up.isDown) {
-        this.player.body.velocity.y = -150;
-        this.player.anims.play("climb", true);
-        this.shadow.anims.play("climb", true);
-        this.facing = "left";
-      }
-    }
-
-    // Go to the next level.
-    if (this.player.touchesdoor == true) {
-      if (this.cursors.space.isDown) {
-        this.scene.start("hub");
-      }
-    }
-
-    // Camera zoom.
-    this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
-      if (deltaY > 0) {
-        this.camera.setZoom(1);
-      }
-      if (deltaY < 0) {
-        this.camera.setZoom(1.5);
-      } else {
-      }
-    });
-
-    // Resets ladder variable.
-    this.player.touchesdoor = false;
-
-    // Resets bounce variable.
-    this.player.touchesbounce = false;
-
-    // Resets Door variable.
-    this.player.touchesladder = false;
-
-    // Pauses the scene.
-    if (this.cursors.pause.isDown) {
-      this.scene.launch("pause");
-      this.scene.pause();
-    }
-
-    // Resets the scene.
-    if (this.cursors.reset.isDown) {
-      this.scene.restart();
+    if (this.currentTime < 300) {
+      this.movingPlatformX.setVelocityX(100);
+      this.movingPlatformY.setVelocityY(100);
+    } else if (this.currentTime >= 300) {
+      this.movingPlatformX.setVelocityX(-100);
+      this.movingPlatformY.setVelocityY(-100);
     }
   }
 
@@ -656,7 +292,7 @@ class Forest extends Phaser.Scene {
         start: 0,
         end: 21,
       }),
-      frameRate: 45,
+      frameRate: 40,
       repeat: -1,
     });
 
@@ -667,7 +303,7 @@ class Forest extends Phaser.Scene {
         start: 22,
         end: 43,
       }),
-      frameRate: 45,
+      frameRate: 40,
       repeat: -1,
     });
 
@@ -727,32 +363,697 @@ class Forest extends Phaser.Scene {
     });
   }
 
-  // Prevents the block from pushing through the ground.
+  // Player.
+  character() {
+    //  Player.
+    this.player = this.physics.add.sprite(
+      this.checkpoint.x,
+      this.checkpoint.y,
+      "avatar-idle"
+    );
+    this.player.setDepth(0);
+    this.player.setScale(0.25);
+    this.player.setCollideWorldBounds(true); // Boundaries of the world.
+    this.player.setSize(75, 260, true);
+    this.player.touchesdoor = false;
+    this.player.touchesladder = false;
+    this.player.touchesbounce = false;
+    this.player.touchesflag = false;
+  }
+
+  // Game objects.
+  objects() {
+    // Sky Background.
+    this.sky = this.add.group({
+      key: "sky",
+      repeat: 6,
+      setXY: { x: -1600, y: 360, stepX: 1500 },
+    });
+
+    // Background ground.
+    this.backgroundGround2 = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 584, stepX: 1500 },
+    });
+
+    // Background ground.
+    this.backgroundGround = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 644, stepX: 1500 },
+    });
+
+    // Ground.
+    this.ground = this.physics.add.staticGroup({
+      key: "ground",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 700, stepX: 1500 },
+    });
+
+    // Foreground ground.
+    this.foregroundGround = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 756, stepX: 1500 },
+    });
+
+    // Foreground ground.
+    this.foregroundGround2 = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 818, stepX: 1500 },
+    });
+
+    // Background Forest Tree.
+    this.backgroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.6, y: 0.6 },
+      repeat: 10,
+      setXY: { x: -720, y: 297, stepX: 1000 },
+    });
+
+    // Background Plant.
+    this.backgroundForestRock = this.physics.add.staticGroup({
+      key: "forestRock",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720 - 120, y: 526, stepX: 1000 },
+    });
+
+    // Foreground Forest Tree.
+    this.foregroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.6, y: 0.6 },
+      repeat: 10,
+      setXY: { x: -720 + 500, y: 472, stepX: 2000 },
+    });
+
+    // Checkpoint.
+    this.flag = this.physics.add.group({
+      defaultKey: "checkpoint",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    // Door.
+    this.door = this.physics.add.group({
+      defaultKey: "door",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    // Star.
+    this.star = this.physics.add.group({
+      defaultKey: "star",
+      immovable: false,
+      allowGravity: true,
+    });
+
+    // Ladder.
+    this.ladder = this.physics.add.group({
+      defaultKey: "ladder",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    this.moveableBlockGroup = this.physics.add.group({
+      defaultKey: "block",
+      immovable: false,
+      allowGravity: true,
+      dragX: 2500,
+    });
+
+    // Block.
+    this.block = this.physics.add.group({
+      defaultKey: "block",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Block Wide.
+    this.blockWide = this.physics.add.group({
+      defaultKey: "blockWide",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Block Tall.
+    this.blockTall = this.physics.add.group({
+      defaultKey: "blockTall",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Big Block.
+    this.bigBlock = this.physics.add.group({
+      defaultKey: "bigBlock",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Big Block Wide.
+    this.bigBlockWide = this.physics.add.group({
+      defaultKey: "bigBlockWide",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Bouncing Block.
+    this.bouncingBlock = this.physics.add.group({
+      defaultKey: "block",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Platform.
+    this.platform = this.physics.add.group({
+      defaultKey: "platform",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Wide Platform.
+    this.platformWide = this.physics.add.group({
+      defaultKey: "platformWide",
+      immovable: true,
+      allowGravity: false,
+    });
+    // Wider Platform.
+    this.platformWider = this.physics.add.group({
+      defaultKey: "platformWider",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    // Moving Platform X.
+    this.movingPlatformX = this.physics.add.group({
+      defaultKey: "platform",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    // Moving Platform Y.
+    this.movingPlatformY = this.physics.add.group({
+      defaultKey: "platform",
+      immovable: true,
+      allowGravity: false,
+    });
+  }
+
+  // Children of group objects properties.
+  objectProperties() {
+    // Sky.
+    this.sky.children.iterateLocal("setDepth", -7);
+    this.sky.children.iterateLocal("setTint", "0x404040");
+    this.sky.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background ground.
+    this.backgroundGround2.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundGround2.children.iterateLocal("setDepth", -6);
+    this.backgroundGround2.children.iterateLocal("setTint", "0x042004");
+    this.backgroundGround2.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background ground.
+    this.backgroundGround.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundGround.children.iterateLocal("setDepth", -5);
+    this.backgroundGround.children.iterateLocal("setTint", "0x104010");
+    this.backgroundGround.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background Trees.
+    this.backgroundForestTree.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundForestTree.children.iterateLocal("setDepth", -4);
+    this.backgroundForestTree.children.iterateLocal("setTint", "0x404040");
+    this.backgroundForestTree.children.iterateLocal("setPipeline", "Light2D");
+
+    // Background Rocks.
+    this.backgroundForestRock.children.iterateLocal("setSize", 1500, 150);
+    this.backgroundForestRock.children.iterateLocal("setDepth", -4);
+    this.backgroundForestRock.children.iterateLocal("setTint", "0x808080");
+    this.backgroundForestRock.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground ground.
+    this.foregroundGround.children.iterateLocal("setSize", 1500, 150);
+    this.foregroundGround.children.iterateLocal("setDepth", 1);
+    this.foregroundGround.children.iterateLocal("setTint", "0x104010");
+    this.foregroundGround.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground ground.
+    this.foregroundGround2.children.iterateLocal("setSize", 1500, 150);
+    this.foregroundGround2.children.iterateLocal("setDepth", 2);
+    this.foregroundGround2.children.iterateLocal("setTint", "0x042004");
+    this.foregroundGround2.children.iterateLocal("setPipeline", "Light2D");
+
+    // Foreground Forest Tree.
+    this.foregroundForestTree.children.iterateLocal("setSize", 1500, 150);
+    this.foregroundForestTree.children.iterateLocal("setDepth", 1);
+    this.foregroundForestTree.children.iterateLocal("setTint", "0x808080");
+    this.foregroundForestTree.children.iterateLocal("setPipeline", "Light2D");
+
+    // Ground.
+    this.ground.children.iterateLocal("setSize", 1500, 150);
+    this.ground.children.iterateLocal("setDepth", -3);
+    this.ground.children.iterateLocal("setTint", "0x108010");
+    this.ground.children.iterateLocal("setPipeline", "Light2D");
+
+    // Checkpoint.
+    this.flag.children.iterateLocal("setDepth", -3);
+    this.flag.children.iterateLocal("setScale", "0.25");
+    this.flag.children.iterateLocal("setPipeline", "Light2D");
+
+    // Door.
+    this.door.children.iterateLocal("setDepth", -3);
+    this.door.children.iterateLocal("setScale", "0.25");
+    this.door.children.iterateLocal("setSize", 250, 599);
+    this.door.children.iterateLocal("setPipeline", "Light2D");
+
+    // Star.
+    this.star.children.iterateLocal("setDepth", 0);
+    this.star.children.iterateLocal("setScale", "0.5");
+    this.star.children.iterateLocal("setTint", "0x00FF00");
+
+    // Ladder.
+    this.ladder.children.iterateLocal("setDepth", -1);
+    this.ladder.children.iterateLocal("setScale", "0.25");
+    this.ladder.children.iterateLocal("setPipeline", "Light2D");
+
+    // Moveable Blocks.
+    this.moveableBlockGroup.children.iterateLocal("setScale", "0.25");
+    this.moveableBlockGroup.children.iterateLocal("setTint", "0x802800");
+
+    // Block.
+    this.block.children.iterateLocal("setScale", "0.25");
+    this.block.children.iterateLocal("setTint", "0x804000");
+
+    // Wide Blocks.
+    this.blockWide.children.iterateLocal("setScale", "0.25");
+    this.blockWide.children.iterateLocal("setTint", "0x804000");
+
+    // Tall Blocks.
+    this.blockTall.children.iterateLocal("setScale", "0.25");
+    this.blockTall.children.iterateLocal("setTint", "0x804000");
+
+    // Big Blocks.
+    this.bigBlock.children.iterateLocal("setScale", "0.25");
+    this.bigBlock.children.iterateLocal("setTint", "0x802800");
+
+    // Big Wide Block.
+    this.bigBlockWide.children.iterateLocal("setScale", "0.25");
+    this.bigBlockWide.children.iterateLocal("setTint", "0x802800");
+
+    // Bouncing Blocks.
+    this.bouncingBlock.children.iterateLocal("setScale", "0.25");
+    this.bouncingBlock.children.iterateLocal("setPipeline", "Light2D");
+
+    // Platforms.
+    this.platform.children.iterateLocal("setScale", "0.25");
+    this.platform.children.iterateLocal("setTint", "0x804000");
+
+    // Platforms.
+    this.platformWide.children.iterateLocal("setScale", "0.25");
+    this.platformWide.children.iterateLocal("setTint", "0x8802800");
+
+    // Platforms.
+    this.platformWider.children.iterateLocal("setScale", "0.25");
+    this.platformWider.children.iterateLocal("setTint", "0x802800");
+
+    // Moving Platform X.
+    this.movingPlatformX.children.iterateLocal("setScale", "0.25");
+    this.movingPlatformX.children.iterateLocal("setFrictionX", "1");
+    this.movingPlatformX.children.iterateLocal("setTint", "0x802800");
+
+    // Moving Platform Y.
+    this.movingPlatformY.children.iterateLocal("setScale", "0.25");
+    this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
+    this.movingPlatformY.children.iterateLocal("setTint", "0x802800");
+  }
+
+  // Colliders.
+  colliders() {
+    // [Player.
+
+    this.physics.add.collider(this.player, this.ground);
+    this.physics.add.collider(this.player, this.block);
+    this.physics.add.collider(this.player, this.blockTall);
+    this.physics.add.collider(this.player, this.blockWide);
+    this.physics.add.collider(this.player, this.bigBlock);
+    this.physics.add.collider(this.player, this.bigBlockWide);
+    this.physics.add.collider(this.player, this.platform);
+    this.physics.add.collider(this.player, this.platformWide);
+    this.physics.add.collider(this.player, this.platformWider);
+    this.physics.add.collider(this.player, this.movingPlatformX);
+    this.physics.add.collider(this.player, this.movingPlatformY);
+
+    // Star.
+
+    this.physics.add.collider(this.star, this.ground);
+    this.physics.add.collider(this.star, this.block);
+    this.physics.add.collider(this.star, this.blockTall);
+    this.physics.add.collider(this.star, this.blockWide);
+    this.physics.add.collider(this.star, this.bigBlock);
+    this.physics.add.collider(this.star, this.bigBlockWide);
+    this.physics.add.collider(this.star, this.platform);
+    this.physics.add.collider(this.star, this.platformWide);
+    this.physics.add.collider(this.star, this.platformWider);
+    this.physics.add.collider(this.star, this.movingPlatformX);
+    this.physics.add.collider(this.star, this.movingPlatformY);
+
+    // Moveable blocks.
+
+    this.physics.add.collider(this.moveableBlockGroup, this.player);
+    this.physics.add.collider(this.moveableBlockGroup, this.ground);
+    this.physics.add.collider(this.moveableBlockGroup, this.moveableBlockGroup);
+    this.physics.add.collider(this.moveableBlockGroup, this.block);
+    this.physics.add.collider(this.moveableBlockGroup, this.blockWide);
+    this.physics.add.collider(this.moveableBlockGroup, this.blockTall);
+    this.physics.add.collider(this.moveableBlockGroup, this.bigBlock);
+    this.physics.add.collider(this.moveableBlockGroup, this.bigBlockWide);
+  }
+
+  // Prevents the moveable block from pushing through the ground.
   hitBlock(player, block) {
     if (this.player.body.touching.down) {
       this.player.setVelocityY(0);
-      this.block.setVelocityY(0);
+      this.moveableBlockGroup.setVelocityY(0);
     }
   }
 
-  // Prevents the block from pushing through the ground.
-  hitBlockTall(player, blockTall) {
-    if (this.player.body.touching.down) {
-      this.player.setVelocityY(0);
-      this.blockTall.setVelocityY(0);
+  // Checkpoint function.
+  checkPoint() {
+    if (this.hitCheckpoint) {
+      this.checkpoint.x = this.player.x;
+      this.checkpoint.y = this.player.y;
+      this.player.body.touching.left = false;
+      this.player.body.touching.right = false;
+      return;
     }
+    this.hitCheckpoint = true;
   }
 
-  // Prevents the block from pushing through the ground.
-  hitBlockWide(player, blockWide) {
-    if (this.player.body.touching.down) {
-      this.player.setVelocityY(0);
-      this.blockWide.setVelocityY(0);
-    }
-  }
-  // COllects the star.
+  // Collects the star.
   collectStar(player, star) {
     star.destroy();
     this.hubStars += 1;
+  }
+
+  // Cursor keys.
+  cursorKeys() {
+    // Cursor keys.
+    this.cursors = this.input.keyboard.addKeys({
+      up: Phaser.Input.Keyboard.KeyCodes.W,
+      down: Phaser.Input.Keyboard.KeyCodes.S,
+      left: Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D,
+      shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
+      space: Phaser.Input.Keyboard.KeyCodes.SPACE,
+      reset: Phaser.Input.Keyboard.KeyCodes.R,
+      pause: Phaser.Input.Keyboard.KeyCodes.ESC,
+    });
+  }
+
+  // Global canera any lighting.
+  global() {
+    // Camera function.
+    this.camera = this.cameras.main.startFollow(this.player);
+    this.camera.setZoom(1);
+
+    // Lights.
+    this.lights.enable();
+    this.lights.setAmbientColor(0x808080);
+
+    // Dim light that follows the player.
+    this.light = this.lights.addLight(0, 0, 1080);
+    this.light.setIntensity(1.5);
+
+    // Dark Overlay.
+    this.overlay = this.add.image(0, 0, "dark");
+    this.overlay.setDepth(2);
+    this.overlay.setBlendMode("MULTIPLY");
+  }
+
+  // Hud and Text.
+  hud() {
+    // Random text.
+    this.text = this.add
+      .text(0, 0, "TEXT", {
+        fontSize: "15px",
+        align: "center",
+        fontFamily: "block",
+      })
+      .setOrigin(0.5)
+      .setDepth(3);
+
+    //  Level.
+    this.hudLevel = this.add
+      .text(0, 0, "Level: FOREST", {
+        fontSize: "15px",
+        align: "left",
+        fontFamily: "block",
+      })
+      .setOrigin(0.5)
+      .setDepth(3);
+
+    //  Stars collected.
+    this.hudStars = this.add
+      .text(0, 0, this.hubStars + " / 3 Stars", {
+        fontSize: "15px",
+        align: "right",
+        fontFamily: "block",
+      })
+      .setOrigin(0.5)
+      .setDepth(3);
+  }
+
+  // Global elements position.
+  globalPosition() {
+    // Light.
+    this.light.x = this.player.x;
+    this.light.y = this.player.y;
+
+    // Overlay.
+    this.overlay.x = this.player.x;
+    this.overlay.y = this.player.y;
+  }
+
+  // Position of the hud and text.
+  hudPosition() {
+    // Updates the position of the random text relative to the player's position.
+    this.text.x = this.player.body.position.x;
+    this.text.y = this.player.body.position.y + 350;
+
+    // Updates the position of the hud text relative to the player's position.
+    this.hudStars.x = this.player.body.position.x + 670;
+    this.hudStars.y = this.player.body.position.y - 300;
+
+    // Updates the position of the hud text relative to the player's position.
+    this.hudLevel.x = this.player.body.position.x - 630;
+    this.hudLevel.y = this.player.body.position.y - 300;
+
+    // Hud text updates.
+    this.hudStars.text = `${this.hubStars} / 3 Stars`;
+
+    // Random Text updates.
+    if (this.player.touchesdoor == true) {
+      if (this.hubStars < 1) {
+        this.text.setText("You need 3 stars to Enter the forest");
+      } else {
+        this.text.setText("Press SPACE to ENTER the Forest");
+      }
+    } else if (this.player.touchesflag == true) {
+      this.text.setText("Checkpoint!");
+    } else {
+      this.text.setText("");
+    }
+  }
+
+  controls() {
+    if (this.cursors.left.isDown) {
+      // Going left.
+      this.facing = "left";
+      // Sprinting left.
+      if (
+        this.cursors.shift.isDown & !this.player.body.touching.left ||
+        this.cursors.shift.isDown & this.player.touchesdoor ||
+        this.cursors.shift.isDown & this.player.touchesladder
+      ) {
+        this.player.setVelocityX(-240);
+        this.player.anims.play("run-left", true);
+
+        // If the player collides with the block it slows the speed down.
+      } else if (this.cursors.shift.isDown && this.player.body.touching.left) {
+        this.player.setVelocityX(-120);
+        this.player.anims.play("push-left", true);
+
+        // Walking left
+      } else if (
+        !this.player.body.touching.left ||
+        this.player.touchesdoor ||
+        this.player.touchesladder
+      ) {
+        this.player.setVelocityX(-180);
+        this.player.anims.play("walk-left", true);
+      }
+      // If the player collides with the block it slows the speed down.
+      else if (this.player.body.touching.left) {
+        this.player.setVelocityX(-90);
+        this.player.anims.play("push-left", true);
+      }
+
+      // Going right.
+    } else if (this.cursors.right.isDown) {
+      this.facing = "right";
+      // Sprinting right.
+      if (
+        this.cursors.shift.isDown & !this.player.body.touching.right ||
+        this.cursors.shift.isDown & this.player.touchesdoor ||
+        this.cursors.shift.isDown & this.player.touchesladder
+      ) {
+        this.player.setVelocityX(240);
+        this.player.anims.play("run-right", true);
+
+        // If the player collides with the block it slows the speed down.
+      } else if (this.cursors.shift.isDown && this.player.body.touching.right) {
+        this.player.setVelocityX(120);
+        this.player.anims.play("push-right", true);
+
+        // Walking right
+      } else if (
+        !this.player.body.touching.right ||
+        this.player.touchesdoor ||
+        this.player.touchesladder
+      ) {
+        this.player.setVelocityX(180);
+        this.player.anims.play("walk-right", true);
+      }
+      // If the player collides with the block it slows the speed down.
+      else if (this.player.body.touching.right) {
+        this.player.setVelocityX(90);
+        this.player.anims.play("push-right", true);
+      }
+
+      // Crouching.
+    } else if (this.cursors.down.isDown) {
+      this.player.setVelocityX(0);
+      // Brings the player down if they are in the air.
+      if (this.player.body.velocity.y > 0) {
+        this.player.setVelocityY(600);
+      }
+      if (
+        this.facing === "right" &&
+        this.player.anims.currentAnim.key !== "down-right"
+      ) {
+        this.player.anims.play("down-right");
+      } else if (
+        this.facing === "left" &&
+        this.player.anims.currentAnim.key !== "down-left"
+      ) {
+        this.player.anims.play("down-left");
+      }
+
+      // Idle.
+    } else {
+      this.player.setVelocityX(0);
+      if (this.player.body.touching.down) {
+        // Idle Right.
+        if (this.facing == "right") {
+          this.player.anims.play("idle-right", true);
+
+          // Idle Left.
+        } else if (this.facing == "left") {
+          this.player.anims.play("idle-left", true);
+        }
+      } else if (
+        !this.player.body.touching.down &&
+        !this.player.touchesladder
+      ) {
+        if (this.facing == "right") {
+          this.player.anims.play("up-right", true);
+        } else if (this.facing == "left") {
+          this.player.anims.play("up-left", true);
+        }
+      }
+    }
+
+    // Jump.
+    if (this.cursors.up.isDown && this.player.body.touching.down) {
+      this.player.setVelocityY(-400);
+      // Plays sound.
+      this.sound.play("sound-jump");
+    }
+
+    // If the player is touching the bouncing block.
+    if (this.player.touchesbounce && this.player.body.touching.down) {
+      this.player.setVelocityY(-800);
+    }
+
+    // If the player is touching the Ladder.
+    if (this.player.touchesladder) {
+      if (this.cursors.up.isDown) {
+        this.player.body.velocity.y = -150;
+        this.player.anims.play("climb", true);
+
+        this.facing = "left";
+      }
+    }
+
+    // Go to the next level.
+    if (this.player.touchesdoor == true) {
+      // If the player has gathered the required amoount of stars.
+      if (this.hubStars >= 3) {
+        if (this.cursors.space.isDown) {
+          this.scene.start("end");
+        }
+      }
+    }
+
+    // Camera zoom.
+    this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+      if (deltaY > 0) {
+        this.camera.setZoom(1);
+      }
+      if (deltaY < 0) {
+        this.camera.setZoom(1.5);
+      } else {
+      }
+    });
+
+    // Resets ladder variable.
+    this.player.touchesdoor = false;
+
+    // Resets Bounce variable.
+    this.player.touchesbounce = false;
+
+    // Resets Door variable.
+    this.player.touchesladder = false;
+
+    // Resets Flag variable.
+    this.player.touchesflag = false;
+
+    // Pauses the scene.
+    if (this.cursors.pause.isDown) {
+      this.text.setText("Paused");
+      this.scene.launch("pause");
+      this.scene.pause();
+    }
+
+    if (this.cursors.reset.isDown) {
+      this.player.x = this.checkpoint.x;
+      this.player.y = this.checkpoint.y;
+
+      this.moveableBlock1.x = -600;
+      this.moveableBlock1.y = 587.5;
+
+      this.moveableBlock2.x = 3200;
+      this.moveableBlock2.y = 587.5;
+
+      this.moveableBlock3.x = 4200;
+      this.moveableBlock3.y = 587.5;
+    }
   }
 }
