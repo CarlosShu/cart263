@@ -44,8 +44,9 @@ class Boot extends Phaser.Scene {
     // Forest Assets.
     this.load.image("forestTree", "assets/images/forestTree.png");
     this.load.image("forestFlower", "assets/images/forestFlower.png");
-    this.load.image("forestRock", "assets/images/forestRock.png");
-    this.load.image("forestMushroom", "assets/images/forestTree.png");
+    this.load.image("forestBush", "assets/images/forestBush.png");
+    this.load.image("forestPlant", "assets/images/forestPlant.png");
+    this.load.image("forestMushroom", "assets/images/forestMushroom.png");
 
     // Avatar Sprites.
     this.load.spritesheet("avatar-idle", "assets/images/avatar-idle.png", {

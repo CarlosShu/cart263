@@ -6,7 +6,7 @@ class Forest extends Phaser.Scene {
   create() {
     let scene = this;
 
-    this.physics.world.setBounds(-4000, -1000, 8000, 2000);
+    this.physics.world.setBounds(-1400, -1000, 7400, 2000);
 
     this.hitCheckpoint = false;
     this.currentTime = 0;
@@ -31,41 +31,11 @@ class Forest extends Phaser.Scene {
 
     //  this.ladder.create(300, 150);
 
-    this.block.create(-800, 587.5);
+    this.moveableBlock1 = this.moveableBlockGroup.create(-600, 587.5);
 
-    this.blockTall.create(-1000, 550);
+    this.star.create(-1200, 400);
 
-    this.bigBlockWide.create(-1300, 550);
-
-    this.blockWide.create(-1600, 587.5);
-
-    this.blockTall.create(-2300, 550);
-
-    this.star.create(-2300, 400);
-
-    this.ladder.create(-1300, 332.5);
-
-    this.platformWide.create(-1450, 200);
-
-    this.platformWide.create(-1850, 200);
-
-    this.moveableBlock2 = this.moveableBlockGroup.create(-1850, 100);
-
-    this.platform.create(-1650, 200);
-
-    this.platformWide.create(-1150, 200);
-
-    this.platform.create(-950, 200);
-
-    this.movingPlatformX.create(-750, 200);
-
-    this.platformWider.create(-250, 200);
-
-    this.moveableBlock3 = this.moveableBlockGroup.create(-250, 100);
-
-    this.platform.create(-950, 200);
-
-    this.bigBlockWide.create(2100, 550);
+    this.bigBlock.create(-1200, 550);
 
     this.blockTall.create(-1000, 550);
 
@@ -73,15 +43,21 @@ class Forest extends Phaser.Scene {
 
     this.bigBlock.create(600, 550);
 
+    this.block.create(800, 587.5);
+
     this.flag.create(0, 552.5);
 
     this.door.create(1100, 400);
+
+    this.bigBlockWide.create(1100, 550);
 
     this.block.create(1400, 587.5);
 
     this.blockWide.create(1600, 587.5);
 
     this.blockTall.create(1800, 550);
+
+    this.bigBlockWide.create(2100, 550);
 
     this.flag.create(2100, 410);
 
@@ -420,7 +396,7 @@ class Forest extends Phaser.Scene {
       isStatic: true,
       setScale: { x: 0.5, y: 0.5 },
       repeat: 6,
-      setXY: { x: -1600, y: 604, stepX: 1500 },
+      setXY: { x: -1600, y: 584, stepX: 1500 },
     });
 
     // Background ground.
@@ -429,61 +405,7 @@ class Forest extends Phaser.Scene {
       isStatic: true,
       setScale: { x: 0.5, y: 0.5 },
       repeat: 6,
-      setXY: { x: -1600, y: 654, stepX: 1500 },
-    });
-
-    // Foreground ground.
-    this.foregroundGround = this.physics.add.staticGroup({
-      key: "groundFloor",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 6,
-      setXY: { x: -1600, y: 746, stepX: 1500 },
-    });
-
-    // Foreground ground.
-    this.foregroundGround2 = this.physics.add.staticGroup({
-      key: "groundFloor",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 6,
-      setXY: { x: -1600, y: 798, stepX: 1500 },
-    });
-
-    // Background Forest Tree.
-    this.backgroundForestTree = this.physics.add.staticGroup({
-      key: "forestTree",
-      isStatic: true,
-      setScale: { x: 0.6, y: 0.6 },
-      repeat: 10,
-      setXY: { x: -720, y: 317, stepX: 1000 },
-    });
-
-    // Background Plants.
-    this.backgroundForestPlant = this.physics.add.staticGroup({
-      key: "forestPlant",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 10,
-      setXY: { x: -720 - 500, y: 485, stepX: 2000 },
-    });
-
-    // Foreground Forest Tree.
-    this.foregroundForestTree = this.physics.add.staticGroup({
-      key: "forestTree",
-      isStatic: true,
-      setScale: { x: 0.6, y: 0.6 },
-      repeat: 10,
-      setXY: { x: -720 + 500, y: 508, stepX: 2000 },
-    });
-
-    // Foreground Plants.
-    this.foregroundForestPlant = this.physics.add.staticGroup({
-      key: "forestPlant",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 10,
-      setXY: { x: -720, y: 678, stepX: 1000 },
+      setXY: { x: -1600, y: 644, stepX: 1500 },
     });
 
     // Ground.
@@ -493,6 +415,51 @@ class Forest extends Phaser.Scene {
       setScale: { x: 0.5, y: 0.5 },
       repeat: 6,
       setXY: { x: -1600, y: 700, stepX: 1500 },
+    });
+
+    // Foreground ground.
+    this.foregroundGround = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 756, stepX: 1500 },
+    });
+
+    // Foreground ground.
+    this.foregroundGround2 = this.physics.add.staticGroup({
+      key: "groundFloor",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 6,
+      setXY: { x: -1600, y: 818, stepX: 1500 },
+    });
+
+    // Background Forest Tree.
+    this.backgroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.6, y: 0.6 },
+      repeat: 10,
+      setXY: { x: -720, y: 297, stepX: 1000 },
+    });
+
+    // Background Plants.
+    this.backgroundForestPlant = this.physics.add.staticGroup({
+      key: "forestPlant",
+      isStatic: true,
+      setScale: { x: 0.5, y: 0.5 },
+      repeat: 10,
+      setXY: { x: -720 - 500, y: 424, stepX: 2000 },
+    });
+
+    // Foreground Forest Tree.
+    this.foregroundForestTree = this.physics.add.staticGroup({
+      key: "forestTree",
+      isStatic: true,
+      setScale: { x: 0.6, y: 0.6 },
+      repeat: 10,
+      setXY: { x: -720 + 500, y: 472, stepX: 2000 },
     });
 
     // Checkpoint.
@@ -622,12 +589,14 @@ class Forest extends Phaser.Scene {
     // Background Trees.
     this.backgroundForestTree.children.iterateLocal("setSize", 1500, 150);
     this.backgroundForestTree.children.iterateLocal("setDepth", -4);
-    this.backgroundForestTree.children.iterateLocal("setTint", "0x202020");
+    this.backgroundForestTree.children.iterateLocal("setTint", "0x303030");
+    this.backgroundForestTree.children.iterateLocal("setPipeline", "Light2D");
 
     // Background plants.
     this.backgroundForestPlant.children.iterateLocal("setSize", 1500, 150);
     this.backgroundForestPlant.children.iterateLocal("setDepth", -4);
-    this.backgroundForestPlant.children.iterateLocal("setTint", "0x202020");
+    this.backgroundForestPlant.children.iterateLocal("setTint", "0x303030");
+    this.backgroundForestPlant.children.iterateLocal("setPipeline", "Light2D");
 
     // Foreground ground.
     this.foregroundGround.children.iterateLocal("setSize", 1500, 150);
@@ -643,13 +612,9 @@ class Forest extends Phaser.Scene {
 
     // Foreground Forest Tree.
     this.foregroundForestTree.children.iterateLocal("setSize", 1500, 150);
-    this.foregroundForestTree.children.iterateLocal("setDepth", 2);
-    this.foregroundForestTree.children.iterateLocal("setTint", "0x404040");
-
-    // Foreground Forest Plant.
-    this.foregroundForestPlant.children.iterateLocal("setSize", 1500, 150);
-    this.foregroundForestPlant.children.iterateLocal("setDepth", 2);
-    this.foregroundForestPlant.children.iterateLocal("setTint", "0x404040");
+    this.foregroundForestTree.children.iterateLocal("setDepth", 1);
+    this.foregroundForestTree.children.iterateLocal("setTint", "0x606060");
+    this.foregroundForestTree.children.iterateLocal("setPipeline", "Light2D");
 
     // Ground.
     this.ground.children.iterateLocal("setSize", 1500, 150);
@@ -676,70 +641,57 @@ class Forest extends Phaser.Scene {
     // Ladder.
     this.ladder.children.iterateLocal("setDepth", -1);
     this.ladder.children.iterateLocal("setScale", "0.25");
-    this.ladder.children.iterateLocal("setTint", "0x804000");
     this.ladder.children.iterateLocal("setPipeline", "Light2D");
 
     // Moveable Blocks.
     this.moveableBlockGroup.children.iterateLocal("setScale", "0.25");
     this.moveableBlockGroup.children.iterateLocal("setTint", "0x802800");
-    this.moveableBlockGroup.children.iterateLocal("setPipeline", "Light2D");
 
     // Block.
     this.block.children.iterateLocal("setScale", "0.25");
     this.block.children.iterateLocal("setTint", "0x804000");
-    this.block.children.iterateLocal("setPipeline", "Light2D");
 
     // Wide Blocks.
     this.blockWide.children.iterateLocal("setScale", "0.25");
     this.blockWide.children.iterateLocal("setTint", "0x804000");
-    this.block.children.iterateLocal("setPipeline", "Light2D");
 
     // Tall Blocks.
     this.blockTall.children.iterateLocal("setScale", "0.25");
     this.blockTall.children.iterateLocal("setTint", "0x804000");
-    this.blockTall.children.iterateLocal("setPipeline", "Light2D");
 
     // Big Blocks.
     this.bigBlock.children.iterateLocal("setScale", "0.25");
     this.bigBlock.children.iterateLocal("setTint", "0x802800");
-    this.bigBlock.children.iterateLocal("setPipeline", "Light2D");
 
     // Big Wide Block.
     this.bigBlockWide.children.iterateLocal("setScale", "0.25");
     this.bigBlockWide.children.iterateLocal("setTint", "0x802800");
-    this.bigBlockWide.children.iterateLocal("setPipeline", "Light2D");
 
     // Bouncing Blocks.
     this.bouncingBlock.children.iterateLocal("setScale", "0.25");
     this.bouncingBlock.children.iterateLocal("setTint", "0x808080");
-    this.bouncingBlock.children.iterateLocal("setPipeline", "Light2D");
 
     // Platforms.
     this.platform.children.iterateLocal("setScale", "0.25");
     this.platform.children.iterateLocal("setTint", "0x804000");
-    this.platform.children.iterateLocal("setPipeline", "Light2D");
 
     // Platforms.
     this.platformWide.children.iterateLocal("setScale", "0.25");
     this.platformWide.children.iterateLocal("setTint", "0x8802800");
-    this.platformWide.children.iterateLocal("setPipeline", "Light2D");
 
     // Platforms.
     this.platformWider.children.iterateLocal("setScale", "0.25");
     this.platformWider.children.iterateLocal("setTint", "0x802800");
-    this.platformWider.children.iterateLocal("setPipeline", "Light2D");
 
     // Moving Platform X.
     this.movingPlatformX.children.iterateLocal("setScale", "0.25");
     this.movingPlatformX.children.iterateLocal("setFrictionX", "1");
     this.movingPlatformX.children.iterateLocal("setTint", "0x802800");
-    this.movingPlatformX.children.iterateLocal("setPipeline", "Light2D");
 
     // Moving Platform Y.
     this.movingPlatformY.children.iterateLocal("setScale", "0.25");
     this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
     this.movingPlatformY.children.iterateLocal("setTint", "0x802800");
-    this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
   }
 
   // Colliders.
@@ -782,9 +734,6 @@ class Forest extends Phaser.Scene {
     this.physics.add.collider(this.moveableBlockGroup, this.blockTall);
     this.physics.add.collider(this.moveableBlockGroup, this.bigBlock);
     this.physics.add.collider(this.moveableBlockGroup, this.bigBlockWide);
-    this.physics.add.collider(this.moveableBlockGroup, this.platform);
-    this.physics.add.collider(this.moveableBlockGroup, this.platformWide);
-    this.physics.add.collider(this.moveableBlockGroup, this.platformWider);
   }
 
   // Prevents the moveable block from pushing through the ground.

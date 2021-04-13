@@ -626,6 +626,9 @@ class Hub extends Phaser.Scene {
     this.physics.add.collider(this.moveableBlockGroup, this.blockTall);
     this.physics.add.collider(this.moveableBlockGroup, this.bigBlock);
     this.physics.add.collider(this.moveableBlockGroup, this.bigBlockWide);
+    this.physics.add.collider(this.moveableBlockGroup, this.platform);
+    this.physics.add.collider(this.moveableBlockGroup, this.platformWide);
+    this.physics.add.collider(this.moveableBlockGroup, this.platformWider);
   }
 
   // Prevents the moveable block from pushing through the ground.
