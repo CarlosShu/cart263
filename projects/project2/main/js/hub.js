@@ -86,6 +86,7 @@ class Hub extends Phaser.Scene {
     this.block.create(4700, 437.5);
 
     this.blockTall.create(4900, 550);
+
     this.blockTall.create(4900, 400);
 
     this.platform.create(5100, 335);
@@ -211,9 +212,13 @@ class Hub extends Phaser.Scene {
     if (this.currentTime < 300) {
       this.movingPlatformX.setVelocityX(100);
       this.movingPlatformY.setVelocityY(100);
+      this.movingPlatformX2.setVelocityX(-100);
+      this.movingPlatformY2.setVelocityY(-100);
     } else if (this.currentTime >= 300) {
       this.movingPlatformX.setVelocityX(-100);
       this.movingPlatformY.setVelocityY(-100);
+      this.movingPlatformX2.setVelocityX(100);
+      this.movingPlatformY2.setVelocityY(100);
     }
   }
 
@@ -502,6 +507,20 @@ class Hub extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
+
+    // Moving Platform X2.
+    this.movingPlatformX2 = this.physics.add.group({
+      defaultKey: "platform",
+      immovable: true,
+      allowGravity: false,
+    });
+
+    // Moving Platform Y2.
+    this.movingPlatformY2 = this.physics.add.group({
+      defaultKey: "platform",
+      immovable: true,
+      allowGravity: false,
+    });
   }
 
   // Children of group objects properties.
@@ -584,6 +603,14 @@ class Hub extends Phaser.Scene {
     // Moving Platform Y.
     this.movingPlatformY.children.iterateLocal("setScale", "0.25");
     this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
+
+    // Moving Platform X2.
+    this.movingPlatformX2.children.iterateLocal("setScale", "0.25");
+    this.movingPlatformX2.children.iterateLocal("setFrictionX", "1");
+
+    // Moving Platform Y2.
+    this.movingPlatformY2.children.iterateLocal("setScale", "0.25");
+    this.movingPlatformY2.children.iterateLocal("setTint", "0x802800");
   }
 
   // Colliders.
@@ -601,6 +628,8 @@ class Hub extends Phaser.Scene {
     this.physics.add.collider(this.player, this.platformWider);
     this.physics.add.collider(this.player, this.movingPlatformX);
     this.physics.add.collider(this.player, this.movingPlatformY);
+    this.physics.add.collider(this.player, this.movingPlatformX2);
+    this.physics.add.collider(this.player, this.movingPlatformY2);
 
     // Star.
 
@@ -706,7 +735,7 @@ class Hub extends Phaser.Scene {
 
     //  Level.
     this.hudLevel = this.add
-      .text(0, 0, "Level: HUB", {
+      .text(0, 0, "Level 01", {
         fontSize: "15px",
         align: "left",
         fontFamily: "block",
@@ -743,7 +772,7 @@ class Hub extends Phaser.Scene {
     this.text.y = this.player.body.position.y + 350;
 
     // Updates the position of the hud text relative to the player's position.
-    this.hudStars.x = this.player.body.position.x + 670;
+    this.hudStars.x = this.player.body.position.x + 650;
     this.hudStars.y = this.player.body.position.y - 300;
 
     // Updates the position of the hud text relative to the player's position.
@@ -756,9 +785,9 @@ class Hub extends Phaser.Scene {
     // Random Text updates.
     if (this.player.touchesdoor == true) {
       if (this.hubStars < 1) {
-        this.text.setText("You need 3 stars to Enter the forest");
+        this.text.setText("You need 3 stars to enter the next area");
       } else {
-        this.text.setText("Press SPACE to ENTER the Forest");
+        this.text.setText("Press SPACE to enter the next area");
       }
     } else if (this.player.touchesflag == true) {
       this.text.setText("Checkpoint!");

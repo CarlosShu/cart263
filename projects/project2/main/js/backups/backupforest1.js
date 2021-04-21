@@ -6,13 +6,13 @@ class Forest extends Phaser.Scene {
   create() {
     let scene = this;
 
-    this.physics.world.setBounds(-4000, -1000, 11000, 2000);
+    this.physics.world.setBounds(-4000, -1000, 8000, 2000);
 
     this.hitCheckpoint = false;
     this.currentTime = 0;
     this.timedEvent;
 
-    this.checkpoint = { x: 4400, y: 0 };
+    this.checkpoint = { x: 2000, y: 250 };
 
     // Variables.
     this.hubStars = 0;
@@ -111,61 +111,42 @@ class Forest extends Phaser.Scene {
 
     this.bouncingBlock.create(2400, 600);
 
-    this.block.create(3200, 587.5);
+    this.bouncingBlock.create(3200, 600);
 
     this.bigBlock.create(3400, 550);
 
-    this.flag.create(3400, 410);
+    this.flag.create(3700, 410);
 
-    this.bigBlockWide.create(4300, 550);
-    this.bigBlockWide.create(4000, 550);
-    this.bigBlockWide.create(3700, 550);
+    this.moveableBlock3 = this.moveableBlockGroup.create(4200, 187.55);
 
-    this.door.create(4200, 400);
+    this.blockTall.create(4500, 550);
 
-    this.block.create(4600, 587.5);
+    this.blockTall.create(4700, 550);
 
-    this.platform.create(4600, 405);
+    this.block.create(4700, 437.5);
 
-    this.platform.create(4800, 355);
+    this.blockTall.create(4900, 550);
+    this.blockTall.create(4900, 400);
 
-    this.platform.create(5000, 305);
+    this.platform.create(5100, 335);
 
-    this.movingPlatformY.create(5200, 85);
+    this.platform.create(5300, 335);
 
-    this.movingPlatformY2.create(5400, 285);
+    this.movingPlatformY.create(5750, 50);
 
-    this.movingPlatformY.create(5600, 85);
+    this.platformWider.create(5450, 50);
 
-    this.movingPlatformY2.create(5800, 285);
+    this.flag.create(5450, -25);
 
-    this.platform.create(6000, 255);
+    this.movingPlatformX.create(4900, 50);
 
-    this.platform.create(6200, 205);
+    this.platform.create(4700, 50);
 
-    this.platform.create(6400, 155);
+    this.movingPlatformX.create(4300, 50);
 
-    this.movingPlatformY.create(6600, -85);
+    this.platformWider.create(4000, 150);
 
-    this.movingPlatformX2.create(6400, -85);
-
-    this.movingPlatformX.create(5800, -85);
-
-    this.movingPlatformX2.create(5700, -85);
-
-    this.movingPlatformX.create(5100, -85);
-
-    this.movingPlatformX2.create(5000, -85);
-
-    this.platform.create(4600, -85);
-
-    this.platform.create(4400, -85);
-
-    this.platform.create(4200, -85);
-
-    this.platform.create(4000, -85);
-
-    this.star.create(4000, -300);
+    this.star.create(4000, 100);
 
     // Calls the Object Properties function.
     this.objectProperties();
@@ -266,13 +247,9 @@ class Forest extends Phaser.Scene {
     if (this.currentTime < 300) {
       this.movingPlatformX.setVelocityX(100);
       this.movingPlatformY.setVelocityY(100);
-      this.movingPlatformX2.setVelocityX(-100);
-      this.movingPlatformY2.setVelocityY(-100);
     } else if (this.currentTime >= 300) {
       this.movingPlatformX.setVelocityX(-100);
       this.movingPlatformY.setVelocityY(-100);
-      this.movingPlatformX2.setVelocityX(100);
-      this.movingPlatformY2.setVelocityY(100);
     }
   }
 
@@ -633,20 +610,6 @@ class Forest extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
-
-    // Moving Platform X2.
-    this.movingPlatformX2 = this.physics.add.group({
-      defaultKey: "platform",
-      immovable: true,
-      allowGravity: false,
-    });
-
-    // Moving Platform Y2.
-    this.movingPlatformY2 = this.physics.add.group({
-      defaultKey: "platform",
-      immovable: true,
-      allowGravity: false,
-    });
   }
 
   // Children of group objects properties.
@@ -709,14 +672,12 @@ class Forest extends Phaser.Scene {
     // Checkpoint.
     this.flag.children.iterateLocal("setDepth", -3);
     this.flag.children.iterateLocal("setScale", "0.25");
-    this.flag.children.iterateLocal("setTint", "0xFF8F00");
     this.flag.children.iterateLocal("setPipeline", "Light2D");
 
     // Door.
     this.door.children.iterateLocal("setDepth", -3);
     this.door.children.iterateLocal("setScale", "0.25");
     this.door.children.iterateLocal("setSize", 250, 599);
-    this.door.children.iterateLocal("setTint", "0xFF8F00");
     this.door.children.iterateLocal("setPipeline", "Light2D");
 
     // Star.
@@ -791,18 +752,6 @@ class Forest extends Phaser.Scene {
     this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
     this.movingPlatformY.children.iterateLocal("setTint", "0x802800");
     this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
-
-    // Moving Platform X2.
-    this.movingPlatformX2.children.iterateLocal("setScale", "0.25");
-    this.movingPlatformX2.children.iterateLocal("setFrictionX", "1");
-    this.movingPlatformX2.children.iterateLocal("setTint", "0x802800");
-    this.movingPlatformX2.children.iterateLocal("setPipeline", "Light2D");
-
-    // Moving Platform Y2.
-    this.movingPlatformY2.children.iterateLocal("setScale", "0.25");
-    this.movingPlatformY2.children.iterateLocal("setPipeline", "Light2D");
-    this.movingPlatformY2.children.iterateLocal("setTint", "0x802800");
-    this.movingPlatformY2.children.iterateLocal("setPipeline", "Light2D");
   }
 
   // Colliders.
@@ -820,8 +769,6 @@ class Forest extends Phaser.Scene {
     this.physics.add.collider(this.player, this.platformWider);
     this.physics.add.collider(this.player, this.movingPlatformX);
     this.physics.add.collider(this.player, this.movingPlatformY);
-    this.physics.add.collider(this.player, this.movingPlatformX2);
-    this.physics.add.collider(this.player, this.movingPlatformY2);
 
     // Star.
 
@@ -927,7 +874,7 @@ class Forest extends Phaser.Scene {
 
     //  Level.
     this.hudLevel = this.add
-      .text(0, 0, "Level 02", {
+      .text(0, 0, "Level: FOREST", {
         fontSize: "15px",
         align: "left",
         fontFamily: "block",
@@ -964,11 +911,11 @@ class Forest extends Phaser.Scene {
     this.text.y = this.player.body.position.y + 350;
 
     // Updates the position of the hud text relative to the player's position.
-    this.hudStars.x = this.player.body.position.x + 650;
+    this.hudStars.x = this.player.body.position.x + 670;
     this.hudStars.y = this.player.body.position.y - 300;
 
     // Updates the position of the hud text relative to the player's position.
-    this.hudLevel.x = this.player.body.position.x - 650;
+    this.hudLevel.x = this.player.body.position.x - 630;
     this.hudLevel.y = this.player.body.position.y - 300;
 
     // Hud text updates.
@@ -977,9 +924,9 @@ class Forest extends Phaser.Scene {
     // Random Text updates.
     if (this.player.touchesdoor == true) {
       if (this.hubStars < 1) {
-        this.text.setText("You need 3 stars to enter the next area");
+        this.text.setText("You need 3 stars to Enter the forest");
       } else {
-        this.text.setText("Press SPACE to enter the next area");
+        this.text.setText("Press SPACE to ENTER the Forest");
       }
     } else if (this.player.touchesflag == true) {
       this.text.setText("Checkpoint!");

@@ -1,18 +1,18 @@
-class Forest extends Phaser.Scene {
+class Hub extends Phaser.Scene {
   constructor() {
-    super({ key: "forest" });
+    super({ key: "hub" });
   }
 
   create() {
     let scene = this;
 
-    this.physics.world.setBounds(-4000, -1000, 11000, 2000);
+    this.physics.world.setBounds(-1400, -1000, 7400, 2000);
 
     this.hitCheckpoint = false;
     this.currentTime = 0;
     this.timedEvent;
 
-    this.checkpoint = { x: 4400, y: 0 };
+    this.checkpoint = { x: 0, y: 550 };
 
     // Variables.
     this.hubStars = 0;
@@ -31,141 +31,86 @@ class Forest extends Phaser.Scene {
 
     //  this.ladder.create(300, 150);
 
-    this.block.create(-800, 587.5);
+    this.moveableBlock1 = this.moveableBlockGroup.create(-600, 587.5);
+
+    this.star.create(-1200, 400);
+
+    this.bigBlock.create(-1200, 550);
 
     this.blockTall.create(-1000, 550);
 
-    this.bigBlockWide.create(-1300, 550);
+    this.block.create(400, 587.5);
 
-    this.blockWide.create(-1600, 587.5);
+    this.bigBlock.create(600, 550);
 
-    this.blockTall.create(-2300, 550);
+    this.block.create(800, 587.5);
 
-    this.star.create(-2300, 400);
+    this.flag.create(0, 552.5);
 
-    this.ladder.create(-1300, 332.5);
+    this.door.create(1100, 400);
 
-    this.platformWide.create(-1450, 200);
+    this.bigBlockWide.create(1100, 550);
 
-    this.platformWide.create(-1850, 200);
+    this.block.create(1400, 587.5);
 
-    this.moveableBlock2 = this.moveableBlockGroup.create(-1850, 100);
-
-    this.platform.create(-1650, 200);
-
-    this.platformWide.create(-1150, 200);
-
-    this.platform.create(-950, 200);
-
-    this.movingPlatformX.create(-750, 200);
-
-    this.platformWider.create(-250, 200);
-
-    this.moveableBlock3 = this.moveableBlockGroup.create(-250, 100);
-
-    this.platform.create(-950, 200);
-
-    this.blockTall.create(-1000, 550);
-
-    this.bigBlock.create(800, 550);
-
-    this.flag.create(800, 410);
-
-    this.bouncingBlock.create(600, 600);
-
-    this.bouncingBlock.create(1100, 600);
-
-    this.blockTall.create(1350, 550);
-
-    this.blockTall.create(1350, 400);
-
-    this.bouncingBlock.create(1600, 600);
+    this.blockWide.create(1600, 587.5);
 
     this.blockTall.create(1800, 550);
 
-    this.blockTall.create(1800, 400);
+    this.bigBlockWide.create(2100, 550);
 
-    this.bouncingBlock.create(2000, 600);
+    this.flag.create(2100, 410);
 
-    this.blockTall.create(2200, 550);
+    this.blockTall.create(2400, 550);
 
-    this.blockTall.create(2200, 400);
+    this.blockTall.create(2600, 550);
 
-    this.movingPlatformX.create(2400, 335);
+    this.star.create(2600, 400);
 
-    this.platform.create(2800, 335);
+    this.blockTall.create(2800, 550);
 
-    this.ladder.create(2800, 185);
+    this.moveableBlock2 = this.moveableBlockGroup.create(3200, 587.5);
 
-    this.ladder.create(2800, -75);
+    this.bigBlockWide.create(3800, 550);
 
-    this.platformWide.create(2650, -205);
+    this.flag.create(3700, 410);
 
-    this.platform.create(2450, -205);
+    this.bigBlockWide.create(3600, 550);
 
-    this.platform.create(2250, -205);
+    this.moveableBlock3 = this.moveableBlockGroup.create(4200, 187.55);
 
-    this.platform.create(2050, -205);
+    this.blockTall.create(4500, 550);
 
-    this.star.create(2050, -400);
+    this.blockTall.create(4700, 550);
 
-    this.bouncingBlock.create(2400, 600);
+    this.block.create(4700, 437.5);
 
-    this.block.create(3200, 587.5);
+    this.blockTall.create(4900, 550);
+    this.blockTall.create(4900, 400);
 
-    this.bigBlock.create(3400, 550);
+    this.platform.create(5100, 335);
 
-    this.flag.create(3400, 410);
+    this.platform.create(5300, 335);
 
-    this.bigBlockWide.create(4300, 550);
-    this.bigBlockWide.create(4000, 550);
-    this.bigBlockWide.create(3700, 550);
+    this.platformWide.create(5550, 335);
 
-    this.door.create(4200, 400);
+    this.movingPlatformY.create(5750, 50);
 
-    this.block.create(4600, 587.5);
+    this.platformWider.create(5450, 50);
 
-    this.platform.create(4600, 405);
+    this.flag.create(5450, -25);
 
-    this.platform.create(4800, 355);
+    this.movingPlatformX.create(4900, 50);
 
-    this.platform.create(5000, 305);
+    this.platform.create(4700, 50);
 
-    this.movingPlatformY.create(5200, 85);
+    this.movingPlatformX.create(4300, 50);
 
-    this.movingPlatformY2.create(5400, 285);
+    this.platformWider.create(4000, 150);
 
-    this.movingPlatformY.create(5600, 85);
+    this.star.create(4000, 100);
 
-    this.movingPlatformY2.create(5800, 285);
-
-    this.platform.create(6000, 255);
-
-    this.platform.create(6200, 205);
-
-    this.platform.create(6400, 155);
-
-    this.movingPlatformY.create(6600, -85);
-
-    this.movingPlatformX2.create(6400, -85);
-
-    this.movingPlatformX.create(5800, -85);
-
-    this.movingPlatformX2.create(5700, -85);
-
-    this.movingPlatformX.create(5100, -85);
-
-    this.movingPlatformX2.create(5000, -85);
-
-    this.platform.create(4600, -85);
-
-    this.platform.create(4400, -85);
-
-    this.platform.create(4200, -85);
-
-    this.platform.create(4000, -85);
-
-    this.star.create(4000, -300);
+    // this.bouncingBlock.create(100, 600);
 
     // Calls the Object Properties function.
     this.objectProperties();
@@ -266,13 +211,9 @@ class Forest extends Phaser.Scene {
     if (this.currentTime < 300) {
       this.movingPlatformX.setVelocityX(100);
       this.movingPlatformY.setVelocityY(100);
-      this.movingPlatformX2.setVelocityX(-100);
-      this.movingPlatformY2.setVelocityY(-100);
     } else if (this.currentTime >= 300) {
       this.movingPlatformX.setVelocityX(-100);
       this.movingPlatformY.setVelocityY(-100);
-      this.movingPlatformX2.setVelocityX(100);
-      this.movingPlatformY2.setVelocityY(100);
     }
   }
 
@@ -449,78 +390,6 @@ class Forest extends Phaser.Scene {
       setXY: { x: -1600, y: 360, stepX: 1500 },
     });
 
-    // Background ground.
-    this.backgroundGround2 = this.physics.add.staticGroup({
-      key: "groundFloor",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 6,
-      setXY: { x: -1600, y: 604, stepX: 1500 },
-    });
-
-    // Background ground.
-    this.backgroundGround = this.physics.add.staticGroup({
-      key: "groundFloor",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 6,
-      setXY: { x: -1600, y: 654, stepX: 1500 },
-    });
-
-    // Foreground ground.
-    this.foregroundGround = this.physics.add.staticGroup({
-      key: "groundFloor",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 6,
-      setXY: { x: -1600, y: 746, stepX: 1500 },
-    });
-
-    // Foreground ground.
-    this.foregroundGround2 = this.physics.add.staticGroup({
-      key: "groundFloor",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 6,
-      setXY: { x: -1600, y: 798, stepX: 1500 },
-    });
-
-    // Background Forest Tree.
-    this.backgroundForestTree = this.physics.add.staticGroup({
-      key: "forestTree",
-      isStatic: true,
-      setScale: { x: 0.6, y: 0.6 },
-      repeat: 10,
-      setXY: { x: -720, y: 317, stepX: 1000 },
-    });
-
-    // Background Plants.
-    this.backgroundForestPlant = this.physics.add.staticGroup({
-      key: "forestPlant",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 10,
-      setXY: { x: -720 - 500, y: 485, stepX: 2000 },
-    });
-
-    // Foreground Forest Tree.
-    this.foregroundForestTree = this.physics.add.staticGroup({
-      key: "forestTree",
-      isStatic: true,
-      setScale: { x: 0.6, y: 0.6 },
-      repeat: 10,
-      setXY: { x: -720 + 500, y: 508, stepX: 2000 },
-    });
-
-    // Foreground Plants.
-    this.foregroundForestPlant = this.physics.add.staticGroup({
-      key: "forestPlant",
-      isStatic: true,
-      setScale: { x: 0.5, y: 0.5 },
-      repeat: 10,
-      setXY: { x: -720, y: 678, stepX: 1000 },
-    });
-
     // Ground.
     this.ground = this.physics.add.staticGroup({
       key: "ground",
@@ -597,7 +466,7 @@ class Forest extends Phaser.Scene {
     });
     // Bouncing Block.
     this.bouncingBlock = this.physics.add.group({
-      defaultKey: "forestMushroom",
+      defaultKey: "block",
       immovable: true,
       allowGravity: false,
     });
@@ -633,176 +502,88 @@ class Forest extends Phaser.Scene {
       immovable: true,
       allowGravity: false,
     });
-
-    // Moving Platform X2.
-    this.movingPlatformX2 = this.physics.add.group({
-      defaultKey: "platform",
-      immovable: true,
-      allowGravity: false,
-    });
-
-    // Moving Platform Y2.
-    this.movingPlatformY2 = this.physics.add.group({
-      defaultKey: "platform",
-      immovable: true,
-      allowGravity: false,
-    });
   }
 
   // Children of group objects properties.
   objectProperties() {
     // Sky.
-    this.sky.children.iterateLocal("setDepth", -7);
-    this.sky.children.iterateLocal("setTint", "0x303030");
+    this.sky.children.iterateLocal("setDepth", -5);
     this.sky.children.iterateLocal("setPipeline", "Light2D");
-
-    // Background ground.
-    this.backgroundGround2.children.iterateLocal("setSize", 1500, 150);
-    this.backgroundGround2.children.iterateLocal("setDepth", -6);
-    this.backgroundGround2.children.iterateLocal("setTint", "0x042004");
-    this.backgroundGround2.children.iterateLocal("setPipeline", "Light2D");
-
-    // Background ground.
-    this.backgroundGround.children.iterateLocal("setSize", 1500, 150);
-    this.backgroundGround.children.iterateLocal("setDepth", -5);
-    this.backgroundGround.children.iterateLocal("setTint", "0x104010");
-    this.backgroundGround.children.iterateLocal("setPipeline", "Light2D");
-
-    // Background Trees.
-    this.backgroundForestTree.children.iterateLocal("setSize", 1500, 150);
-    this.backgroundForestTree.children.iterateLocal("setDepth", -4);
-    this.backgroundForestTree.children.iterateLocal("setTint", "0x202020");
-
-    // Background plants.
-    this.backgroundForestPlant.children.iterateLocal("setSize", 1500, 150);
-    this.backgroundForestPlant.children.iterateLocal("setDepth", -4);
-    this.backgroundForestPlant.children.iterateLocal("setTint", "0x202020");
-
-    // Foreground ground.
-    this.foregroundGround.children.iterateLocal("setSize", 1500, 150);
-    this.foregroundGround.children.iterateLocal("setDepth", 1);
-    this.foregroundGround.children.iterateLocal("setTint", "0x104010");
-    this.foregroundGround.children.iterateLocal("setPipeline", "Light2D");
-
-    // Foreground ground.
-    this.foregroundGround2.children.iterateLocal("setSize", 1500, 150);
-    this.foregroundGround2.children.iterateLocal("setDepth", 2);
-    this.foregroundGround2.children.iterateLocal("setTint", "0x042004");
-    this.foregroundGround2.children.iterateLocal("setPipeline", "Light2D");
-
-    // Foreground Forest Tree.
-    this.foregroundForestTree.children.iterateLocal("setSize", 1500, 150);
-    this.foregroundForestTree.children.iterateLocal("setDepth", 2);
-    this.foregroundForestTree.children.iterateLocal("setTint", "0x404040");
-
-    // Foreground Forest Plant.
-    this.foregroundForestPlant.children.iterateLocal("setSize", 1500, 150);
-    this.foregroundForestPlant.children.iterateLocal("setDepth", 2);
-    this.foregroundForestPlant.children.iterateLocal("setTint", "0x404040");
 
     // Ground.
     this.ground.children.iterateLocal("setSize", 1500, 150);
-    this.ground.children.iterateLocal("setDepth", -3);
-    this.ground.children.iterateLocal("setTint", "0x108010");
+    this.ground.children.iterateLocal("setDepth", -4);
     this.ground.children.iterateLocal("setPipeline", "Light2D");
 
     // Checkpoint.
     this.flag.children.iterateLocal("setDepth", -3);
     this.flag.children.iterateLocal("setScale", "0.25");
-    this.flag.children.iterateLocal("setTint", "0xFF8F00");
     this.flag.children.iterateLocal("setPipeline", "Light2D");
 
     // Door.
     this.door.children.iterateLocal("setDepth", -3);
     this.door.children.iterateLocal("setScale", "0.25");
     this.door.children.iterateLocal("setSize", 250, 599);
-    this.door.children.iterateLocal("setTint", "0xFF8F00");
     this.door.children.iterateLocal("setPipeline", "Light2D");
 
     // Star.
     this.star.children.iterateLocal("setDepth", 0);
     this.star.children.iterateLocal("setScale", "0.5");
-    this.star.children.iterateLocal("setTint", "0x00FF00");
+    this.star.children.iterateLocal("setTint", "0xffffff");
 
     // Ladder.
     this.ladder.children.iterateLocal("setDepth", -1);
     this.ladder.children.iterateLocal("setScale", "0.25");
-    this.ladder.children.iterateLocal("setTint", "0x804000");
     this.ladder.children.iterateLocal("setPipeline", "Light2D");
 
     // Moveable Blocks.
     this.moveableBlockGroup.children.iterateLocal("setScale", "0.25");
-    this.moveableBlockGroup.children.iterateLocal("setTint", "0x802800");
     this.moveableBlockGroup.children.iterateLocal("setPipeline", "Light2D");
 
     // Block.
     this.block.children.iterateLocal("setScale", "0.25");
-    this.block.children.iterateLocal("setTint", "0x804000");
     this.block.children.iterateLocal("setPipeline", "Light2D");
 
     // Wide Blocks.
     this.blockWide.children.iterateLocal("setScale", "0.25");
-    this.blockWide.children.iterateLocal("setTint", "0x804000");
-    this.block.children.iterateLocal("setPipeline", "Light2D");
+    this.blockWide.children.iterateLocal("setPipeline", "Light2D");
 
     // Tall Blocks.
     this.blockTall.children.iterateLocal("setScale", "0.25");
-    this.blockTall.children.iterateLocal("setTint", "0x804000");
     this.blockTall.children.iterateLocal("setPipeline", "Light2D");
 
     // Big Blocks.
     this.bigBlock.children.iterateLocal("setScale", "0.25");
-    this.bigBlock.children.iterateLocal("setTint", "0x802800");
     this.bigBlock.children.iterateLocal("setPipeline", "Light2D");
 
     // Big Wide Block.
     this.bigBlockWide.children.iterateLocal("setScale", "0.25");
-    this.bigBlockWide.children.iterateLocal("setTint", "0x802800");
     this.bigBlockWide.children.iterateLocal("setPipeline", "Light2D");
 
     // Bouncing Blocks.
     this.bouncingBlock.children.iterateLocal("setScale", "0.25");
-    this.bouncingBlock.children.iterateLocal("setTint", "0x808080");
     this.bouncingBlock.children.iterateLocal("setPipeline", "Light2D");
 
     // Platforms.
     this.platform.children.iterateLocal("setScale", "0.25");
-    this.platform.children.iterateLocal("setTint", "0x804000");
     this.platform.children.iterateLocal("setPipeline", "Light2D");
 
     // Platforms.
     this.platformWide.children.iterateLocal("setScale", "0.25");
-    this.platformWide.children.iterateLocal("setTint", "0x8802800");
     this.platformWide.children.iterateLocal("setPipeline", "Light2D");
 
     // Platforms.
     this.platformWider.children.iterateLocal("setScale", "0.25");
-    this.platformWider.children.iterateLocal("setTint", "0x802800");
     this.platformWider.children.iterateLocal("setPipeline", "Light2D");
 
     // Moving Platform X.
     this.movingPlatformX.children.iterateLocal("setScale", "0.25");
     this.movingPlatformX.children.iterateLocal("setFrictionX", "1");
-    this.movingPlatformX.children.iterateLocal("setTint", "0x802800");
     this.movingPlatformX.children.iterateLocal("setPipeline", "Light2D");
 
     // Moving Platform Y.
     this.movingPlatformY.children.iterateLocal("setScale", "0.25");
     this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
-    this.movingPlatformY.children.iterateLocal("setTint", "0x802800");
-    this.movingPlatformY.children.iterateLocal("setPipeline", "Light2D");
-
-    // Moving Platform X2.
-    this.movingPlatformX2.children.iterateLocal("setScale", "0.25");
-    this.movingPlatformX2.children.iterateLocal("setFrictionX", "1");
-    this.movingPlatformX2.children.iterateLocal("setTint", "0x802800");
-    this.movingPlatformX2.children.iterateLocal("setPipeline", "Light2D");
-
-    // Moving Platform Y2.
-    this.movingPlatformY2.children.iterateLocal("setScale", "0.25");
-    this.movingPlatformY2.children.iterateLocal("setPipeline", "Light2D");
-    this.movingPlatformY2.children.iterateLocal("setTint", "0x802800");
-    this.movingPlatformY2.children.iterateLocal("setPipeline", "Light2D");
   }
 
   // Colliders.
@@ -820,8 +601,6 @@ class Forest extends Phaser.Scene {
     this.physics.add.collider(this.player, this.platformWider);
     this.physics.add.collider(this.player, this.movingPlatformX);
     this.physics.add.collider(this.player, this.movingPlatformY);
-    this.physics.add.collider(this.player, this.movingPlatformX2);
-    this.physics.add.collider(this.player, this.movingPlatformY2);
 
     // Star.
 
@@ -927,7 +706,7 @@ class Forest extends Phaser.Scene {
 
     //  Level.
     this.hudLevel = this.add
-      .text(0, 0, "Level 02", {
+      .text(0, 0, "Level: HUB", {
         fontSize: "15px",
         align: "left",
         fontFamily: "block",
@@ -964,7 +743,7 @@ class Forest extends Phaser.Scene {
     this.text.y = this.player.body.position.y + 350;
 
     // Updates the position of the hud text relative to the player's position.
-    this.hudStars.x = this.player.body.position.x + 650;
+    this.hudStars.x = this.player.body.position.x + 670;
     this.hudStars.y = this.player.body.position.y - 300;
 
     // Updates the position of the hud text relative to the player's position.
@@ -977,9 +756,9 @@ class Forest extends Phaser.Scene {
     // Random Text updates.
     if (this.player.touchesdoor == true) {
       if (this.hubStars < 1) {
-        this.text.setText("You need 3 stars to enter the next area");
+        this.text.setText("You need 3 stars to Enter the forest");
       } else {
-        this.text.setText("Press SPACE to enter the next area");
+        this.text.setText("Press SPACE to ENTER the Forest");
       }
     } else if (this.player.touchesflag == true) {
       this.text.setText("Checkpoint!");
@@ -1161,6 +940,15 @@ class Forest extends Phaser.Scene {
     if (this.cursors.reset.isDown) {
       this.player.x = this.checkpoint.x;
       this.player.y = this.checkpoint.y;
+
+      this.moveableBlock1.x = -600;
+      this.moveableBlock1.y = 587.5;
+
+      this.moveableBlock2.x = 3200;
+      this.moveableBlock2.y = 587.5;
+
+      this.moveableBlock3.x = 4200;
+      this.moveableBlock3.y = 587.5;
     }
   }
 }
