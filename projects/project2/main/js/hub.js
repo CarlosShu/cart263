@@ -931,7 +931,7 @@ class Hub extends Phaser.Scene {
       // If the player has gathered the required amoount of stars.
       if (this.hubStars >= 3) {
         if (this.cursors.space.isDown) {
-          this.scene.start("end");
+          this.scene.start("forest");
         }
       }
     }

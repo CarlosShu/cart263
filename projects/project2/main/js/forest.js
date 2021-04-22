@@ -12,7 +12,7 @@ class Forest extends Phaser.Scene {
     this.currentTime = 0;
     this.timedEvent;
 
-    this.checkpoint = { x: 4400, y: 0 };
+    this.checkpoint = { x: 0, y: 550 };
 
     // Variables.
     this.hubStars = 0;
@@ -30,6 +30,8 @@ class Forest extends Phaser.Scene {
     // level assets.
 
     //  this.ladder.create(300, 150);
+
+    this.flag.create(0, 552.5);
 
     this.block.create(-800, 587.5);
 
